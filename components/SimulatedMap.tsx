@@ -75,6 +75,22 @@ const MapboxMapInner: React.FC<MapProps> = (props) => {
 
   const mapboxToken = APP_CONFIG.mapboxToken;
 
+  // Track if we've done initial center update to avoid repeated jumps
+  const hasInitialCentered = useRef(false);
+
+  // Update viewState when initialCenter becomes available (GPS loaded)
+  useEffect(() => {
+    if (props.initialCenter && !hasInitialCentered.current) {
+      setViewState(prev => ({
+        ...prev,
+        longitude: props.initialCenter!.lng,
+        latitude: props.initialCenter!.lat,
+        zoom: 15
+      }));
+      hasInitialCentered.current = true;
+    }
+  }, [props.initialCenter]);
+
   // Memoize padding to prevent fitBounds regeneration on every render
   const safePadding = React.useMemo(() => {
     return fitBoundsPadding ?

@@ -1031,11 +1031,15 @@ export const UserApp = () => {
               <div className="relative flex flex-col items-center group">
                 {/* The Pin */}
                 <div className="relative z-10 -mb-1 text-orange-600 drop-shadow-2xl filter transform transition-transform duration-300">
-                  {/* Solid Fill Pin */}
-                  <Pin size={56} fill="currentColor" strokeWidth={0} className="block" />
-
-                  {/* Glare/Reflection (Simulating the image style) */}
-                  <div className="absolute top-2 right-3 w-3 h-2 bg-white/40 rounded-full blur-[1px] rotate-45"></div>
+                  {/* Custom Lollipop Pin SVG */}
+                  <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="block drop-shadow-xl">
+                    {/* Stick */}
+                    <rect x="11" y="10" width="2" height="14" rx="1" fill="currentColor" />
+                    {/* Circle Head */}
+                    <circle cx="12" cy="8" r="7" fill="currentColor" />
+                    {/* Hole */}
+                    <circle cx="12" cy="8" r="2.5" fill="white" />
+                  </svg>
                 </div>
 
                 {/* The Shadow/Target on the floor */}

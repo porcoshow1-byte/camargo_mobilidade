@@ -61,6 +61,7 @@ export const DriverApp = () => {
   const [darkMode, setDarkMode] = useState(true);
   const [showApprovalCelebration, setShowApprovalCelebration] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
+  const [isRequestCollapsed, setIsRequestCollapsed] = useState(false);
 
   // Support UI State
   const [ticketAttachments, setTicketAttachments] = useState<string[]>([]);
@@ -80,11 +81,12 @@ export const DriverApp = () => {
   const prevIncomingCountRef = useRef(0);
 
   // GPS em tempo real do motorista
-  const { location: driverGpsLocation, accuracy: gpsAccuracy, error: gpsError } = useGeoLocation();
+  const { location: driverGpsLocation, error: gpsError } = useGeoLocation();
   const [currentDriverLocation, setCurrentDriverLocation] = useState<Coords | null>(null);
   const lastLocationUpdateRef = useRef<number>(0);
 
   const [isLocationReady, setIsLocationReady] = useState(false);
+  const [routeMetrics, setRouteMetrics] = useState<{ distance: string; duration: string; distanceValue: number; durationValue: number } | null>(null);
 
   const loadDriverProfile = async () => {
     if (!authUser) return;
@@ -330,6 +332,8 @@ export const DriverApp = () => {
     try {
       await startRide(activeRide.id);
       playSound('rideStarted');
+      // setIsNavigating(true); // Disable auto-start to avoid confusion
+      showNotification('rideStarted');
     } catch (error) {
       console.error(error);
       alert("Erro ao iniciar corrida.");
@@ -399,64 +403,71 @@ export const DriverApp = () => {
             showRoute={!!activeRide}
             isLoading={!driverGpsLocation}
             navigationMode={isNavigating}
+            onRouteDetailsChange={setRouteMetrics}
           />
         )}
       </div>
 
-      {/* 2. Floating Header */}
-      <div className="absolute top-0 left-0 right-0 z-20 px-4 pt-safe-4 pb-2 bg-gradient-to-b from-black/80 to-transparent pointer-events-none">
-        <div className="flex justify-between items-start pointer-events-auto">
-          {/* User Profile Pill */}
-          <div
-            onClick={() => setShowProfile(true)}
-            className="flex items-center gap-3 bg-gray-900/80 backdrop-blur-md border border-gray-700 rounded-full pl-1 pr-4 py-1 shadow-lg cursor-pointer active:scale-95 transition-transform"
-          >
-            <img
-              src={currentDriver?.avatar || "https://ui-avatars.com/api/?background=000&color=fff&name=Motorista"}
-              className="w-10 h-10 rounded-full border-2 border-orange-500 object-cover"
-              alt="Avatar"
-            />
-            <div className="flex flex-col">
-              <span className="font-bold text-sm leading-tight text-white">{currentDriver?.name?.split(' ')[0] || 'Motorista'}</span>
-              <div className="flex items-center gap-1">
-                <Star size={10} className="text-yellow-400 fill-yellow-400" />
-                <span className="text-xs text-gray-300 font-medium">{(currentDriver?.rating || 5.0).toFixed(1)}</span>
+      {/* 2. Floating Header - Hidden during Navigation OR Active Ride OR Incoming Request (Clean UI) */}
+      {!isNavigating && !activeRide && !currentRequest && (
+        <div className="absolute top-0 left-0 right-0 z-20 px-4 pt-safe-4 pb-2 bg-gradient-to-b from-black/80 to-transparent pointer-events-none">
+          <div className="flex justify-between items-start pointer-events-auto">
+            {/* User Profile Pill */}
+            <div
+              onClick={() => setShowProfile(true)}
+              className="flex items-center gap-3 bg-gray-900/80 backdrop-blur-md border border-gray-700 rounded-full pl-1 pr-4 py-1 shadow-lg cursor-pointer active:scale-95 transition-transform"
+            >
+              <div className="relative">
+                <img
+                  src={currentDriver?.avatar || "https://ui-avatars.com/api/?background=000&color=fff&name=Motorista"}
+                  className="w-10 h-10 rounded-full border-2 border-orange-500 object-cover"
+                  alt="Avatar"
+                />
+                <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-gray-900 ${isOnline ? (activeRide ? 'bg-orange-500' : 'bg-green-500') : 'bg-gray-500'
+                  }`}></div>
+              </div>
+              <div className="flex flex-col">
+                <span className="font-bold text-sm leading-tight text-white">{currentDriver?.name?.split(' ')[0] || 'Motorista'}</span>
+                <div className="flex items-center gap-1">
+                  <Star size={10} className="text-yellow-400 fill-yellow-400" />
+                  <span className="text-xs text-gray-300 font-medium">{(currentDriver?.rating || 5.0).toFixed(1)}</span>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* Right Side Actions */}
-          <div className="flex gap-2">
-            {/* Notifications Bell (New) */}
-            <button
-              onClick={() => setShowNotifications(true)}
-              className="w-10 h-10 bg-gray-900/80 backdrop-blur-md border border-gray-700 rounded-full flex items-center justify-center text-white shadow-lg active:scale-95 transition-transform relative"
-            >
-              <Bell size={20} />
-              <span className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-gray-900"></span>
-            </button>
+            {/* Right Side Actions */}
+            <div className="flex gap-2">
+              {/* Notifications Bell (New) */}
+              <button
+                onClick={() => setShowNotifications(true)}
+                className="w-10 h-10 bg-gray-900/80 backdrop-blur-md border border-gray-700 rounded-full flex items-center justify-center text-white shadow-lg active:scale-95 transition-transform relative"
+              >
+                <Bell size={20} />
+                <span className="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-gray-900"></span>
+              </button>
 
-            {/* Earnings Pill */}
-            <button
-              onClick={() => setShowHistory(true)}
-              className="flex flex-col items-end bg-gray-900/80 backdrop-blur-md border border-gray-700 rounded-2xl px-3 py-1.5 shadow-lg active:scale-95 transition-transform"
-            >
-              <span className="text-[10px] text-gray-400 uppercase tracking-wider font-bold">Ganhos</span>
-              <span className="text-green-400 font-mono font-bold text-sm">
-                {APP_CONFIG.currency}{earnings.toFixed(2)}
-              </span>
-            </button>
+              {/* Earnings Pill */}
+              <button
+                onClick={() => setShowHistory(true)}
+                className="flex flex-col items-end bg-gray-900/80 backdrop-blur-md border border-gray-700 rounded-2xl px-3 py-1.5 shadow-lg active:scale-95 transition-transform"
+              >
+                <span className="text-[10px] text-gray-400 uppercase tracking-wider font-bold">Ganhos</span>
+                <span className="text-green-400 font-mono font-bold text-sm">
+                  {APP_CONFIG.currency}{earnings.toFixed(2)}
+                </span>
+              </button>
 
-            {/* Power Button */}
-            <button
-              onClick={handleToggleOnlineClick}
-              className={`w-10 h-10 rounded-full flex items-center justify-center shadow-lg border-2 active:scale-95 transition-all ${isOnline ? 'bg-green-500 border-green-400 text-white' : 'bg-red-500 border-red-400 text-white animate-pulse'}`}
-            >
-              <Power size={20} />
-            </button>
+              {/* Power Button */}
+              <button
+                onClick={handleToggleOnlineClick}
+                className={`w-10 h-10 rounded-full flex items-center justify-center shadow-lg border-2 active:scale-95 transition-all ${isOnline ? 'bg-green-500 border-green-400 text-white' : 'bg-red-500 border-red-400 text-white animate-pulse'}`}
+              >
+                <Power size={20} />
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* 3. Offline Overlay */}
       {
@@ -481,7 +492,7 @@ export const DriverApp = () => {
 
       {/* 4. Searching State */}
       {
-        isOnline && !activeRide && !currentRequest && (
+        isOnline && !activeRide && !currentRequest && !isNavigating && (
           <div className="absolute bottom-10 left-0 right-0 z-10 flex flex-col items-center pointer-events-none">
             <div className="bg-gray-900/90 backdrop-blur-xl px-6 py-3 rounded-full shadow-2xl border border-gray-700 flex items-center gap-3 animate-slide-up">
               <span className="relative flex h-3 w-3">
@@ -494,17 +505,96 @@ export const DriverApp = () => {
         )
       }
 
+
+      {/* 4.5. NAVIGATION OVERLAY (New Waze-like Mode) */}
+      {isNavigating && activeRide && (
+        <div className="absolute inset-0 z-50 pointer-events-none flex flex-col justify-between p-4 safe-area-inset">
+          {/* Top Instruction Bar (Glassmorphism) */}
+          <div className="bg-gray-900/90 backdrop-blur-xl text-white p-5 rounded-3xl shadow-2xl animate-slide-down pointer-events-auto border border-white/10 mt-2 mx-2">
+            <div className="flex items-center gap-4">
+              <div className="bg-green-500 w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg shadow-green-500/30 shrink-0 border border-white/20">
+                <Navigation size={32} className="text-white fill-white" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1.5 flex items-center gap-1">
+                  <MapPin size={10} className="text-orange-500" /> Em 200 metros
+                </p>
+                <h2 className="text-2xl font-black leading-none truncate">
+                  Siga o traçado
+                </h2>
+                <p className="text-sm text-gray-400 font-medium truncate mt-1">
+                  {activeRide?.status === 'in_progress'
+                    ? cleanAddress(activeRide.destination).split(',')[0]
+                    : cleanAddress(activeRide?.origin || '').split(',')[0]
+                  }
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Floating Action Pills */}
+          <div className="absolute right-4 bottom-40 flex flex-col gap-3 pointer-events-auto items-end">
+            <div className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md p-2 pl-3 rounded-full shadow-lg border border-white/20 dark:border-gray-700 flex items-center gap-2">
+              <span className="font-bold text-sm text-gray-800 dark:text-white">{activeRide?.passenger?.name?.split(' ')[0] || 'Passageiro'}</span>
+              <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                <User size={16} className="text-gray-600 dark:text-gray-300" />
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Control Bar (Glassmorphism) */}
+          <div className="bg-white/90 dark:bg-gray-900/90 backdrop-blur-xl p-4 rounded-3xl shadow-2xl animate-slide-up pointer-events-auto border border-gray-200 dark:border-gray-800 mb-4">
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col">
+                <div className="flex items-baseline gap-1">
+                  <span className="text-4xl font-black text-green-600 dark:text-green-500 tracking-tight">
+                    {routeMetrics?.duration ? routeMetrics.duration.replace(' min', '') : "12"}
+                  </span>
+                  <span className="text-sm font-bold text-green-600 dark:text-green-500">min</span>
+                </div>
+                <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 text-sm font-bold mt-1">
+                  <span>{routeMetrics?.distance || "5.2 km"}</span>
+                  <span className="w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-600"></span>
+                  <span>{new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                </div>
+                {/* Progress Bar */}
+                <div className="w-full h-1.5 bg-gray-100 dark:bg-gray-800 rounded-full mt-3 overflow-hidden">
+                  <div className="h-full bg-green-500 w-[20%] rounded-full animate-pulse"></div>
+                </div>
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest text-center mt-2">NAVEGANDO COM MOTOJÁ</p>
+              </div>
+
+              <div className="h-16 w-px bg-gray-100 dark:bg-gray-800 mx-4"></div>
+
+              <button
+                onClick={() => setIsNavigating(false)}
+                className="w-16 h-16 bg-red-50 dark:bg-red-900/10 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-full flex flex-col items-center justify-center gap-1 transition-colors group"
+              >
+                <X size={26} className="text-red-500 group-hover:scale-110 transition-transform" />
+                <span className="text-[10px] uppercase font-bold text-red-400">Sair</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )
+      }
+
       {/* 5. Ride Request Bottom Sheet (The Main Event) */}
       {
-        currentRequest && !activeRide && (
-          <div className={`absolute inset-x-0 bottom-0 z-50 bg-white dark:bg-gray-900 rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.5)] border-t border-gray-200 dark:border-gray-800 p-6 pb-safe-4 ${requestAnimation}`}>
-            {/* Handle Bar */}
-            <div className="w-12 h-1.5 bg-gray-300 dark:bg-gray-700 rounded-full mx-auto mb-6"></div>
+        currentRequest && !activeRide && !isNavigating && (
+          <div className={`absolute inset-x-0 bottom-0 z-50 bg-white dark:bg-gray-900 rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.5)] border-t border-gray-200 dark:border-gray-800 p-6 pb-safe-4 ${requestAnimation} transition-all duration-300 ease-in-out`}>
+            {/* Handle Bar (Clickable to Collapse) */}
+            <div
+              className="w-full flex justify-center pb-6 cursor-pointer"
+              onClick={() => setIsRequestCollapsed(!isRequestCollapsed)}
+            >
+              <div className="w-12 h-1.5 bg-gray-300 dark:bg-gray-700 rounded-full"></div>
+            </div>
 
             <div className="flex justify-between items-start mb-6">
               <div>
                 <Badge className="bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400 mb-2 border-none px-3 py-1">
-                  Nova Corrida • {currentRequest.distance}km
+                  Nova Corrida • {currentRequest.distance}
                 </Badge>
                 <h2 className="text-3xl font-black text-gray-900 dark:text-white">
                   R$ {(currentRequest.price || 0).toFixed(2)}
@@ -517,36 +607,48 @@ export const DriverApp = () => {
               />
             </div>
 
-            {/* Route Timeline */}
-            <div className="space-y-6 mb-8 relative pl-2">
-              {/* Vertical Line */}
-              <div className="absolute left-[7px] top-3 bottom-4 w-0.5 bg-gray-200 dark:bg-gray-700"></div>
+            {/* Route Info - Collapsible */}
+            {isRequestCollapsed ? (
+              // Collapsed View: Compact
+              <div className="mb-8 animate-fade-in">
+                <div className="flex items-center gap-2 text-gray-500 text-sm">
+                  <span className="font-bold text-gray-900 dark:text-white truncate max-w-[120px]">{cleanAddress(currentRequest.origin).split(',')[0]}</span>
+                  <ArrowRight size={14} />
+                  <span className="font-bold text-gray-900 dark:text-white truncate max-w-[120px]">{cleanAddress(currentRequest.destination).split(',')[0]}</span>
+                </div>
+              </div>
+            ) : (
+              // Expanded View: Full Timeline
+              <div className="space-y-6 mb-8 relative pl-2 animate-fade-in">
+                {/* Vertical Line */}
+                <div className="absolute left-[7px] top-3 bottom-4 w-0.5 bg-gray-200 dark:bg-gray-700"></div>
 
-              <div className="relative flex gap-4">
-                <div className="w-4 h-4 rounded-full bg-green-500 mt-1 relative z-10 shadow-[0_0_0_4px_white] dark:shadow-[0_0_0_4px_#111827]"></div>
-                <div>
-                  <label className="text-xs uppercase font-bold text-gray-400 tracking-wider">Origem</label>
-                  <p className="font-semibold text-gray-900 dark:text-gray-100 text-lg leading-tight mt-0.5">
-                    {cleanAddress(currentRequest.origin)}
-                  </p>
-                  {currentRequest.pickupReference && (
-                    <p className="text-xs text-orange-500 mt-1 flex items-center gap-1">
-                      <MapPin size={10} /> {currentRequest.pickupReference}
+                <div className="relative flex gap-4">
+                  <div className="w-4 h-4 rounded-full bg-green-500 mt-1 relative z-10 shadow-[0_0_0_4px_white] dark:shadow-[0_0_0_4px_#111827]"></div>
+                  <div>
+                    <label className="text-xs uppercase font-bold text-gray-400 tracking-wider">Origem</label>
+                    <p className="font-semibold text-gray-900 dark:text-gray-100 text-lg leading-tight mt-0.5">
+                      {cleanAddress(currentRequest.origin)}
                     </p>
-                  )}
+                    {currentRequest.pickupReference && (
+                      <p className="text-xs text-orange-500 mt-1 flex items-center gap-1">
+                        <MapPin size={10} /> {currentRequest.pickupReference}
+                      </p>
+                    )}
+                  </div>
                 </div>
-              </div>
 
-              <div className="relative flex gap-4">
-                <div className="w-4 h-4 rounded-full bg-gray-900 dark:bg-white mt-1 relative z-10 shadow-[0_0_0_4px_white] dark:shadow-[0_0_0_4px_#111827] border-2 border-gray-900 dark:border-white"></div>
-                <div>
-                  <label className="text-xs uppercase font-bold text-gray-400 tracking-wider">Destino</label>
-                  <p className="font-semibold text-gray-900 dark:text-gray-100 text-lg leading-tight mt-0.5">
-                    {cleanAddress(currentRequest.destination)}
-                  </p>
+                <div className="relative flex gap-4">
+                  <div className="w-4 h-4 rounded-full bg-gray-900 dark:bg-white mt-1 relative z-10 shadow-[0_0_0_4px_white] dark:shadow-[0_0_0_4px_#111827] border-2 border-gray-900 dark:border-white"></div>
+                  <div>
+                    <label className="text-xs uppercase font-bold text-gray-400 tracking-wider">Destino</label>
+                    <p className="font-semibold text-gray-900 dark:text-gray-100 text-lg leading-tight mt-0.5">
+                      {cleanAddress(currentRequest.destination)}
+                    </p>
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Action Buttons */}
             <div className="space-y-3">
@@ -558,13 +660,15 @@ export const DriverApp = () => {
                 color="green"
               />
 
-              <button
-                disabled={!!processingId}
-                onClick={handleRejectRide}
-                className="w-full py-4 rounded-full font-bold text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center justify-center gap-2"
-              >
-                <X size={20} /> Rejeitar Corrida
-              </button>
+              {!isRequestCollapsed && (
+                <button
+                  disabled={!!processingId}
+                  onClick={handleRejectRide}
+                  className="w-full py-4 rounded-full font-bold text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center justify-center gap-2 animate-fade-in"
+                >
+                  <X size={20} /> Rejeitar Corrida
+                </button>
+              )}
             </div>
           </div>
         )
@@ -572,7 +676,7 @@ export const DriverApp = () => {
 
       {/* 6. Active Ride Status Panel */}
       {
-        activeRide && (
+        activeRide && !isNavigating && (
           <div className="absolute inset-x-0 bottom-0 z-40 bg-white dark:bg-gray-900 rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.3)] p-5 pb-safe-4 border-t border-gray-200 dark:border-gray-800 animate-slide-up">
             <div className="flex justify-between items-center mb-6">
               <div className="flex items-center gap-4">
@@ -602,7 +706,7 @@ export const DriverApp = () => {
             <div className="grid grid-cols-2 gap-3 mb-4">
               {activeRide.status === 'accepted' && (
                 <SwipeableButton
-                  label="Iniciar Corrida"
+                  label="Deslize para iniciar"
                   successLabel="Iniciando"
                   onSwipeSuccess={handleStartRide}
                   isLoading={processingId === 'starting'}
@@ -680,11 +784,11 @@ export const DriverApp = () => {
                     </div>
                     <div className="bg-white dark:bg-gray-900 p-2.5 rounded-lg">
                       <p className="text-[10px] text-gray-400 font-bold uppercase">Distância</p>
-                      <p className="text-sm font-bold text-gray-800 dark:text-gray-200">{activeRide.distance || '—'} km</p>
+                      <p className="text-sm font-bold text-gray-800 dark:text-gray-200">{routeMetrics?.distance || activeRide.distance || '—'} </p>
                     </div>
                     <div className="bg-white dark:bg-gray-900 p-2.5 rounded-lg">
                       <p className="text-[10px] text-gray-400 font-bold uppercase">Tempo Est.</p>
-                      <p className="text-sm font-bold text-gray-800 dark:text-gray-200">{activeRide.duration || '—'}</p>
+                      <p className="text-sm font-bold text-gray-800 dark:text-gray-200">{routeMetrics?.duration || activeRide.duration || '—'}</p>
                     </div>
                   </div>
                 </div>
@@ -889,53 +993,55 @@ export const DriverApp = () => {
       }
 
       {/* Full Screen Navigation Overlay */}
-      {isNavigating && activeRide && (
-        <div className="absolute inset-0 z-[100] flex flex-col pointer-events-none">
-          {/* Top HUD: Direction */}
-          <div className="bg-gray-900/90 backdrop-blur-md p-4 pt-safe-top pb-6 rounded-b-[2rem] shadow-2xl pointer-events-auto animate-slide-down">
-            <div className="flex items-start gap-4">
-              <div className="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center shadow-lg shadow-green-500/20 shrink-0">
-                <ArrowRight size={32} className="text-white -rotate-45" />
-              </div>
-              <div className="flex-1">
-                <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">Em 200 metros</p>
-                <h2 className="text-white text-2xl font-black leading-tight">
-                  Vire à direita na {cleanAddress(activeRide.status === 'in_progress' ? activeRide.destination : activeRide.origin).split(',')[0]}
-                </h2>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex-1" />
-
-          {/* Bottom HUD: Trip Info */}
-          <div className="bg-white dark:bg-gray-900 p-5 pb-safe-4 rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.4)] pointer-events-auto animate-slide-up">
-            <div className="flex items-center justify-between mb-2">
-              <div>
-                <p className="text-3xl font-black text-green-500">{(activeRide.duration || '12 min').replace(' mins', ' min')}</p>
-                <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 font-bold">
-                  <span>{activeRide.distance || '4.5'} km</span>
-                  <span>•</span>
-                  <span>12:42</span>
+      {
+        isNavigating && activeRide && (
+          <div className="absolute inset-0 z-[100] flex flex-col pointer-events-none">
+            {/* Top HUD: Direction */}
+            <div className="bg-gray-900/90 backdrop-blur-md p-4 pt-safe-top pb-6 rounded-b-[2rem] shadow-2xl pointer-events-auto animate-slide-down">
+              <div className="flex items-start gap-4">
+                <div className="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center shadow-lg shadow-green-500/20 shrink-0">
+                  <ArrowRight size={32} className="text-white -rotate-45" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">Em 200 metros</p>
+                  <h2 className="text-white text-2xl font-black leading-tight">
+                    Vire à direita na {cleanAddress(activeRide.status === 'in_progress' ? activeRide.destination : activeRide.origin).split(',')[0]}
+                  </h2>
                 </div>
               </div>
-
-              <button
-                onClick={() => setIsNavigating(false)}
-                className="w-14 h-14 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center text-red-600 hover:bg-red-200 dark:hover:bg-red-900/50 transition active:scale-90"
-              >
-                <X size={28} />
-              </button>
             </div>
 
-            <div className="w-full bg-gray-200 dark:bg-gray-800 h-1.5 rounded-full mt-4 overflow-hidden">
-              <div className="h-full bg-green-500 w-[45%]" />
+            <div className="flex-1" />
+
+            {/* Bottom HUD: Trip Info */}
+            <div className="bg-white dark:bg-gray-900 p-5 pb-safe-4 rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.4)] pointer-events-auto animate-slide-up">
+              <div className="flex items-center justify-between mb-2">
+                <div>
+                  <p className="text-3xl font-black text-green-500">{(routeMetrics?.duration || activeRide.duration || '12 min').replace(' mins', ' min')}</p>
+                  <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 font-bold">
+                    <span>{routeMetrics?.distance || activeRide.distance || '4.5 km'}</span>
+                    <span>•</span>
+                    <span>12:42</span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => setIsNavigating(false)}
+                  className="w-14 h-14 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center text-red-600 hover:bg-red-200 dark:hover:bg-red-900/50 transition active:scale-90"
+                >
+                  <X size={28} />
+                </button>
+              </div>
+
+              <div className="w-full bg-gray-200 dark:bg-gray-800 h-1.5 rounded-full mt-4 overflow-hidden">
+                <div className="h-full bg-green-500 w-[45%]" />
+              </div>
+              <p className="text-center text-xs text-gray-400 font-bold mt-2 uppercase tracking-widest">Navegando com MotoJá</p>
             </div>
-            <p className="text-center text-xs text-gray-400 font-bold mt-2 uppercase tracking-widest">Navegando com MotoJá</p>
           </div>
-        </div>
-      )}
+        )
+      }
 
-    </div>
+    </div >
   );
 };

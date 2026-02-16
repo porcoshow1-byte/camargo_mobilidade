@@ -169,6 +169,21 @@ export interface RideRequest {
   // Dispatch Logic
   candidateDriverId?: string;
   rejectedDriverIds?: string[];
+
+  // Multi-Stop & Wait Time Logic
+  stops?: RideStop[];
+  totalWaitTime?: number; // Total wait time in minutes (or ms, but usually minutes for billing)
+  waitFee?: number;       // Calculated fee for overtime
+}
+
+export interface RideStop {
+  id: string; // unique ID
+  address: string;
+  coords: Coords;
+  status: 'pending' | 'arrived' | 'completed';
+  arrivalTime?: number;   // Timestamp when driver arrived
+  departureTime?: number; // Timestamp when driver resumed ride
+  waitTime?: number;      // Calculated wait duration in ms
 }
 
 export interface ChatMessage {

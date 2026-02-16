@@ -12,9 +12,10 @@ interface AddressAutocompleteProps {
   userLocation?: Coords | null;
   leftIcon?: React.ReactNode;
   readOnly?: boolean;
+  transparent?: boolean;
 }
 
-export const AddressAutocomplete = ({ value, onChange, onSelect, placeholder, userLocation, leftIcon, readOnly = false }: AddressAutocompleteProps) => {
+export const AddressAutocomplete = ({ value, onChange, onSelect, placeholder, userLocation, leftIcon, readOnly = false, transparent = false }: AddressAutocompleteProps) => {
   const [suggestions, setSuggestions] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -138,10 +139,10 @@ export const AddressAutocomplete = ({ value, onChange, onSelect, placeholder, us
           }}
           onFocus={() => setShowSuggestions(true)}
           placeholder={placeholder || "Digite o endereço"}
-          className="w-full p-3.5 pl-10 bg-gray-50 border border-transparent focus:bg-white focus:border-orange-500 rounded-xl outline-none transition-all font-medium text-gray-800 shadow-sm group-hover:bg-white group-hover:shadow-md placeholder:text-gray-400 text-sm"
+          className={`w-full h-14 ${transparent ? 'pl-4 pr-12' : 'pl-12 pr-4'} ${transparent ? 'bg-transparent border-0' : 'bg-gray-100 border-0'} focus:bg-white focus:ring-2 focus:ring-black/5 rounded-lg outline-none transition-all font-semibold text-gray-900 placeholder:text-gray-500 text-base`}
         />
-        <div className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors ${loading ? 'text-orange-500' : 'text-gray-400 group-focus-within:text-orange-500'}`}>
-          {loading ? <Loader2 className="animate-spin" size={18} /> : (leftIcon || <Search size={18} />)}
+        <div className={`absolute top-1/2 -translate-y-1/2 transition-colors pointer-events-none ${transparent ? 'right-4' : 'left-4'} ${loading ? 'text-orange-500' : 'text-gray-500'}`}>
+          {loading ? <Loader2 className="animate-spin" size={20} /> : (leftIcon || null)}
         </div>
       </div>
 

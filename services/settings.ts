@@ -66,6 +66,11 @@ export interface SystemSettings {
     appName: string;
     supportPhone: string;
     supportEmail: string;
+
+    // Stop Wait Time Settings (New)
+    waitTimeLimit: number; // minutes
+    waitTimeFee: number;   // currency value per minute
+
     companyName: string;
     companyCnpj: string;
     companyAddress: string;
@@ -110,6 +115,11 @@ export const DEFAULT_SETTINGS: SystemSettings = {
     appName: 'MotoJá',
     supportPhone: '(11) 99999-9999',
     supportEmail: 'suporte@motoja.com.br',
+
+    // Default Wait Settings
+    waitTimeLimit: 5,   // 5 minutes tolerance
+    waitTimeFee: 0.50,  // R$ 0.50 per excess minute
+
     companyName: 'MotoJá Transportes LTDA',
     companyCnpj: '00.000.000/0001-00',
     companyAddress: 'Rua das Motos, 123 - Centro',

@@ -1,107 +1,118 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Geolocation } from '@capacitor/geolocation';
-import { Capacitor } from '@capacitor/core';
+
+const DEFAULT_LOCATION = { lat: -23.5505, lng: -46.6333 }; // São Paulo (Fallback)
+const MAX_WAIT_TIME = 5000; // 5 seconds max wait
 
 export const useGeoLocation = () => {
   const [location, setLocation] = useState<{ lat: number, lng: number } | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [retryCount, setRetryCount] = useState(0); // Trigger re-run
 
-  const getCurrentLocation = useCallback(async () => {
+  // Ref to track if we already resolved the initial loading state
+  const resolvedRef = useRef(false);
+  const watcherIdRef = useRef<string | null>(null);
+
+  const retry = () => {
     setLoading(true);
-    try {
-      // Verificar permissão
-      const permission = await Geolocation.checkPermissions();
-      if (permission.location !== 'granted') {
-        const requested = await Geolocation.requestPermissions();
-        if (requested.location !== 'granted') {
-          throw new Error("Permissão de localização negada.");
-        }
-      }
-
-      // Try High Accuracy with short timeout first
-      try {
-        const position = await Geolocation.getCurrentPosition({
-          enableHighAccuracy: true,
-          timeout: 5000,
-          maximumAge: 0
-        });
-        setLocation({ lat: position.coords.latitude, lng: position.coords.longitude });
-        setLoading(false);
-        return;
-      } catch (e) {
-        console.log("High accuracy GPS failed, trying low accuracy...");
-      }
-
-      // Fallback: Low Accuracy (faster, less precise but good enough for initial load)
-      const position = await Geolocation.getCurrentPosition({
-        enableHighAccuracy: false,
-        timeout: 10000,
-        maximumAge: 30000 // Accept cached positions up to 30s old
-      });
-
-      setLocation({
-        lat: position.coords.latitude,
-        lng: position.coords.longitude
-      });
-      setLoading(false);
-
-    } catch (err: any) {
-      console.warn("Erro ao obter localização (Native/Web):", err);
-      // Fallback to default center if absolutely everything fails
-      setLocation({ lat: -23.5505, lng: -46.6333 }); // SP Check
-      setLoading(false);
-    }
-  }, []);
+    setError(null);
+    resolvedRef.current = false;
+    setRetryCount(prev => prev + 1);
+  };
 
   useEffect(() => {
-    getCurrentLocation();
+    let timer: NodeJS.Timeout;
 
-    // FAILSAFE: Force stop loading after 8 seconds (Desktop/Permission hang protection)
-    const failsafe = setTimeout(() => {
-      setLoading(l => {
-        if (l) {
-          console.warn("GPS timed out (Failsafe triggered)");
-          setLocation({ lat: -23.5505, lng: -46.6333 }); // SP Default
-          return false;
+    const startLocationTracking = async () => {
+      // 1. Race Condition: Timeout vs Low Accuracy vs High Accuracy
+
+      // Failsafe Timer: Force resolution after 5s
+      timer = setTimeout(() => {
+        if (!resolvedRef.current) {
+          console.warn('[useGeoLocation] 🚨 Timeout (5s) triggered! Forcing DEFAULT_LOCATION.');
+
+          // Force updates in batch
+          setError('timeout');
+          setLocation(DEFAULT_LOCATION);
+          setLoading(false);
+
+          resolvedRef.current = true;
         }
-        return l;
-      });
-    }, 8000);
+      }, MAX_WAIT_TIME);
 
-    let watcherId: string | number | null = null;
-    const startWatcher = async () => {
       try {
-        watcherId = await Geolocation.watchPosition({
-          enableHighAccuracy: true,
-          timeout: 10000,
-          maximumAge: 0
-        }, (position, err) => {
-          if (err) {
-            console.warn("Erro no watchPosition:", err);
-            return;
+        // Check Permissions
+        // Check Permissions (Skip on Web if not implemented)
+        try {
+          const permission = await Geolocation.checkPermissions();
+          if (permission.location !== 'granted') {
+            const requested = await Geolocation.requestPermissions();
+            if (requested.location !== 'granted') {
+              throw new Error("Permissão negada");
+            }
           }
-          if (position) {
-            setLocation({
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            });
-            setAccuracy(position.coords.accuracy);
-            setLoading(false);
+        } catch (err: any) {
+          // Ignore "Not implemented" on web, let the browser handle it during watchPosition
+          if (err.message && err.message.includes("Not implemented")) {
+            console.log("Geolocation permissions skipped (Web/Not Implemented). Proceeding...");
+          } else {
+            throw err;
           }
-        });
-      } catch (error) {
-        console.error("Falha ao iniciar Watcher GPS:", error);
+        }
+
+        // 2. Start Watcher (Best for moving vehicles/users)
+        // We use watchPosition because it keeps updating
+        const id = await Geolocation.watchPosition(
+          {
+            enableHighAccuracy: true,
+            timeout: 10000,
+            maximumAge: 0
+          },
+          (position, err) => {
+            if (position) {
+              const newLoc = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+              };
+              setLocation(newLoc);
+
+              // If this is the first fix, resolve loading
+              if (!resolvedRef.current) {
+                resolvedRef.current = true;
+                setLoading(false);
+                clearTimeout(timer);
+              }
+            } else if (err) {
+              console.warn('[useGeoLocation] Watcher error:', err);
+              // Don't set error state here immediately as timer handles the "no location" case
+            }
+          }
+        );
+        watcherIdRef.current = id;
+
+      } catch (err: any) {
+        console.error('[useGeoLocation] Setup error:', err);
+        // If we fail specifically on permissions or setup, fail fast (if not timed out yet)
+        if (!resolvedRef.current) {
+          setError(err.message || 'Error init location');
+          setLocation(DEFAULT_LOCATION);
+          setLoading(false);
+          resolvedRef.current = true;
+          clearTimeout(timer);
+        }
       }
     };
-    startWatcher();
+
+    startLocationTracking();
 
     return () => {
-      if (watcherId !== null) Geolocation.clearWatch({ id: watcherId as string });
+      clearTimeout(timer);
+      if (watcherIdRef.current) {
+        Geolocation.clearWatch({ id: watcherIdRef.current });
+      }
     };
-  }, [getCurrentLocation]);
+  }, [retryCount]);
 
-  const [accuracy, setAccuracy] = useState<number | null>(null);
-
-  return { location, accuracy, error, loading, getCurrentLocation };
+  return { location, error, loading, getCurrentLocation: retry };
 };

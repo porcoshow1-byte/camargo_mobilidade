@@ -44,6 +44,7 @@ interface MapProps {
   layoutTrigger?: any; // Change in this prop triggers map resize
   navigationMode?: boolean; // Waze-like turn-by-turn navigation view
   onMapReady?: () => void; // Callback when map API is fully loaded
+  onRouteDetailsChange?: (details: { distance: string; duration: string; distanceValue: number; durationValue: number }) => void;
 }
 
 const mapContainerStyle = {
@@ -424,7 +425,7 @@ const MapboxMapInner: React.FC<MapProps> = (props) => {
               }}
             >
               <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                <circle cx="24" cy="24" r="22" fill="#3B82F6" stroke="white" strokeWidth="3" />
+                <circle cx="24" cy="24" r="22" fill="#f97316" stroke="white" strokeWidth="3" />
                 <path d="M24 10 L34 32 L24 26 L14 32 Z" fill="white" />
               </svg>
             </div>
@@ -583,7 +584,7 @@ const GOOGLE_MAP_STYLES = [
 
 // ... (LeafletMapInner remains the same)
 
-const GoogleMapInner: React.FC<MapProps> = ({ showDriver, showRoute, status, origin, destination, driverLocation, drivers, waypoints, recenterTrigger, onCameraChange, fitBoundsPadding, initialCenter }) => {
+const GoogleMapInner: React.FC<MapProps> = ({ showDriver, showRoute, status, origin, destination, driverLocation, drivers, waypoints, recenterTrigger, onCameraChange, fitBoundsPadding, initialCenter, onRouteDetailsChange }) => {
   const [map, setMap] = useState<any | null>(null);
   const [directionsResponse, setDirectionsResponse] = useState<any | null>(null);
 
@@ -687,6 +688,27 @@ const GoogleMapInner: React.FC<MapProps> = ({ showDriver, showRoute, status, ori
       }, (result: any, status: any) => {
         if (status === window.google.maps.DirectionsStatus.OK) {
           setDirectionsResponse(result);
+
+          // Calculate Totals
+          const route = result.routes[0];
+          let totalDist = 0;
+          let totalDur = 0;
+          if (route && route.legs) {
+            route.legs.forEach((leg: any) => {
+              totalDist += leg.distance?.value || 0;
+              totalDur += leg.duration?.value || 0;
+            });
+          }
+
+
+          if (onRouteDetailsChange) {
+            onRouteDetailsChange({
+              distance: (totalDist / 1000).toFixed(1) + ' km',
+              duration: Math.ceil(totalDur / 60) + ' min',
+              distanceValue: totalDist,
+              durationValue: totalDur
+            });
+          }
         } else {
           console.error(`Erro ao buscar rota: ${status}`);
         }
@@ -694,9 +716,9 @@ const GoogleMapInner: React.FC<MapProps> = ({ showDriver, showRoute, status, ori
     } else {
       setDirectionsResponse(null);
       // Limpa directions se a rota não deve ser mostrada
-      if (directionsResponse) setDirectionsResponse(null);
     }
-  }, [showRoute, origin, destination, waypoints]); // Removido directionsResponse da dependência para evitar loop se não setado null corretamente
+    if (directionsResponse && !showRoute) setDirectionsResponse(null);
+  }, [showRoute, origin, destination, waypoints, onRouteDetailsChange, directionsResponse]);
 
   // Animar movimento do motorista suavemente
   useEffect(() => {
@@ -883,12 +905,13 @@ export const SimulatedMap: React.FC<MapProps> = (props) => {
     libraries: libraries
   });
 
-  // Notify parent when API is loaded
+  // Notify parent when API is loaded (or if using Mapbox, we are ready immediately)
   useEffect(() => {
-    if (isLoaded && props.onMapReady) {
+    const isReady = mapboxToken ? true : isLoaded;
+    if (isReady && props.onMapReady) {
       props.onMapReady();
     }
-  }, [isLoaded, props.onMapReady]);
+  }, [isLoaded, mapboxToken, props.onMapReady]);
 
   // 0. Loading State (Prevents Avaré Jump)
   if (props.isLoading) {
@@ -906,15 +929,7 @@ export const SimulatedMap: React.FC<MapProps> = (props) => {
       <div className="relative w-full h-full animate-fade-in bg-gray-100 z-0">
         <MapboxMapInner {...props} />
 
-        {/* Status Badge */}
-        {props.status && (
-          <div className="absolute top-24 left-0 right-0 z-10 flex justify-center pointer-events-none">
-            <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-lg border border-orange-100 text-sm font-bold text-gray-800 pointer-events-auto flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></div>
-              {props.status}
-            </div>
-          </div>
-        )}
+
         <div className="absolute bottom-1 right-1 z-[400] bg-white/80 px-1 rounded text-[10px] text-gray-500">
           Mapbox GL JS
         </div>
@@ -929,14 +944,7 @@ export const SimulatedMap: React.FC<MapProps> = (props) => {
       <div className="relative w-full h-full animate-fade-in bg-gray-100 z-0">
         <GoogleMapInner {...props} />
 
-        {props.status && (
-          <div className="absolute top-24 left-0 right-0 z-[400] flex justify-center pointer-events-none">
-            <div className="bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-lg border border-orange-100 text-sm font-bold text-gray-800 pointer-events-auto flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse"></div>
-              {props.status}
-            </div>
-          </div>
-        )}
+
       </div>
     );
   }

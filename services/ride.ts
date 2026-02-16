@@ -95,7 +95,7 @@ export const injectMockCorporateRides = (companyId: string) => {
 };
 
 // HELPERS: Mapping
-const mapToAppRide = (data: any): RideRequest => {
+export const mapToAppRide = (data: any): RideRequest => {
   if (!data) return data;
   return {
     ...data, // Spread first
@@ -120,7 +120,57 @@ const mapToAppRide = (data: any): RideRequest => {
     cancellationReason: data.cancellation_reason,
     cancellationFee: data.cancellation_fee,
     cancelledBy: data.cancelled_by,
+    stops: data.stops, // Array of RideStop
+    totalWaitTime: data.total_wait_time,
+    waitFee: data.wait_fee
   };
+};
+
+export const updateRideStopStatus = async (
+  rideId: string,
+  stopId: string,
+  status: 'arrived' | 'completed',
+  feeUpdate?: number
+) => {
+  if (isMockMode || !supabase) return;
+
+  // 1. Fetch current ride stops
+  const { data: ride } = await supabase.from(RIDES_TABLE).select('stops, price, wait_fee, total_wait_time').eq('id', rideId).single();
+  if (!ride || !ride.stops) return;
+
+  const stops = ride.stops as any[]; // Type assertion for JSONB
+  const stopIndex = stops.findIndex((s: any) => s.id === stopId);
+
+  if (stopIndex === -1) return;
+
+  // 2. Update Stop
+  const now = Date.now();
+  if (status === 'arrived') {
+    stops[stopIndex].status = 'arrived';
+    stops[stopIndex].arrivalTime = now;
+  } else if (status === 'completed') {
+    stops[stopIndex].status = 'completed';
+    stops[stopIndex].departureTime = now;
+    // Calculate final wait time for this stop if needed, or rely on client passing fee
+    if (stops[stopIndex].arrivalTime) {
+      stops[stopIndex].waitTime = now - stops[stopIndex].arrivalTime;
+    }
+  }
+
+  const updates: any = { stops };
+
+  // 3. Update Price/Fee if provided
+  if (feeUpdate && feeUpdate > 0) {
+    const currentWaitFee = ride.wait_fee || 0;
+    const currentPrice = ride.price || 0;
+
+    updates.wait_fee = currentWaitFee + feeUpdate;
+    updates.price = currentPrice + feeUpdate;
+    // We could calculate total_wait_time here too if we tracked it incrementally
+  }
+
+  const { error } = await supabase.from(RIDES_TABLE).update(updates).eq('id', rideId);
+  if (error) console.error("Error updating stop status:", error);
 };
 
 const mapToDbRide = (data: Partial<RideRequest>): any => {
@@ -155,6 +205,11 @@ const mapToDbRide = (data: Partial<RideRequest>): any => {
   if (data.cancellationFee) mapped.cancellation_fee = data.cancellationFee;
   if (data.cancelledBy) mapped.cancelled_by = data.cancelledBy;
 
+  // Stops and Wait Time
+  if (data.stops) mapped.stops = data.stops;
+  if (data.totalWaitTime) mapped.total_wait_time = data.totalWaitTime;
+  if (data.waitFee) mapped.wait_fee = data.waitFee;
+
   // Timestamps: Supabase handles created_at default. 
   // For updates, we pass ISO string if we want to set them explicitly, or let DB handle it (but we usually set them here).
   // Actually, for dates like 'acceptedAt' which are number (timestamp) in App, we convert to ISO for DB.
@@ -173,6 +228,9 @@ const mapToDbRide = (data: Partial<RideRequest>): any => {
   delete mapped.pickupReference;
   delete mapped.candidateDriverId;
   delete mapped.rejectedDriverIds;
+  delete mapped.stops; // Mapped to 'stops' column, but let's ensure we don't duplicate if logic changes
+  delete mapped.totalWaitTime;
+  delete mapped.waitFee;
   // Don't delete passenger/driver, we mapped them to same name but checked JSONB nature.
   // Actually mapped.passenger is correct for the column name 'passenger'.
 
@@ -196,7 +254,8 @@ export const createRideRequest = async (
   paymentMethod: PaymentMethod = 'pix',
   companyId?: string,
   routePolyline?: string,
-  pickupReference?: string
+  pickupReference?: string,
+  stops?: RideRequest['stops'] // New parameter
 ): Promise<string> => {
 
   if (isMockMode || !supabase) {
@@ -206,7 +265,7 @@ export const createRideRequest = async (
       serviceType, price, distance, duration, status: 'pending', createdAt: Date.now(),
       driver: undefined, deliveryDetails, securityCode, companyId, paymentMethod,
       paymentStatus: paymentMethod === 'corporate' ? 'pending_invoice' : 'pending',
-      routePolyline, pickupReference
+      routePolyline, pickupReference, stops
     };
     const rides = getMockRides();
     rides.push(newRide);
@@ -225,6 +284,7 @@ export const createRideRequest = async (
     passenger, origin, destination, originCoords, destinationCoords,
     serviceType, price, distance, duration, status: 'pending',
     paymentMethod, companyId, deliveryDetails, securityCode, routePolyline, pickupReference,
+    stops, // Pass stops to mapper
     paymentStatus: paymentMethod === 'corporate' ? 'pending_invoice' : 'pending',
     candidateDriverId,
     rejectedDriverIds: []
@@ -339,12 +399,13 @@ export const subscribeToPendingRides = (
 ) => {
   if (isMockMode || !supabase) {
     // ... mock logic (same as before) ...
-    const interval = setInterval(() => {
-      const rides = getMockRides();
-      // ... filtering ...
-      onUpdate(rides.filter(r => r.status === 'pending').sort((a, b) => b.createdAt - a.createdAt));
-    }, 2000);
-    return () => clearInterval(interval);
+    // const interval = setInterval(() => {
+    //   const rides = getMockRides();
+    //   // ... filtering ...
+    //   onUpdate(rides.filter(r => r.status === 'pending').sort((a, b) => b.createdAt - a.createdAt));
+    // }, 2000);
+    // return () => clearInterval(interval);
+    return () => { };
   }
 
   const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
@@ -381,6 +442,17 @@ export const subscribeToPendingRides = (
           return false;
         }
 
+        // Rejection Check: If I rejected this ride, never show it again
+        if (driverId && r.rejectedDriverIds && r.rejectedDriverIds.includes(driverId)) {
+          return false;
+        }
+
+        // Stale Check: Ignore rides created more than 20 minutes ago
+        const STALE_THRESHOLD_MS = 20 * 60 * 1000;
+        if (Date.now() - r.createdAt > STALE_THRESHOLD_MS) {
+          return false;
+        }
+
         return true;
       });
       onUpdate(filtered);
@@ -390,12 +462,13 @@ export const subscribeToPendingRides = (
   fetchAndFilter();
 
   const channel = supabase
-    .channel('pending_rides')
+    .channel('pending_rides_subscription')
     .on(
       'postgres_changes',
-      { event: '*', schema: 'public', table: RIDES_TABLE, filter: 'status=eq.pending' },
-      () => {
-        // Simplest strategy: Re-fetch list on any change to pending rides
+      { event: '*', schema: 'public', table: RIDES_TABLE }, // Listen to ALL changes to ensure we catch removals
+      (payload) => {
+        // Optimization: Only re-fetch if the change involves a pending ride or a ride becoming non-pending
+        // But for now, reliability > tiny optimization.
         fetchAndFilter();
       }
     )
@@ -532,42 +605,17 @@ export const rejectRide = async (rideId: string, driverId: string) => {
 };
 
 export const updateDriverLocation = async (rideId: string, location: Coords) => {
-  if (isMockMode || !supabase) {
-    // mock...
-    return;
+  // Validate params to prevent PATCH 400
+  if (!rideId || !location || typeof location.lat !== 'number' || typeof location.lng !== 'number') {
+    // console.warn("Invalid key params for updateDriverLocation", { rideId, location });
+    return { error: { message: "Invalid params" } };
   }
 
-  // Broadcast location
-  const channel = supabase.channel(`ride_${rideId}`);
-  // We don't subscribe here just to send? 
-  // Supabase requires subscription to send? Yes.
-  // But usually we assume a channel is already open or we open one.
-  // Opening a channel every time might be slow.
-  // Ideally DriverApp keeps a channel open. 
-  // But `updateDriverLocation` is a stateless helper.
-  // Let's try to send via a channel.
+  // Simple DB Update
+  const { error } = await supabase
+    .from(RIDES_TABLE)
+    .update({ driver_location: location })
+    .eq('id', rideId);
 
-  // NOTE: In production, the DriverApp should maintain the channel connection.
-  // For this helper:
-  channel.subscribe(async (status) => {
-    if (status === 'SUBSCRIBED') {
-      await channel.send({
-        type: 'broadcast',
-        event: 'location',
-        payload: location
-      });
-      // We might want to unsubscribe after? Or keep it open?
-      // If called 1Hz, verifying subscription every time is bad.
-      // The calling component should ideally invoke `channel.send` directly.
-      // But for maintaining the function signature:
-      // We will just do a "fire and forget" attempt here or rely on the fact that existing logic calls this.
-
-      // BETTER STRATEGY: 
-      // We can't easily rely on this helper for high-freq Broadcast if it constructs a new channel every time.
-      // However, Supabase channels are lightweight.
-      // Let's leave it as is for now, but be aware of overhead.
-    }
-  });
-
-  // Also, maybe update DB throttled? (Skipped as per previous decision)
+  return { error };
 };

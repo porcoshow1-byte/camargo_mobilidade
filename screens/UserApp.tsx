@@ -11,18 +11,16 @@ import {
 import { PaymentOptionsScreen } from './PaymentOptionsScreen';
 import { logout } from '../services/auth';
 import { Button, Card, Badge, Input } from '../components/UI';
-import { AddressAutocomplete } from '../components/AddressAutocomplete'; // Import here
+import { AddressAutocomplete } from '../components/AddressAutocomplete';
 import { ToastItem } from '../components/Toast';
 
 // React Icons
 import { FaMotorcycle, FaBox } from 'react-icons/fa';
 import { MdDeliveryDining, MdPedalBike } from 'react-icons/md';
 
-// Settings Service
-import { subscribeToSettings, DEFAULT_SETTINGS, SystemSettings } from '../services/settings';
-
 import { SimulatedMap } from '../components/SimulatedMap';
 import { ChatModal } from '../components/ChatModal';
+import { CampaignBanner } from '../components/CampaignBanner';
 import { RideHistoryModal } from '../components/RideHistoryModal';
 import { ProfileScreen } from './ProfileScreen';
 import { AccountScreen } from './AccountScreen';
@@ -32,17 +30,17 @@ import { ReferralScreen } from './ReferralScreen';
 import { FavoriteDriversScreen } from './FavoriteDriversScreen';
 import { SERVICES, APP_CONFIG, MOCK_DRIVER } from '../constants';
 import { ServiceType, RideRequest, User, Coords, PaymentMethod, Company, WalletTransaction, Coupon, SavedAddress } from '../types';
-import { createRideRequest, subscribeToRide, cancelRide, getRideHistory } from '../services/ride';
 import { subscribeToChat } from '../services/chat';
-import { createPixPayment, checkPayment } from '../services/mercadopago';
-import { getOrCreateUserProfile, updateUserProfile } from '../services/user';
+import { createRideRequest, subscribeToRide, cancelRide, getRideHistory } from '../services/ride';
+import { getSettings, subscribeToSettings, SystemSettings, DEFAULT_SETTINGS } from '../services/settings';
 import { getCompany } from '../services/company';
 import { calculateRoute, calculatePrice, reverseGeocode, searchAddress, getGoogleStaticMapUrl } from '../services/map';
 import { useAuth } from '../context/AuthContext';
 import { useGeoLocation } from '../hooks/useGeoLocation';
 import { playSound, initAudio } from '../services/audio';
 import { showNotification, ensureNotificationPermission } from '../services/notifications';
-// Note: useJsApiLoader is handled internally by SimulatedMap component
+import { createPixPayment, checkPayment } from '../services/mercadopago';
+import { getOrCreateUserProfile, updateUserProfile } from '../services/user';
 
 import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors, DragEndEvent } from '@dnd-kit/core';
 import { arrayMove, SortableContext, sortableKeyboardCoordinates, useSortable, verticalListSortingStrategy } from '@dnd-kit/sortable';
@@ -92,87 +90,272 @@ const SortableRouteItem = ({
     opacity: isDragging ? 0.5 : 1,
   };
 
+  const isLast = index === routePointsLength - 1;
+
   return (
     <div
       ref={setNodeRef}
       style={style}
-      className={`relative flex items-start gap-4 transition-all bg-white ${isDragging ? 'shadow-lg ring-2 ring-orange-500 rounded-lg' : ''}`}
+      className={`relative flex items-center gap-0 transition-all ${isDragging ? 'bg-white shadow-2xl ring-2 ring-orange-500 rounded-lg z-50' : ''}`}
     >
-      {/* Drag Handle & Timeline Dot */}
-      <div className="pt-3 flex items-center gap-1 cursor-grab active:cursor-grabbing touch-none" {...attributes} {...listeners}>
-        <GripVertical size={16} className="text-gray-300" />
+      {/* Drag Handle & Timeline Icon */}
+      {/* Icon Column - Fixed Width 44px (Uber Standard) */}
+      <div className="flex flex-col items-center gap-1 cursor-grab active:cursor-grabbing touch-none w-[44px] shrink-0 pt-0 pb-0 justify-center h-full min-h-[56px]" {...attributes} {...listeners}>
+        {/* Icons overlap the line, so they need z-10 and bg-white (or parent bg) */}
         {isOrigin ? (
-          <div className="w-4 h-4 rounded-full border-[3px] border-gray-500 bg-white"></div>
+          // Origin: Circle with Hole (Border 2px Black, Transparent/White Center)
+          <div className="w-2.5 h-2.5 rounded-full border-[2px] border-black bg-white z-10 relative box-border ml-1"></div>
+        ) : isDest ? (
+          // Dest: Solid Square
+          <div className="w-2.5 h-2.5 bg-black z-10 relative shadow-sm ml-1"></div>
         ) : (
-          <div className={`w-4 h-4 rounded-full border-[3px] ${isDest ? 'border-orange-500 bg-orange-500' : 'border-gray-400 bg-white'}`}></div>
+          // Stop: Numbered Circle (1, 2, 3...)
+          <div className="w-5 h-5 rounded-full bg-gray-200 border border-gray-300 flex items-center justify-center z-10 relative ml-1 shadow-sm">
+            <span className="text-[10px] font-bold text-gray-700">{index}</span>
+          </div>
         )}
       </div>
 
       {/* Input Field Area */}
-      <div className="flex-1 min-w-0 border-b border-gray-100 pb-2">
-        <label className="text-xs text-gray-400 font-medium block mb-1">
-          {isOrigin ? 'Partida' : isDest ? 'Destino' : `Parada ${index}`}
-        </label>
-
+      {/* Separator Line Logic: Apply border-b to THIS div, so it starts AFTER the icons */}
+      <div className={`flex-1 min-w-0 py-2 pr-4 ${!isLast && !isDragging ? 'border-b border-gray-100' : ''}`}>
         <div className="flex items-center gap-2">
+          {/* Transparent Input Wrapper */}
           <div className="flex-1">
             <AddressAutocomplete
               value={point.address}
               onChange={(val) => onUpdatePoint(index, val, null)}
               onSelect={(addr, coords) => onUpdatePoint(index, addr, coords)}
-              placeholder={isOrigin ? "Local de partida" : "Qual o destino?"}
+              placeholder={isOrigin ? "Local de partida" : "Para onde?"}
               userLocation={userLocation}
+              transparent={true} // Removes internal padding/borders
+            // Font size improvement? AddressAutocomplete handles it.
             />
           </div>
 
           {/* Row Actions */}
-          <div className="flex items-center gap-2 text-gray-400">
-            {/* Star for Favorites - Add Only */}
-            {point.address.length > 5 && (
-              <button
-                onClick={onFavoriteClick}
-                className={`transition-colors ${isFavorite ? 'text-amber-400' : 'text-gray-300 hover:text-amber-400'}`}
-                title="Salvar nos favoritos"
-              >
-                <Star size={20} fill={isFavorite ? "currentColor" : "none"} />
-              </button>
-            )}
-
-            {/* Origin: Swap button */}
-            {isOrigin && routePointsLength === 2 && (
-              <button onClick={onSwapOrigin} className="hover:text-gray-600" title="Inverter origem/destino">
-                <ArrowDownUp size={20} />
-              </button>
-            )}
-
-            {/* Stops: Move Up/Down (Keep buttons as alternative) & Remove */}
+          <div className="flex items-center">
+            {/* Stops: Remove */}
             {isStop && (
-              <button onClick={() => onRemoveStop(index)} className="hover:text-red-500 bg-gray-100 rounded-full p-1" title="Remover parada">
-                <X size={16} />
+              <button onClick={() => onRemoveStop(index)} className="hover:text-red-500 p-2 text-gray-400 hover:bg-gray-50 rounded-full" title="Remover parada">
+                <X size={18} />
               </button>
             )}
 
-            {/* Destination: Plus Button */}
+            {/* Destination: Add Button (Floating to Right) */}
             {isDest && (
               <button
                 onClick={onAddStop}
-                disabled={routePointsLength >= 8}
-                className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors ${routePointsLength >= 8 ? 'bg-gray-100 text-gray-300' : 'bg-gray-800 text-white hover:bg-black'}`}
+                disabled={routePointsLength >= 9}
+                className={`w-9 h-9 ml-2 rounded-full flex items-center justify-center transition-colors bg-gray-100 text-gray-500 hover:bg-gray-200`}
                 title="Adicionar parada"
               >
-                <Plus size={20} />
+                <Plus size={18} />
               </button>
             )}
           </div>
         </div>
+      </div>
+    </div>
+  );
+};
 
-        {/* Stop Tolerance Info */}
-        {isStop && (
-          <p className="text-[10px] text-gray-400 mt-1 flex items-center gap-1">
-            <Clock size={10} />
-            Tolerância: 5 min.
-          </p>
-        )}
+
+interface SchedulePickerProps {
+  onBack: () => void;
+  onConfirm: (date: Date | null) => void;
+}
+
+const SchedulePicker: React.FC<SchedulePickerProps> = ({ onBack, onConfirm }) => {
+  const [selectedDay, setSelectedDay] = useState(0);
+  const [selectedHour, setSelectedHour] = useState(new Date().getHours() + 1);
+  const [selectedMinute, setSelectedMinute] = useState(0);
+  const [activeTab, setActiveTab] = useState<'departure' | 'arrival'>('departure');
+
+  // Helper to get day label
+  const getDayLabel = (offset: number) => {
+    const d = new Date();
+    d.setDate(d.getDate() + offset);
+    if (offset === 0) return 'Hoje';
+    if (offset === 1) return 'Amanhã';
+    return d.toLocaleDateString('pt-BR', { weekday: 'short', day: '2-digit', month: 'short' });
+  };
+
+  const days = Array.from({ length: 30 }, (_, i) => ({
+    label: getDayLabel(i),
+    value: new Date(new Date().setDate(new Date().getDate() + i))
+  }));
+
+  const hours = Array.from({ length: 24 }, (_, i) => i);
+  const minutes = Array.from({ length: 12 }, (_, i) => i * 5);
+
+
+  // Screen Refs for auto-scroll
+  const daysRef = useRef<HTMLDivElement>(null);
+  const hoursRef = useRef<HTMLDivElement>(null);
+  const minutesRef = useRef<HTMLDivElement>(null);
+
+  // Initial Scroll Effect
+  useEffect(() => {
+    if (daysRef.current) daysRef.current.scrollTop = selectedDay * 48;
+    // Find index of selectedHour in hours array (it matches value in 0-23 range)
+    if (hoursRef.current) hoursRef.current.scrollTop = hours.indexOf(selectedHour) * 48;
+    // Find index of selectedMinute in minutes array
+    if (minutesRef.current) minutesRef.current.scrollTop = minutes.indexOf(selectedMinute) * 48;
+  }, []); // Run once on mount
+
+  const handleConfirmSchedule = () => {
+    const targetDate = new Date();
+    targetDate.setDate(targetDate.getDate() + selectedDay);
+    targetDate.setHours(selectedHour, selectedMinute, 0, 0);
+    onConfirm(targetDate);
+  };
+
+  return (
+    <div className="h-full bg-white flex flex-col font-sans animate-fade-in absolute inset-0 z-50">
+      {/* Header - Apple Style (Minimal) */}
+      <div className="pt-4 pb-2 px-4 flex items-center justify-between bg-white z-10">
+        <button
+          onClick={onBack}
+          className="p-2 -ml-2 text-orange-500 font-medium text-lg hover:opacity-70 transition-opacity"
+        >
+          Cancelar
+        </button>
+        <h2 className="text-lg font-semibold text-gray-900">Agendar Viagem</h2>
+        <div className="w-16"></div> {/* Spacer for alignment */}
+      </div>
+
+      {/* Segmented Control - iOS Style */}
+      <div className="px-5 mt-2 mb-6">
+        <div className="flex bg-gray-100 p-1 rounded-lg h-10 relative">
+          {/* Animated Background Pill */}
+          <div
+            className={`absolute top-1 bottom-1 w-[calc(50%-4px)] bg-white rounded-md shadow-sm transition-all duration-300 ease-out ${activeTab === 'departure' ? 'left-1' : 'left-[calc(50%+2px)]'
+              }`}
+          />
+
+          <button
+            onClick={() => setActiveTab('departure')} // 'departure' = 'Ir agora'
+            className={`flex-1 relative z-10 text-sm font-semibold transition-colors ${activeTab === 'departure' ? 'text-gray-900' : 'text-gray-500'
+              }`}
+          >
+            Ir agora
+          </button>
+          <button
+            onClick={() => setActiveTab('arrival')} // 'arrival' = 'Agendar' (repurposed)
+            className={`flex-1 relative z-10 text-sm font-semibold transition-colors ${activeTab === 'arrival' ? 'text-gray-900' : 'text-gray-500'
+              }`}
+          >
+            Agendar
+          </button>
+        </div>
+      </div>
+
+      {/* Picker Wheel Area - Cupertino Style */}
+      {/* Hide wheels if 'Ir agora' (activeTab === 'departure') */}
+      <div className={`flex-1 flex overflow-hidden relative mt-4 items-center justify-center transition-opacity duration-300 ${activeTab === 'departure' ? 'opacity-30 pointer-events-none grayscale' : 'opacity-100'}`}>
+        {/* Selection Band (Subtle Gray Bar) */}
+        <div className="absolute w-[calc(100%-32px)] h-12 bg-gray-100 rounded-lg pointer-events-none z-0"></div>
+
+        {/* Days Column */}
+        <div
+          ref={daysRef}
+          className="h-64 w-40 overflow-y-auto no-scrollbar snap-y snap-mandatory text-start py-[104px] mask-gradient-vertical z-10"
+          onScroll={(e) => {
+            const index = Math.round(e.currentTarget.scrollTop / 48);
+            if (days[index] && index !== selectedDay) setSelectedDay(index);
+          }}
+        >
+          {days.map((d, i) => (
+            <div
+              key={i}
+              onClick={() => {
+                setSelectedDay(i);
+                if (daysRef.current) daysRef.current.scrollTo({ top: i * 48, behavior: 'smooth' });
+              }}
+              className={`h-12 flex items-center px-4 snap-center cursor-pointer transition-all ${selectedDay === i
+                ? 'text-gray-900 font-semibold text-xl'
+                : 'text-gray-400 font-normal text-lg'
+                }`}
+            >
+              {d.label}
+            </div>
+          ))}
+        </div>
+
+        {/* Hours Column */}
+        <div
+          ref={hoursRef}
+          className="h-64 w-20 overflow-y-auto no-scrollbar snap-y snap-mandatory text-center py-[104px] mask-gradient-vertical z-10"
+          onScroll={(e) => {
+            const index = Math.round(e.currentTarget.scrollTop / 48);
+            if (hours[index] !== undefined && hours[index] !== selectedHour) setSelectedHour(hours[index]);
+          }}
+        >
+          {hours.map((h, i) => (
+            <div
+              key={h}
+              onClick={() => {
+                setSelectedHour(h);
+                if (hoursRef.current) hoursRef.current.scrollTo({ top: i * 48, behavior: 'smooth' });
+              }}
+              className={`h-12 flex items-center justify-center snap-center cursor-pointer transition-all ${selectedHour === h
+                ? 'text-gray-900 font-semibold text-xl'
+                : 'text-gray-400 font-normal text-lg'
+                }`}
+            >
+              {h.toString().padStart(2, '0')}
+            </div>
+          ))}
+        </div>
+
+        <span className="text-gray-900 font-semibold text-xl pb-1 z-10">:</span>
+
+        {/* Minutes Column */}
+        <div
+          ref={minutesRef}
+          className="h-64 w-20 overflow-y-auto no-scrollbar snap-y snap-mandatory text-center py-[104px] mask-gradient-vertical z-10"
+          onScroll={(e) => {
+            const index = Math.round(e.currentTarget.scrollTop / 48);
+            if (minutes[index] !== undefined && minutes[index] !== selectedMinute) setSelectedMinute(minutes[index]);
+          }}
+        >
+          {minutes.map((m, i) => (
+            <div
+              key={m}
+              onClick={() => {
+                setSelectedMinute(m);
+                if (minutesRef.current) minutesRef.current.scrollTo({ top: i * 48, behavior: 'smooth' });
+              }}
+              className={`h-12 flex items-center justify-center snap-center cursor-pointer transition-all ${selectedMinute === m
+                ? 'text-gray-900 font-semibold text-xl'
+                : 'text-gray-400 font-normal text-lg'
+                }`}
+            >
+              {m.toString().padStart(2, '0')}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Footer - Clean & Floating */}
+      <div className="p-6 bg-white safe-bottom flex flex-col gap-3">
+        {/* Only ONE Confirm Button */}
+        <button
+          onClick={() => {
+            if (activeTab === 'departure') { // Ir agora
+              onConfirm(null);
+            } else { // Agendar
+              handleConfirmSchedule();
+            }
+          }}
+          className="w-full bg-orange-500 text-white font-bold text-lg py-4 rounded-2xl hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/20 active:scale-[0.98]"
+        >
+          {activeTab === 'departure'
+            ? 'Confirmar partida agora'
+            : `Confirmar ${days[selectedDay].label} às ${selectedHour}:${selectedMinute.toString().padStart(2, '0')}`
+          }
+        </button>
       </div>
     </div>
   );
@@ -181,6 +364,21 @@ const SortableRouteItem = ({
 export const UserApp = () => {
   const { user: authUser } = useAuth();
   const { location: userLocation, getCurrentLocation, loading: loadingLocation } = useGeoLocation();
+
+  // Helper: Remove state, CEP, and country from addresses for cleaner display
+  const cleanAddress = (addr: string | undefined): string => {
+    if (!addr) return '';
+    let clean = addr;
+    clean = clean.replace(/,?\s*Brazil$/i, '');
+    clean = clean.replace(/,?\s*Brasil$/i, '');
+    clean = clean.replace(/\s*-\s*State of [^,]+/gi, '');
+    clean = clean.replace(/,?\s*\d{5}-?\d{3}/g, '');       // CEP
+    clean = clean.replace(/,?\s*[A-Z]{2}\s*$/g, '');         // trailing state abbr
+    clean = clean.replace(/\s*-\s*[A-Z]{2}\s*$/g, '');       // " - SP" at end
+    clean = clean.replace(/,\s*,/g, ',');                    // double commas
+    clean = clean.replace(/,\s*$/g, '').trim();              // trailing comma
+    return clean;
+  };
 
   // Maps loading is handled by SimulatedMap component internally
 
@@ -192,9 +390,15 @@ export const UserApp = () => {
   );
 
   const [routePoints, setRoutePoints] = useState<RoutePoint[]>([
-    { id: 'origin', address: 'Localizando...', coords: null },
+    { id: 'origin', address: '', coords: null }, // Fix: Start empty to show placeholder
     { id: 'dest', address: '', coords: null }
   ]);
+
+  // Uber-style Features State
+  const [rideDate, setRideDate] = useState<Date | null>(null); // null = Now
+  const [rideFor, setRideFor] = useState<'me' | 'other'>('me');
+  const [passengerInfo, setPassengerInfo] = useState({ name: '', phone: '' });
+  const [tempRideDate, setTempRideDate] = useState<Date | null>(null); // For Schedule Picker
 
 
   const [selectedHistoryRide, setSelectedHistoryRide] = useState<RideRequest | null>(null);
@@ -208,7 +412,25 @@ export const UserApp = () => {
 
   // History State
   const [showHistory, setShowHistory] = useState(false);
+  const [gpsTimeout, setGpsTimeout] = useState(false); // Failsafe for GPS spinner
 
+
+  // Subscribe to System Settings (Banner, Prices)
+  useEffect(() => {
+    // Initial fetch
+    getSettings().then(s => {
+      console.log('UserApp: Settings Loaded', s);
+      if (s) setSettings(s);
+    });
+
+    // Real-time updates
+    const unsub = subscribeToSettings((newSettings) => {
+      console.log('UserApp: Settings Updated', newSettings);
+      if (newSettings) setSettings(newSettings);
+    });
+
+    return () => unsub();
+  }, []);
 
   // Audio Init
   useEffect(() => {
@@ -220,6 +442,33 @@ export const UserApp = () => {
     window.addEventListener('click', handleInteraction);
     return () => window.removeEventListener('click', handleInteraction);
   }, []);
+
+  // Auto-fill Origin with Current Location Address (Rule 67 Fix)
+  useEffect(() => {
+    const fillOriginAddress = async () => {
+      // Only fill if we have a location and the origin field is currently empty
+      if (userLocation && !routePoints[0].address) {
+        try {
+          const address = await reverseGeocode(userLocation.lat, userLocation.lng);
+          if (address) {
+            setRoutePoints(prev => {
+              // Double check to avoid race conditions or overwrites
+              if (prev[0].address) return prev;
+              const newPoints = [...prev];
+              newPoints[0] = { ...newPoints[0], address, coords: userLocation };
+              return newPoints;
+            });
+          }
+        } catch (error) {
+          console.warn("Failed to reverse geocode origin:", error);
+        }
+      }
+    };
+
+    if (step === 'select_dest' || step === 'home') {
+      fillOriginAddress();
+    }
+  }, [userLocation, step]);
 
 
 
@@ -264,6 +513,59 @@ export const UserApp = () => {
 
   const [currentRideId, setCurrentRideId] = useState<string | null>(null);
   const [currentRide, setCurrentRide] = useState<RideRequest | null>(null);
+
+  // Subscribe to Ride Updates (Real-time Status & Location)
+  useEffect(() => {
+    let unsubscribe: any;
+    if (currentRideId) {
+
+      // Subscribe to Supabase updates
+      unsubscribe = subscribeToRide(currentRideId, (updatedRide) => {
+        console.log('UserApp: Ride Updated', updatedRide);
+        setCurrentRide(updatedRide);
+        setRideStatus(updatedRide.status);
+
+        // Auto-transition to Ride Screen when accepted/in_progress
+        if ((updatedRide.status === 'accepted' || updatedRide.status === 'in_progress') && step !== 'ride') {
+          setStep('ride');
+        }
+      });
+    } else {
+      setCurrentRide(null);
+      setRideStatus('');
+    }
+
+    // Polling Fallback: Force check every 4 seconds if searching (to fix "stuck" issue)
+    let pollingInterval: any;
+    if (currentRideId && (step === 'searching' || step === 'confirm')) {
+      pollingInterval = setInterval(async () => {
+        try {
+          // Re-fetch ride data
+          const { supabase } = await import('../services/supabase');
+          if (supabase) {
+            const { data } = await supabase.from('rides').select('*').eq('id', currentRideId).single();
+            if (data && data.status !== rideStatus) {
+              console.log("Polling Sync: Status changed to", data.status);
+              const { mapToAppRide } = await import('../services/ride');
+              const updated = mapToAppRide(data);
+              setCurrentRide(updated);
+              setRideStatus(updated.status);
+              // Force step transition
+              if ((updated.status === 'accepted' || updated.status === 'in_progress') && step === 'searching') {
+                setStep('ride');
+              }
+            }
+          }
+        } catch (e) { console.warn("Polling error", e); }
+      }, 4000);
+    }
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+      if (pollingInterval) clearInterval(pollingInterval);
+    };
+  }, [currentRideId, step, rideStatus]);
+
 
   // Chat Subscription for Passenger (Moved here to access currentRide)
   useEffect(() => {
@@ -543,6 +845,21 @@ export const UserApp = () => {
     setFavorites(prev => prev.filter(f => f.id !== id));
   };
 
+  // Sync User Location with Map Origin
+  useEffect(() => {
+    // If we have a location, update the map origin immediately
+    // We don't need to wait for isMapReady because this just updates state passed as props
+    if (userLocation && step === 'home') {
+      const isSignificantChange = !originCoords ||
+        Math.abs(userLocation.lat - originCoords.lat) > 0.0001 ||
+        Math.abs(userLocation.lng - originCoords.lng) > 0.0001;
+
+      if (isSignificantChange) {
+        setOriginCoords(userLocation);
+      }
+    }
+  }, [userLocation, step]);
+
   useEffect(() => {
     if (userLocation && step === 'home' && isMapReady) {
       setOriginCoords(userLocation);
@@ -746,7 +1063,7 @@ export const UserApp = () => {
   };
 
   const handleAddStop = () => {
-    if (routePoints.length >= 4) return;
+    if (routePoints.length >= 9) return;
     const newStop: RoutePoint = {
       id: `stop_${Date.now()}`,
       address: '',
@@ -769,7 +1086,7 @@ export const UserApp = () => {
     setRoutePoints(newPoints);
   };
 
-  const handleConfirmRoute = async () => {
+  const handleConfirmRoute = async (force?: boolean) => {
 
     const updatedPoints = [...routePoints];
     let hasUpdates = false;
@@ -1139,6 +1456,42 @@ export const UserApp = () => {
   const RenderPayments = () => <div className="p-4"><Button onClick={() => setStep('home')}>Voltar</Button><h1>Pagamentos</h1></div>;
   const RenderHelp = () => <div className="p-4"><Button onClick={() => setStep('home')}>Voltar</Button><h1>Ajuda</h1></div>;
 
+  const RenderNotifications = () => (
+    <div className="h-full bg-white flex flex-col font-sans animate-fade-in absolute inset-0 z-50">
+      <div className="p-4 flex items-center gap-4 bg-white border-b border-gray-100 shadow-sm z-10">
+        <button onClick={() => setStep('home')} className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors">
+          <ArrowLeft size={24} className="text-gray-700" />
+        </button>
+        <h2 className="text-xl font-bold text-gray-800">Notificações</h2>
+      </div>
+      <div className="flex-1 overflow-y-auto p-4">
+        <div className="flex flex-col gap-3">
+          {/* Mock Notifications */}
+          <div className="p-4 bg-orange-50 border border-orange-100 rounded-xl flex gap-3">
+            <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 shrink-0">
+              <Ticket size={20} />
+            </div>
+            <div>
+              <h3 className="font-bold text-gray-800 text-sm">Bem-vindo ao MotoJá!</h3>
+              <p className="text-xs text-gray-500 mt-1">Ganhe 10% OFF na sua primeira corrida com o cupom MOTOJA10.</p>
+              <p className="text-[10px] text-gray-400 mt-2 font-medium">Há 2 horas</p>
+            </div>
+          </div>
+          <div className="p-4 bg-white border border-gray-100 rounded-xl flex gap-3">
+            <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 shrink-0">
+              <Bell size={20} />
+            </div>
+            <div>
+              <h3 className="font-bold text-gray-800 text-sm">Novo sistema de segurança</h3>
+              <p className="text-xs text-gray-500 mt-1">Agora todas as corridas possuem código PIN para sua segurança.</p>
+              <p className="text-[10px] text-gray-400 mt-2 font-medium">Ontem</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   const RenderHome = () => (
     <>
       {/* --- NEW HEADER LAYOUT (Competitor Style) --- */}
@@ -1153,10 +1506,16 @@ export const UserApp = () => {
 
           {/* Top Right: Action Buttons */}
           <div className="absolute right-6 z-20 flex gap-3 animate-fade-in-down" style={{ top: 'calc(1.5rem + env(safe-area-inset-top))' }}>
-            <button className="w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-gray-700 active:scale-90 transition-transform">
+            <button
+              onClick={() => setStep('coupons')}
+              className="w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-gray-700 active:scale-90 transition-transform"
+            >
               <Ticket size={20} />
             </button>
-            <button className="w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-gray-700 active:scale-90 transition-transform relative">
+            <button
+              onClick={() => setStep('notifications')}
+              className="w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center text-gray-700 active:scale-90 transition-transform relative"
+            >
               <Bell size={20} />
               <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
             </button>
@@ -1228,13 +1587,6 @@ export const UserApp = () => {
                     <circle cx="12" cy="8" r="2.5" fill="white" />
                   </svg>
                 </div>
-
-                {/* The Shadow/Target on the floor */}
-                <div className="w-2 h-1 bg-black/40 rounded-[100%] blur-[1px] mt-[-4px]"></div>
-
-                {/* Precision Crosshair (Subtle) */}
-                <div className="absolute top-[48px] -z-10 w-[200px] h-[1px] bg-gradient-to-r from-transparent via-gray-400/50 to-transparent"></div>
-                <div className="absolute top-[-25px] -z-10 h-[100px] w-[1px] bg-gradient-to-b from-transparent via-gray-400/50 to-transparent"></div>
               </div>
             </div>
 
@@ -1285,7 +1637,7 @@ export const UserApp = () => {
             </div>
 
             <div className="px-6 pb-0 pt-2">
-              <h2 className="text-xl font-bold text-gray-800 mb-6 text-center select-none">
+              <h2 className="text-xl font-bold text-gray-800 mb-6 text-center select-none pt-2">
                 Boa tarde, {currentUser?.name?.split(' ')[0] || 'Passageiro'}
               </h2>
 
@@ -1377,6 +1729,9 @@ export const UserApp = () => {
       return () => clearInterval(interval);
     }, []);
 
+    // Calculate display price based on selected service and route specific logic
+    const showGpsSpinner = loadingLocation && !userLocation;
+
     // Get active campaign banner (placeholder - will be from Firebase)
     const campaignBanner = settings.activeCampaignBanner || null;
 
@@ -1420,118 +1775,17 @@ export const UserApp = () => {
 
             </div>
 
-            {/* Partner Ad Banner - Horizontal Scroll */}
-            {/* Partner Ad Banner - Dynamic Carousel */}
+            {/* Campaign Banner - Refactored (Rule 06) */}
+            {/* Campaign Banner - Refactored (Rule 06) */}
             <div className="px-5 mb-4">
-              <div className="relative w-full h-auto aspect-[21/9] rounded-xl overflow-hidden shadow-sm border border-gray-100 bg-gray-100">
-                {(() => {
-                  const activeCampaigns = settings.campaigns?.filter(c => c.active) || [];
-                  const banners = activeCampaigns.length > 0 ? activeCampaigns : [
-                    {
-                      id: 'default-invite',
-                      title: 'Indique amigos e ganhe!',
-                      imageUrl: '',
-                      linkUrl: '',
-                      active: true
-                    }
-                  ];
-
-                  return (
-                    <div className="w-full h-full relative group bg-gray-100 rounded-xl overflow-hidden">
-                      {banners.map((banner, idx) => {
-                        const isActive = idx === (currentBannerIndex % banners.length);
-
-                        // "Solid Stack" Transition Logic:
-                        // Active: Fades IN (opacity 0->100) over 500ms. Z-20 (Top).
-                        // Inactive: Waits 500ms (fully opaque) then snaps to 0. Z-10 (Bottom).
-                        // This ensures the bottom image is ALWAYS visible until completely covered.
-                        const transitionClass = isActive
-                          ? 'opacity-100 z-20 transition-opacity duration-500 ease-out' // Enter
-                          : 'opacity-0 z-10 transition-opacity duration-0 delay-500';   // Exit (Wait then snap)
-
-                        return (
-                          <div
-                            key={banner.id}
-                            className={`absolute inset-0 w-full h-full ${transitionClass}`}
-                            style={{ pointerEvents: isActive ? 'auto' : 'none' }}
-                          >
-                            {banner.imageUrl ? (
-                              <img
-                                src={banner.imageUrl}
-                                alt={banner.title}
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <div className="w-full h-full bg-gradient-to-r from-orange-500 to-orange-600 flex flex-col items-center justify-center text-white p-4">
-                                <span className="text-xs font-bold opacity-80 uppercase tracking-widest">MotoJá</span>
-                                <h4 className="text-lg font-bold text-center mt-1">{banner.title}</h4>
-                                <button className="mt-2 px-4 py-1.5 bg-white text-orange-600 rounded-full text-xs font-bold shadow-sm pointer-events-auto">
-                                  Saiba mais
-                                </button>
-                              </div>
-                            )}
-
-                            {/* Click Link Overlay */}
-                            {banner.linkUrl && isActive && (
-                              <a
-                                href={banner.linkUrl}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="absolute inset-0 z-20"
-                                aria-label={`Ir para ${banner.title}`}
-                              >
-                                <span className="sr-only">Abrir link</span>
-                              </a>
-                            )}
-
-                            {/* CTA Button Layer - Force Extreme Z-Index */}
-                            {banner.showCta && (
-                              <div className="absolute inset-0 flex items-center justify-center z-30 pointer-events-none">
-                                <button
-                                  className="bg-white text-orange-600 px-6 py-2 rounded-full text-sm font-bold shadow-lg uppercase tracking-wide transform hover:scale-105 transition-transform pointer-events-auto cursor-pointer border-2 border-white/50"
-                                >
-                                  {banner.ctaType === 'saiba_mais' && 'Saiba mais'}
-                                  {banner.ctaType === 'ligar' && 'Ligar'}
-                                  {banner.ctaType === 'whatsapp' && 'WhatsApp'}
-                                  {banner.ctaType === 'chamar_zap' && 'Chamar no zap'}
-                                  {banner.ctaType === 'zap' && 'Zap'}
-                                  {banner.ctaType === 'chama' && 'Chama'}
-                                  {banner.ctaType === 'eu_quero' && 'Eu quero!'}
-                                  {banner.ctaType === 'comprar' && 'Comprar'}
-                                  {banner.ctaType === 'pedir_agora' && 'Pedir agora'}
-                                  {!banner.ctaType && 'Saiba mais'}
-                                </button>
-                              </div>
-                            )}
-
-                            {/* Fallback CTA for default/legacy banners */}
-                            {!banner.showCta && banner.id === 'default-invite' && (
-                              <div className="absolute bottom-3 right-3 z-20 pointer-events-none">
-                                <span className="bg-white text-orange-600 px-4 py-1.5 rounded-full text-xs font-bold shadow-md">
-                                  SAIBA MAIS
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                        );
-                      })}
-
-                      {/* Carousel Indicators (Dots) */}
-                      {banners.length > 1 && (
-                        <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5 z-30">
-                          {banners.map((_, idx) => (
-                            <div
-                              key={idx}
-                              className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${idx === (currentBannerIndex % banners.length) ? 'bg-white w-4' : 'bg-white/50'}`}
-                            />
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  );
-                })()}
+              <div className="relative w-full h-auto aspect-[21/9]">
+                <CampaignBanner
+                  campaigns={settings.campaigns || []}
+                  activeBannerId={settings.activeCampaignBanner}
+                />
               </div>
             </div>
+
 
             {/* Price and Payment Row */}
             <div className="mx-5 mb-4 flex items-center justify-between p-3 bg-gray-50 rounded-xl border border-gray-100">
@@ -1560,40 +1814,30 @@ export const UserApp = () => {
             </div>
 
             {/* Route Details */}
-            <div className="mx-5 mb-4 p-4 bg-white border border-gray-100 rounded-xl">
-              <div className="flex items-start gap-3 mb-3">
-                <div className="flex flex-col items-center">
-                  <div className="w-3 h-3 rounded-full bg-green-500 border-2 border-green-200" />
-                  <div className="w-0.5 h-8 bg-gray-200 my-1" />
-                  <div className="w-3 h-3 rounded-full bg-orange-500 border-2 border-orange-200" />
+            {/* Compact Route Summary (Compressed) */}
+            <div className="mx-5 mb-4 p-3 bg-white border border-gray-100 rounded-xl flex items-center gap-3 shadow-sm">
+              <div className="flex flex-col items-center gap-1">
+                <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                <div className="w-0.5 h-3 bg-gray-200"></div>
+                <div className="w-2 h-2 rounded-full bg-orange-500"></div>
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-gray-400 uppercase w-8">Origem</span>
+                  <p className="text-xs text-gray-700 truncate">
+                    {cleanAddress(currentRide?.origin || routePoints[0]?.address || 'Origem')}
+                  </p>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <div className="mb-4">
-                    <p className="text-sm font-semibold text-gray-900 truncate">
-                      {routePoints[0]?.address?.split(',')[0] || 'Origem'}
-                    </p>
-                    <p className="text-xs text-gray-500 truncate">{routePoints[0]?.address || ''}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm font-semibold text-gray-900 truncate">
-                      {routePoints[routePoints.length - 1]?.address?.split(',')[0] || 'Destino'}
-                    </p>
-                    <p className="text-xs text-gray-500 truncate">{routePoints[routePoints.length - 1]?.address || ''}</p>
-                  </div>
+                <div className="h-px bg-gray-50 my-1"></div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-bold text-gray-400 uppercase w-8">Destino</span>
+                  <p className="text-xs text-gray-900 font-bold truncate">
+                    {cleanAddress(currentRide?.destination || routePoints[routePoints.length - 1]?.address || 'Destino')}
+                  </p>
                 </div>
-                {/* Edit Route Button */}
-                <button
-                  onClick={() => {
-                    setStep('select_dest');
-                    setCurrentRide(null);
-                    setCurrentRideId(null);
-                  }}
-                  className="p-2 hover:bg-gray-100 rounded-lg transition text-gray-400 hover:text-orange-500"
-                >
-                  <Pencil size={18} />
-                </button>
               </div>
             </div>
+
 
             {/* Cancel Button */}
             <div className="px-5">
@@ -1605,9 +1849,9 @@ export const UserApp = () => {
                 Cancelar Busca
               </button>
             </div>
-          </div>
-        </div>
-      </div>
+          </div >
+        </div >
+      </div >
     );
   };
 
@@ -1987,8 +2231,9 @@ export const UserApp = () => {
   const RenderRide = () => {
     // Mock ETA calculation (or use real if available)
     // Assuming 1km ~ 2min in city
-    const distToOrigin = currentRide?.driverLocation && originCoords
-      ? Math.sqrt(Math.pow(currentRide.driverLocation.lat - originCoords.lat, 2) + Math.pow(currentRide.driverLocation.lng - originCoords.lng, 2)) * 111 // rough km
+    const driverLoc = currentRide?.driver?.location;
+    const distToOrigin = driverLoc && originCoords
+      ? Math.sqrt(Math.pow(driverLoc.lat - originCoords.lat, 2) + Math.pow(driverLoc.lng - originCoords.lng, 2)) * 111 // rough km
       : 0;
 
     const etaMinutes = Math.max(1, Math.ceil(distToOrigin * 3)); // 3 mins per km approx
@@ -2004,9 +2249,9 @@ export const UserApp = () => {
             showDriver={!!currentRide && step === 'ride'}
             showRoute={true}
             // When accepted: show driver→pickup route. When in_progress: show origin→destination.
-            origin={rideStatus === 'accepted' ? (currentRide?.driverLocation || MOCK_DRIVER.location) : originCoords}
+            origin={rideStatus === 'accepted' ? (currentRide?.driver?.location || MOCK_DRIVER.location) : originCoords}
             destination={rideStatus === 'accepted' ? originCoords : destCoords}
-            driverLocation={currentRide?.driverLocation || MOCK_DRIVER.location}
+            driverLocation={currentRide?.driver?.location || MOCK_DRIVER.location}
             recenterTrigger={recenterCount}
             // Dynamic padding for the new bottom sheet height
             fitBoundsPadding={{ top: 100, bottom: 400, left: 40, right: 40 }}
@@ -2172,7 +2417,7 @@ export const UserApp = () => {
                     {currentRide?.driver?.plate || "ABC-1234"}
                   </p>
                   <p className="text-sm text-gray-500 font-medium">
-                    {currentRide?.driver?.vehicle || "Honda CG 160"} • {currentRide?.driver?.color || "Vermelha"}
+                    {currentRide?.driver?.vehicle || "Honda CG 160"} • {currentRide?.driver?.plate || "ABC-1234"}
                   </p>
                 </div>
               </div>
@@ -2349,26 +2594,52 @@ export const UserApp = () => {
     </div>
   );
 
+  /* --- Uber-style Schedule Picker --- */
+  /* --- Uber-style Schedule Picker moved to external component --- */
+
   const RenderSelectDest = () => (
-    <div className="h-full bg-white flex flex-col font-sans">
-      {/* Header */}
-      {/* Header */}
-      <div className="p-4 pt-safe-24 flex items-center gap-4 bg-white sticky top-0 z-10 shadow-sm border-b border-gray-50">
-        <button onClick={() => setStep('home')} className="p-2 hover:bg-gray-100 rounded-full transition-colors -ml-2">
-          <ArrowLeft size={24} className="text-gray-700" />
-        </button>
-        <h2 className="text-xl font-bold text-gray-800 flex-1 text-center pr-8">Escolha seu destino</h2>
-      </div>
+    <div className="h-full bg-white flex flex-col font-sans relative">
+      {/* --- FIXED HEADER (UBER STYLE) --- */}
+      <div className="bg-white sticky top-0 z-50 shadow-md border-b border-gray-100 pb-4 rounded-b-3xl">
 
-      <div className="flex-1 overflow-y-auto">
-        <div className="px-6 pb-4">
+        {/* Top Bar: Back & Title */}
+        <div className="p-4 pt-safe-24 flex items-center gap-4">
+          <button onClick={() => setStep('home')} className="p-2 hover:bg-gray-100 rounded-full transition-colors -ml-2">
+            <ArrowLeft size={24} className="text-gray-700" />
+          </button>
+          <h2 className="text-xl font-bold text-gray-800 flex-1 text-center pr-8">Planeje sua viagem</h2>
+        </div>
 
-          {/* Timeline Container */}
-          <div className="relative">
-            {/* Connecting Line (drawn behind) */}
-            <div className="absolute left-[15px] top-[24px] bottom-[30px] w-[2px] bg-gray-300 z-0"></div>
+        {/* Action Chips: Schedule & Passenger */}
+        <div className="flex px-5 gap-3 mb-5 overflow-x-auto no-scrollbar">
+          <button
+            onClick={() => setStep('schedule_picker')}
+            className={`flex items-center gap-2 px-4 py-2.5 rounded-full font-bold text-sm transition-all whitespace-nowrap border
+              ${!rideDate ? 'bg-orange-500 border-orange-500 text-white shadow-lg shadow-orange-200' : 'bg-gray-50 border-orange-500 text-orange-700 hover:bg-orange-50'}`}
+          >
+            <Clock size={16} />
+            {rideDate ? `Agendado ${rideDate.getHours()}:${rideDate.getMinutes().toString().padStart(2, '0')}` : 'Ir agora'}
+            <ChevronDown size={14} />
+          </button>
 
-            <div className="space-y-4">
+          {/* REMOVED "For Others" Button as requested */}
+        </div>
+
+        {/* Timeline Inputs (Fixed) */}
+        <div className="px-5 relative">
+
+          {/* UNIFIED CONTAINER (Uber Style: White Grouped Box) */}
+          {/* REMOVED overflow-hidden to fix Z-Index issue with Dropdown */}
+          <div className="bg-white rounded-xl relative z-50 shadow-[0_2px_12px_rgba(0,0,0,0.08)] border border-gray-100">
+
+            {/* Timeline Connecting Line (Absolute within container) */}
+            {/* Icon Column is 44px wide. Center is 22px. */}
+            {/* Padding-Left of icon column is 0, but content is centered. */}
+            {/* Icons have `ml-1` (4px). So center is shifted. */}
+            {/* Let's try 24px left. Top 35px bottom 35px to not poke out? */}
+            <div className="absolute left-[24px] top-[30px] bottom-[30px] w-[2px] bg-black z-0"></div>
+
+            <div className="relative z-10">
               <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
                 <SortableContext items={routePoints.map(p => p.id)} strategy={verticalListSortingStrategy}>
                   {routePoints.map((point, index) => {
@@ -2402,7 +2673,6 @@ export const UserApp = () => {
                           if (isFavorite) {
                             alert('Este endereço já está nos seus favoritos!');
                           } else {
-                            // Add new favorite
                             setEditingFavoriteId('new');
                             setEditingFavoriteLabel('Novo Favorito');
                             setEditingFavoriteAddress(point.address);
@@ -2418,53 +2688,61 @@ export const UserApp = () => {
             </div>
           </div>
         </div>
+      </div>
 
-        {/* --- Favorites Link Section --- */}
-        <div className="border-t border-gray-100 mt-2">
-          <button
-            onClick={() => setStep('favorites_list')}
-            className="w-full p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors group"
-          >
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center group-hover:bg-orange-200 transition-colors">
-                <Star size={20} fill="currentColor" />
-              </div>
-              <div className="text-left">
-                <h3 className="font-bold text-gray-800">Meus Favoritos</h3>
-                <p className="text-xs text-gray-500">Gerenciar todos os endereços salvos</p>
-              </div>
+      {/* --- SCROLLABLE CONTENT (Saved Lists) --- */}
+      <div className="flex-1 overflow-y-auto bg-gray-50 pt-2">
+        {/* Replaced Content Start */}
+        {/* Recent/Favorites List */}
+        <div className="border-b border-gray-100 bg-white">
+          {/* Quick Access Horizontal */}
+          <div className="px-5 py-4 pb-2">
+            <h3 className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Locais Salvos</h3>
+            <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+              {favorites.slice(0, 10).map(fav => (
+                <button
+                  key={fav.id}
+                  onClick={() => {
+                    const destIndex = routePoints.length - 1;
+                    handlePointUpdate(destIndex, fav.address, fav.coords);
+                  }}
+                  className="flex items-center gap-2 px-4 py-3 bg-gray-50 rounded-xl border border-gray-100 whitespace-nowrap hover:bg-orange-50 hover:border-orange-200 hover:text-orange-700 transition-colors"
+                >
+                  {fav.type === 'home' ? <Home size={16} /> : fav.type === 'work' ? <Briefcase size={16} /> : <Star size={16} />}
+                  <span className="font-bold text-gray-700">{fav.label}</span>
+                </button>
+              ))}
             </div>
-            <ChevronRight size={20} className="text-gray-400 group-hover:text-orange-500" />
-          </button>
-
-          {/* Quick Access to Home/Work if available */}
-          <div className="px-4 pb-4 flex gap-3 overflow-x-auto no-scrollbar">
-            {favorites.slice(0, 10).map(fav => (
-              <button
-                key={fav.id}
-                onClick={() => {
-                  // Force update to DESTINATION (last point)
-                  const destIndex = routePoints.length - 1;
-                  handlePointUpdate(destIndex, fav.address, fav.coords);
-                }}
-                className="flex items-center gap-2 px-3 py-2 bg-gray-50 rounded-full border border-gray-100 whitespace-nowrap hover:bg-orange-50 hover:border-orange-200 hover:text-orange-700 transition-colors"
-              >
-                {fav.type === 'home' ? <Home size={14} /> : fav.type === 'work' ? <Briefcase size={14} /> : <Star size={14} />}
-                <span className="text-sm font-medium">{fav.label}</span>
-              </button>
-            ))}
           </div>
-        </div>
 
+          {/* Favorites Vertical List */}
+          <div className="border-t border-gray-100 mt-2">
+            <button
+              onClick={() => setStep('favorites_list')}
+              className="w-full p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center group-hover:bg-orange-200 transition-colors">
+                  <Star size={20} fill="currentColor" />
+                </div>
+                <div className="text-left">
+                  <h3 className="font-bold text-gray-800">Meus Favoritos</h3>
+                  <p className="text-xs text-gray-500">Gerenciar todos os endereços salvos</p>
+                </div>
+              </div>
+              <ChevronRight size={20} className="text-gray-400 group-hover:text-orange-500" />
+            </button>
+          </div>
 
-        {/* --- Choose on Map --- */}
-        <div className="border-t border-gray-100">
-          <div
-            onClick={() => openMapPicker(routePoints.length - 1)}
-            className="p-4 flex items-center gap-4 cursor-pointer hover:bg-gray-50 text-gray-700 font-bold"
-          >
-            <MapPin size={24} className="text-gray-600" />
-            <span>Escolher no mapa</span>
+          {/* Choose on Map */}
+          <div className="border-t border-gray-100">
+            <div
+              onClick={() => openMapPicker(routePoints.length - 1)}
+              className="p-4 flex items-center gap-4 cursor-pointer hover:bg-gray-50 text-gray-700 font-bold"
+            >
+              <MapPin size={24} className="text-gray-600" />
+              <span>Escolher no mapa</span>
+            </div>
           </div>
         </div>
       </div>
@@ -2713,6 +2991,16 @@ export const UserApp = () => {
 
       {/* CORREÇÃO CRÍTICA: Chamar como função {RenderHome()} e não componente <RenderHome/> */}
       {(step === 'home' || step === 'map_picker') && RenderHome()}
+      {step === 'schedule_picker' && (
+        <SchedulePicker
+          onBack={() => setStep('select_dest')}
+          onConfirm={(date) => {
+            setRideDate(date);
+            setStep('confirm');
+            handleConfirmRoute(true);
+          }}
+        />
+      )}
       {step === 'select_dest' && RenderSelectDest()}
       {(step === 'confirm' || step === 'searching') && RenderConfirm()}
       {step === 'ride' && RenderRide()}
@@ -2924,6 +3212,8 @@ export const UserApp = () => {
           onLogout={() => setShowLogoutConfirm(true)}
         />
       )}
+
+      {step === 'notifications' && <RenderNotifications />}
 
       {step === 'profile' && <ProfileScreen
         user={currentUser!}

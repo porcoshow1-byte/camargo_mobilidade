@@ -27,7 +27,7 @@ import { APP_CONFIG } from '../constants';
 // Firestore imports removed — using Supabase Realtime
 import { uploadFile } from '../services/storage';
 import { getSettings, saveSettings, subscribeToSettings, SystemSettings, DEFAULT_SETTINGS } from '../services/settings';
-import { startRideSimulation, stopRideSimulation } from '../services/simulation';
+
 import { getNotifications, sendNotification } from '../services/notifications';
 import { sendEmail, testSMTPConnection } from '../services/email';
 import { formatCNPJ } from '../utils/formatters';
@@ -51,6 +51,118 @@ const SimpleTooltip = ({ content, children }: { content: string, children?: Reac
     </div>
   </div>
 );
+
+
+
+// --- Subcomponent: Settings Tab ---
+const SettingsTab = () => {
+  const [settings, setSettings] = useState<SystemSettings>(DEFAULT_SETTINGS);
+  const [loading, setLoading] = useState(false);
+  const { addToast } = useToast();
+
+  useEffect(() => {
+    getSettings().then(setSettings);
+  }, []);
+
+  const handleSave = async () => {
+    setLoading(true);
+    try {
+      await saveSettings(settings);
+      addToast('Configurações salvas com sucesso!', 'success');
+    } catch (error) {
+      console.error(error);
+      addToast('Erro ao salvar configurações.', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-6 animate-fade-in p-1">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        {/* Card: Wait Time Settings */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex items-center gap-2 mb-4 pb-2 border-b border-gray-100">
+            <Clock className="text-orange-500" size={20} />
+            <h3 className="font-bold text-gray-800">Tempo de Espera e Paradas</h3>
+          </div>
+
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Tempo de Tolerância (Minutos)
+              </label>
+              <div className="relative">
+                <Input
+                  type="number"
+                  value={settings.waitTimeLimit}
+                  onChange={e => setSettings({ ...settings, waitTimeLimit: Number(e.target.value) })}
+                  className="pl-10"
+                />
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                  <Clock size={16} />
+                </div>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                Tempo máximo que o motorista aguarda em cada parada sem cobrança extra.
+              </p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Taxa por Minuto Excedente (R$)
+              </label>
+              <div className="relative">
+                <Input
+                  type="number"
+                  step="0.10"
+                  value={settings.waitTimeFee}
+                  onChange={e => setSettings({ ...settings, waitTimeFee: Number(e.target.value) })}
+                  className="pl-10"
+                />
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                  <DollarSign size={16} />
+                </div>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">
+                Valor cobrado por cada minuto adicional após a tolerância.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Card: General Info (Read Only or Editable) */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+          <div className="flex items-center gap-2 mb-4 pb-2 border-b border-gray-100">
+            <Building2 className="text-blue-500" size={20} />
+            <h3 className="font-bold text-gray-800">Informações da Empresa</h3>
+          </div>
+          <div className="space-y-4 opacity-75">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Nome da Empresa</label>
+              <Input value={settings.companyName} readOnly className="bg-gray-50" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Email de Suporte</label>
+              <Input value={settings.supportEmail} readOnly className="bg-gray-50" />
+            </div>
+          </div>
+          <div className="mt-4 p-3 bg-blue-50 text-blue-800 text-xs rounded-lg">
+            Para alterar dados da empresa, contate o suporte técnico.
+          </div>
+        </div>
+      </div>
+
+      {/* Save Button */}
+      <div className="flex justify-end pt-4">
+        <Button onClick={handleSave} isLoading={loading} className="px-8" variant="primary">
+          <CheckCircle className="mr-2" size={18} /> Salvar Alterações
+        </Button>
+      </div>
+    </div>
+  );
+};
 
 // --- Subcomponent: Driver Details Modal ---
 const DriverDetailModal = ({ driver: initialDriver, onClose, onRefresh, rides = [] }: { driver: Driver, onClose: () => void, onRefresh?: () => void, rides?: any[] }) => {
@@ -476,6 +588,12 @@ const UserDetailModal = ({ user, onClose, rides }: { user: User; onClose: () => 
           <button onClick={() => setActiveTab('info')} className={`pb-3 pt-4 px-2 text-sm font-bold border-b-2 transition ${activeTab === 'info' ? 'border-orange-500 text-orange-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Dados Pessoais</button>
           <button onClick={() => setActiveTab('wallet')} className={`pb-3 pt-4 px-2 text-sm font-bold border-b-2 transition ${activeTab === 'wallet' ? 'border-orange-500 text-orange-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Carteira Digital</button>
           <button onClick={() => setActiveTab('history')} className={`pb-3 pt-4 px-2 text-sm font-bold border-b-2 transition ${activeTab === 'history' ? 'border-orange-500 text-orange-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Histórico de Corridas</button>
+          <button
+            className={`pb-3 pt-4 px-2 text-sm font-bold border-b-2 transition ${activeTab === 'settings' ? 'border-orange-500 text-orange-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+            onClick={() => setActiveTab('settings')}
+          >
+            Ajustes
+          </button>
         </div>
 
         {/* Content */}
@@ -4479,6 +4597,9 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
         </div>
       </div >
 
+      {activeTab === 'settings' && <SettingsTab />}
+      {activeTab === 'campaigns' && <CampaignsTab />}
+
       {showCompanyModal && <CompanyFormModal company={editingCompany} onClose={() => setShowCompanyModal(false)} onSave={handleSaveCompany} onDelete={handleDeleteCompany} onNotify={handleNotify} />}
       {viewDriver && <DriverDetailModal driver={viewDriver} rides={safeData.recentRides} onClose={() => setViewDriver(null)} onRefresh={loadData} />}
       {viewUser && <UserDetailModal user={viewUser} rides={safeData.recentRides} onClose={() => setViewUser(null)} />}
@@ -4978,7 +5099,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                 </Button>
               </div>
             </div>
-          </div>
+          </div >
         )
       }
       {
@@ -4993,18 +5114,20 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
         )
       }
       {showAddCompanyModal && <AddCompanyModal onClose={() => setShowAddCompanyModal(false)} />}
-      {confirmModal.isOpen && (
-        <ConfirmationModal
-          isOpen={confirmModal.isOpen}
-          title={confirmModal.title}
-          message={confirmModal.message}
-          onConfirm={confirmModal.onConfirm}
-          onCancel={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
-          variant={confirmModal.variant}
-          confirmText={confirmModal.title.includes('Erro') || confirmModal.title.includes('Inválidos') || confirmModal.title.includes('Sucesso') ? 'OK' : 'Confirmar'}
-          singleButton={confirmModal.singleButton}
-        />
-      )}
+      {
+        confirmModal.isOpen && (
+          <ConfirmationModal
+            isOpen={confirmModal.isOpen}
+            title={confirmModal.title}
+            message={confirmModal.message}
+            onConfirm={confirmModal.onConfirm}
+            onCancel={() => setConfirmModal(prev => ({ ...prev, isOpen: false }))}
+            variant={confirmModal.variant}
+            confirmText={confirmModal.title.includes('Erro') || confirmModal.title.includes('Inválidos') || confirmModal.title.includes('Sucesso') ? 'OK' : 'Confirmar'}
+            singleButton={confirmModal.singleButton}
+          />
+        )
+      }
     </div >
   );
 

@@ -949,7 +949,7 @@ export const DriverApp = () => {
       {/* Modals (Profile, History, Chat, Payment) */}
       {showProfile && <ProfileScreen user={currentDriver} isDriver={true} onBack={() => setShowProfile(false)} onSave={(u) => { setCurrentDriver(u); setShowProfile(false); }} />}
 
-      {showChat && activeRide && <ChatModal rideId={activeRide.id} currentUserId={currentDriver.id} onClose={() => setShowChat(false)} otherUserName={activeRide.passenger.name} />}
+      {showChat && activeRide && <ChatModal rideId={activeRide.id} currentUserId={currentDriver.id} onClose={() => setShowChat(false)} otherUserName={activeRide.passenger?.name || "Passageiro"} />}
       {showHistory && <RideHistoryModal rides={historyRides} earnings={earnings} onClose={() => setShowHistory(false)} />}
       {showNotifications && <NotificationsScreen onBack={() => setShowNotifications(false)} />}
 

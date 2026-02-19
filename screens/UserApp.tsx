@@ -2227,8 +2227,11 @@ export const UserApp = () => {
       ? Math.sqrt(Math.pow(driverLoc.lat - originCoords.lat, 2) + Math.pow(driverLoc.lng - originCoords.lng, 2)) * 111 // rough km
       : 0;
 
-    const etaMinutes = Math.max(1, Math.ceil(distToOrigin * 3)); // 3 mins per km approx
-    const statusText = rideStatus === 'accepted' ? 'Mototaxista a caminho' : rideStatus === 'in_progress' ? 'Em viagem' : 'Aguardando';
+    const etaMinutes = Math.max(1, Math.ceil(distToOrigin * 3));
+    const statusText = rideStatus === 'accepted' ? 'Mototaxista a caminho'
+      : rideStatus === 'in_progress' ? 'Em viagem para o destino'
+        : rideStatus === 'completed' ? 'Viagem finalizada'
+          : 'Aguardando';
 
     return (
       <>
@@ -2299,12 +2302,12 @@ export const UserApp = () => {
                   />
                   <div className="absolute -bottom-1 -right-1 bg-white rounded-full px-1.5 py-0.5 shadow border border-gray-100 flex items-center gap-0.5">
                     <Star size={10} className="text-yellow-400 fill-yellow-400" />
-                    <span className="text-[10px] font-bold text-gray-700">5.0</span>
+                    <span className="text-[10px] font-bold text-gray-700">{currentRide?.driver?.rating || 5.0}</span>
                   </div>
                 </div>
                 <div>
                   <h3 className="font-black text-xl text-gray-900 leading-tight">{currentRide?.driver?.name || "Motorista"}</h3>
-                  <p className="text-sm text-gray-500 font-medium">{currentRide?.driver?.totalRides || "500+"} corridas</p>
+                  <p className="text-sm text-gray-500 font-medium">{currentRide?.driver?.vehicle || "Veículo"}</p>
                 </div>
               </div>
 
@@ -2398,24 +2401,24 @@ export const UserApp = () => {
             </div>
 
             {/* Vehicle Info Card */}
-            <div className="bg-gray-50 rounded-2xl p-4 flex items-center justify-between border border-gray-100 mb-6">
+            <div className="bg-gradient-to-r from-gray-50 to-orange-50 rounded-2xl p-4 flex items-center justify-between border border-orange-100 mb-6">
               <div className="flex items-center gap-4">
-                <div className="text-gray-400">
-                  <FaMotorcycle size={32} />
+                <div className="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center">
+                  <FaMotorcycle size={24} className="text-orange-600" />
                 </div>
                 <div>
-                  <p className="text-2xl font-mono font-bold text-gray-800 tracking-wider leading-none mb-1">
-                    {currentRide?.driver?.plate || "ABC-1234"}
+                  <p className="text-sm text-gray-500 font-medium mb-0.5">
+                    {currentRide?.driver?.vehicle || "Moto"}
                   </p>
-                  <p className="text-sm text-gray-500 font-medium">
-                    {currentRide?.driver?.vehicle || "Honda CG 160"} • {currentRide?.driver?.plate || "ABC-1234"}
+                  <p className="text-xl font-black text-gray-800 tracking-wider leading-none font-mono">
+                    {currentRide?.driver?.plate || "---"}
                   </p>
                 </div>
               </div>
               {currentRide?.securityCode && (
-                <div className="text-right">
-                  <p className="text-[10px] font-bold text-gray-400 uppercase">PIN</p>
-                  <p className="text-xl font-bold text-orange-600">{currentRide.securityCode}</p>
+                <div className="text-right bg-white rounded-xl px-4 py-2 border border-orange-200 shadow-sm">
+                  <p className="text-[10px] font-bold text-orange-500 uppercase">Código PIN</p>
+                  <p className="text-2xl font-black text-orange-600 tracking-widest">{currentRide.securityCode}</p>
                 </div>
               )}
             </div>

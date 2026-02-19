@@ -688,10 +688,10 @@ export const DriverApp = () => {
                   )}
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg text-gray-900 dark:text-white">{activeRide.passenger.name}</h3>
+                  <h3 className="font-bold text-lg text-gray-900 dark:text-white">{activeRide.passenger?.name || 'Passageiro'}</h3>
                   <div className="flex items-center gap-2">
                     <Badge color="blue" size="sm">Passageiro</Badge>
-                    <span className="text-xs text-gray-400">4.9 ★</span>
+                    <span className="text-xs text-gray-400">{activeRide.passenger?.rating || 4.9} ★</span>
                   </div>
                 </div>
               </div>

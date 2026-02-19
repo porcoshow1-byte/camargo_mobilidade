@@ -680,8 +680,12 @@ export const DriverApp = () => {
           <div className="absolute inset-x-0 bottom-0 z-40 bg-white dark:bg-gray-900 rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.3)] p-5 pb-safe-4 border-t border-gray-200 dark:border-gray-800 animate-slide-up">
             <div className="flex justify-between items-center mb-6">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center">
-                  <User size={24} className="text-gray-600 dark:text-gray-300" />
+                <div className="w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center overflow-hidden">
+                  {activeRide.passenger?.avatar ? (
+                    <img src={activeRide.passenger.avatar} alt={activeRide.passenger.name} className="w-full h-full object-cover" />
+                  ) : (
+                    <User size={24} className="text-gray-600 dark:text-gray-300" />
+                  )}
                 </div>
                 <div>
                   <h3 className="font-bold text-lg text-gray-900 dark:text-white">{activeRide.passenger.name}</h3>

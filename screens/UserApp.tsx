@@ -514,57 +514,9 @@ export const UserApp = () => {
   const [currentRideId, setCurrentRideId] = useState<string | null>(null);
   const [currentRide, setCurrentRide] = useState<RideRequest | null>(null);
 
-  // Subscribe to Ride Updates (Real-time Status & Location)
-  useEffect(() => {
-    let unsubscribe: any;
-    if (currentRideId) {
-
-      // Subscribe to Supabase updates
-      unsubscribe = subscribeToRide(currentRideId, (updatedRide) => {
-        console.log('UserApp: Ride Updated', updatedRide);
-        setCurrentRide(updatedRide);
-        setRideStatus(updatedRide.status);
-
-        // Auto-transition to Ride Screen when accepted/in_progress
-        if ((updatedRide.status === 'accepted' || updatedRide.status === 'in_progress') && step !== 'ride') {
-          setStep('ride');
-        }
-      });
-    } else {
-      setCurrentRide(null);
-      setRideStatus('');
-    }
-
-    // Polling Fallback: Force check every 4 seconds if searching (to fix "stuck" issue)
-    let pollingInterval: any;
-    if (currentRideId && (step === 'searching' || step === 'confirm')) {
-      pollingInterval = setInterval(async () => {
-        try {
-          // Re-fetch ride data
-          const { supabase } = await import('../services/supabase');
-          if (supabase) {
-            const { data } = await supabase.from('rides').select('*').eq('id', currentRideId).single();
-            if (data && data.status !== rideStatus) {
-              console.log("Polling Sync: Status changed to", data.status);
-              const { mapToAppRide } = await import('../services/ride');
-              const updated = mapToAppRide(data);
-              setCurrentRide(updated);
-              setRideStatus(updated.status);
-              // Force step transition
-              if ((updated.status === 'accepted' || updated.status === 'in_progress') && step === 'searching') {
-                setStep('ride');
-              }
-            }
-          }
-        } catch (e) { console.warn("Polling error", e); }
-      }, 4000);
-    }
-
-    return () => {
-      if (unsubscribe) unsubscribe();
-      if (pollingInterval) clearInterval(pollingInterval);
-    };
-  }, [currentRideId, step, rideStatus]);
+  // NOTE: Ride subscription handled by the single Effect below (search for "Referência para rastrear")
+  // A duplicate subscription was removed here to fix a race condition that prevented
+  // the passenger from seeing ride acceptance (channel recycling on step/status change).
 
 
   // Chat Subscription for Passenger (Moved here to access currentRide)
@@ -1004,51 +956,84 @@ export const UserApp = () => {
   const prevRideStatusRef = useRef<string | null>(null);
 
   useEffect(() => {
-    if (currentRideId) {
-      const unsubscribe = subscribeToRide(currentRideId, (updatedRide) => {
-        const prevStatus = prevRideStatusRef.current;
-        const newStatus = updatedRide.status;
-
-        setCurrentRide(updatedRide);
-
-        // Tocar sons e mostrar notificações baseado na mudança de status
-        if (prevStatus !== newStatus) {
-          if (newStatus === 'accepted' && prevStatus !== 'accepted') {
-            playSound('rideAccepted');
-            showNotification('rideAccepted', {
-              driverName: updatedRide.driver?.name
-            });
-            setStep('ride');
-            setRideStatus('Seu piloto está a caminho!');
-          } else if (newStatus === 'in_progress' && prevStatus !== 'in_progress') {
-            playSound('rideStarted');
-            showNotification('rideStarted');
-            setRideStatus('Em viagem para o destino');
-          } else if (newStatus === 'completed') {
-            playSound('rideCompleted');
-            showNotification('rideCompleted');
-            setStep('rating');
-            setCurrentRideId(null);
-            setShowChat(false);
-            setShowRideDetails(false);
-          } else if (newStatus === 'cancelled') {
-            playSound('error');
-            showNotification('rideCancelled');
-            setStep('home');
-            setCurrentRideId(null);
-            setShowChat(false);
-            setShowRideDetails(false);
-            // Clear route from map
-            setRouteInfo(null);
-            setDestCoords(null);
-            setDestCoords(null);
-            showToast('A corrida foi cancelada.', 'info');
-          }
-          prevRideStatusRef.current = newStatus;
-        }
-      });
-      return () => unsubscribe();
+    if (!currentRideId) {
+      setCurrentRide(null);
+      setRideStatus('');
+      prevRideStatusRef.current = null;
+      return;
     }
+
+    // Single Realtime Subscription (source of truth)
+    const unsubscribe = subscribeToRide(currentRideId, (updatedRide) => {
+      const prevStatus = prevRideStatusRef.current;
+      const newStatus = updatedRide.status;
+
+      setCurrentRide(updatedRide);
+      setRideStatus(newStatus);
+
+      // Tocar sons e mostrar notificações baseado na mudança de status
+      if (prevStatus !== newStatus) {
+        if (newStatus === 'accepted' && prevStatus !== 'accepted') {
+          playSound('rideAccepted');
+          showNotification('rideAccepted', {
+            driverName: updatedRide.driver?.name
+          });
+          setStep('ride');
+          setRideStatus('Seu piloto está a caminho!');
+        } else if (newStatus === 'in_progress' && prevStatus !== 'in_progress') {
+          playSound('rideStarted');
+          showNotification('rideStarted');
+          setRideStatus('Em viagem para o destino');
+        } else if (newStatus === 'completed') {
+          playSound('rideCompleted');
+          showNotification('rideCompleted');
+          setStep('rating');
+          setCurrentRideId(null);
+          setShowChat(false);
+          setShowRideDetails(false);
+        } else if (newStatus === 'cancelled') {
+          playSound('error');
+          showNotification('rideCancelled');
+          setStep('home');
+          setCurrentRideId(null);
+          setShowChat(false);
+          setShowRideDetails(false);
+          setRouteInfo(null);
+          setDestCoords(null);
+          showToast('A corrida foi cancelada.', 'info');
+        }
+        prevRideStatusRef.current = newStatus;
+      }
+    });
+
+    // Polling Fallback: Force check every 4s while searching (resilience)
+    const pollingInterval = setInterval(async () => {
+      try {
+        const { supabase } = await import('../services/supabase');
+        if (supabase) {
+          const { data } = await supabase.from('rides').select('*').eq('id', currentRideId).single();
+          if (data && data.status !== prevRideStatusRef.current) {
+            console.log('Polling Sync: Status changed to', data.status);
+            const { mapToAppRide } = await import('../services/ride');
+            const updated = mapToAppRide(data);
+            // Re-trigger the same logic via state update
+            setCurrentRide(updated);
+            const newStatus = updated.status;
+            if (prevRideStatusRef.current !== newStatus) {
+              if ((newStatus === 'accepted' || newStatus === 'in_progress')) {
+                setStep('ride');
+              }
+              prevRideStatusRef.current = newStatus;
+            }
+          }
+        }
+      } catch (e) { console.warn('Polling error', e); }
+    }, 4000);
+
+    return () => {
+      unsubscribe();
+      clearInterval(pollingInterval);
+    };
   }, [currentRideId]);
 
   const handleDragSort = () => {

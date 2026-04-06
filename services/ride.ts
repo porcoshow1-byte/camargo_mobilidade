@@ -3,7 +3,7 @@ import { RideRequest, ServiceType, User, Driver, Coords, PaymentMethod } from '.
 import { triggerN8NWebhook } from './n8n';
 
 export const RIDES_TABLE = 'rides';
-const MOCK_STORAGE_KEY = 'motoja_mock_rides';
+const MOCK_STORAGE_KEY = 'mototaximillenio_mock_rides';
 
 // Helpers para Mock
 const getMockRides = (): RideRequest[] => {

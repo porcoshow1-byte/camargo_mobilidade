@@ -82,21 +82,21 @@ export const ToastItem: React.FC<{ toast: Toast; onRemove: () => void; key?: str
     const icons = {
         success: <CheckCircle className="w-5 h-5 text-green-500" />,
         error: <AlertOctagon className="w-5 h-5 text-red-500" />,
-        warning: <AlertTriangle className="w-5 h-5 text-orange-500" />,
+        warning: <AlertTriangle className="w-5 h-5 text-primary-500" />,
         info: <Info className="w-5 h-5 text-blue-500" />,
     };
 
     const borderColors = {
         success: 'border-green-100',
         error: 'border-red-100',
-        warning: 'border-orange-100',
+        warning: 'border-primary-100',
         info: 'border-blue-100',
     };
 
     const bgColors = {
         success: 'bg-green-50',
         error: 'bg-red-50',
-        warning: 'bg-orange-50',
+        warning: 'bg-primary-50',
         info: 'bg-blue-50',
     };
 

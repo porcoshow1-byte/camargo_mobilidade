@@ -1,6 +1,5 @@
-
 import React, { useState, useEffect, useRef } from 'react';
-import { Shield, Power, DollarSign, User, MessageSquare, Phone, History, Calendar, X, Settings, Loader2, AlertCircle, RefreshCw, Lock, ArrowRight, Navigation, MapPin, LogOut, Star, Sun, Moon, ThumbsUp, Flag, LifeBuoy, Send, CheckCircle, Trash2, Image as ImageIcon, ChevronRight, Bell, Menu, Zap } from 'lucide-react';
+import { Shield, Power, DollarSign, User, MessageSquare, Phone, History, Calendar, X, Settings, Loader2, AlertCircle, RefreshCw, Lock, ArrowRight, Navigation, MapPin, LogOut, Star, Sun, Moon, ThumbsUp, Flag, LifeBuoy, Send, CheckCircle, Trash2, Image as ImageIcon, ChevronRight, Bell, Menu, Zap, Package } from 'lucide-react';
 import { Button, Badge, Card, Input } from '../components/UI';
 import { SimulatedMap } from '../components/SimulatedMap';
 import { ChatModal } from '../components/ChatModal';
@@ -72,7 +71,31 @@ export const DriverApp = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showNavOptions, setShowNavOptions] = useState(false);
   const [showActiveRideDetails, setShowActiveRideDetails] = useState(false);
+
+  // Delivery Mode State
+  // (State already declared above, removing duplicates if any)
+  const [startCode, setStartCode] = useState('');
+  const [isVerifyingCode, setIsVerifyingCode] = useState(false);
+  const [hasArrivedAtPickup, setHasArrivedAtPickup] = useState(false); // Controls visibility of code/details
+
+  // Reset arrival state when ride changes
+  useEffect(() => {
+    setHasArrivedAtPickup(false);
+  }, [activeRide?.id]);
   const [isNavigating, setIsNavigating] = useState(false);
+
+  // Helper: Calculate distance between two coords (Haversine)
+  const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+    const R = 6371; // Radius of the earth in km
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c; // Distance in km
+  };
 
   // Controle de Animação do Modal de Corrida
   const [requestAnimation, setRequestAnimation] = useState('animate-slide-in-bottom');
@@ -210,7 +233,16 @@ export const DriverApp = () => {
           setActiveRide(null);
           alert("A corrida foi cancelada pelo passageiro.");
         } else {
-          setActiveRide(prev => prev ? { ...prev, ...updatedRide } : null);
+          setActiveRide(prev => {
+            if (!prev) return { ...updatedRide };
+            // Merge with previous state to preserve passenger/driver info if missing in partial update
+            return {
+              ...prev,
+              ...updatedRide,
+              passenger: updatedRide.passenger || prev.passenger,
+              driver: updatedRide.driver || prev.driver
+            };
+          });
         }
       });
     }
@@ -355,6 +387,20 @@ export const DriverApp = () => {
     }
   };
 
+  const handleStartDelivery = async () => {
+    if (!activeRide || !activeRide.securityCode) return;
+
+    if (startCode !== activeRide.securityCode) {
+      alert("Código incorreto. Verifique com quem está enviando.");
+      return;
+    }
+
+    setIsVerifyingCode(true);
+    await startRide(activeRide.id);
+    setIsVerifyingCode(false);
+    setIsNavigating(true);
+  };
+
   const [showRatingModal, setShowRatingModal] = useState(false);
   const [paymentProblem, setPaymentProblem] = useState<'none' | 'partial' | 'unpaid'>('none');
   const [partialAmount, setPartialAmount] = useState('');
@@ -402,7 +448,7 @@ export const DriverApp = () => {
       <div className="absolute inset-0 z-0">
         {!isLocationReady && !activeRide ? (
           <div className={`absolute inset-0 flex flex-col items-center justify-center ${darkMode ? 'bg-gray-900' : 'bg-gray-100'}`}>
-            <Loader2 size={48} className="text-orange-500 animate-spin mb-4" />
+            <Loader2 size={48} className="text-primary-500 animate-spin mb-4" />
             <p className="text-gray-500 font-medium">Buscando GPS...</p>
           </div>
         ) : (
@@ -433,10 +479,10 @@ export const DriverApp = () => {
               <div className="relative">
                 <img
                   src={currentDriver?.avatar || "https://ui-avatars.com/api/?background=000&color=fff&name=Motorista"}
-                  className="w-10 h-10 rounded-full border-2 border-orange-500 object-cover"
+                  className="w-10 h-10 rounded-full border-2 border-primary-500 object-cover"
                   alt="Avatar"
                 />
-                <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-gray-900 ${isOnline ? (activeRide ? 'bg-orange-500' : 'bg-green-500') : 'bg-gray-500'
+                <div className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-gray-900 ${isOnline ? (activeRide ? 'bg-primary-500' : 'bg-green-500') : 'bg-gray-500'
                   }`}></div>
               </div>
               <div className="flex flex-col">
@@ -509,8 +555,8 @@ export const DriverApp = () => {
           <div className="absolute bottom-10 left-0 right-0 z-10 flex flex-col items-center pointer-events-none">
             <div className="bg-gray-900/90 backdrop-blur-xl px-6 py-3 rounded-full shadow-2xl border border-gray-700 flex items-center gap-3 animate-slide-up">
               <span className="relative flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-orange-500"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-primary-500"></span>
               </span>
               <span className="text-white font-medium text-sm">Procurando passageiros...</span>
             </div>
@@ -530,7 +576,7 @@ export const DriverApp = () => {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-1.5 flex items-center gap-1">
-                  <MapPin size={10} className="text-orange-500" /> Em 200 metros
+                  <MapPin size={10} className="text-primary-500" /> Em 200 metros
                 </p>
                 <h2 className="text-2xl font-black leading-none truncate">
                   Siga o traçado
@@ -579,13 +625,46 @@ export const DriverApp = () => {
 
               <div className="h-16 w-px bg-gray-100 dark:bg-gray-800 mx-4"></div>
 
-              <button
-                onClick={() => setIsNavigating(false)}
-                className="w-16 h-16 bg-red-50 dark:bg-red-900/10 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-full flex flex-col items-center justify-center gap-1 transition-colors group"
-              >
-                <X size={26} className="text-red-500 group-hover:scale-110 transition-transform" />
-                <span className="text-[10px] uppercase font-bold text-red-400">Sair</span>
-              </button>
+              {/* Delivery Arrival Logic inside Navigation */}
+              {activeRide && activeRide.status === 'accepted' &&
+                (activeRide.serviceType === 'DELIVERY_MOTO' || activeRide.serviceType === 'DELIVERY_BIKE') &&
+                !hasArrivedAtPickup ? (
+                (() => {
+                  // Calculate distance to origin (pickup)
+                  const dist = currentDriverLocation && activeRide.originCoords
+                    ? calculateDistance(currentDriverLocation.lat, currentDriverLocation.lng, activeRide.originCoords.lat, activeRide.originCoords.lng)
+                    : 999;
+                  const isClose = dist <= 0.15; // 150 meters
+
+                  return isClose ? (
+                    <button
+                      onClick={() => {
+                        setIsNavigating(false);
+                        setHasArrivedAtPickup(true);
+                      }}
+                      className="h-16 px-6 bg-green-500 hover:bg-green-600 rounded-full flex flex-col items-center justify-center gap-1 transition-colors shadow-lg shadow-green-500/30 active:scale-95"
+                    >
+                      <MapPin size={24} className="text-white" />
+                      <span className="text-[10px] uppercase font-bold text-white whitespace-nowrap">Cheguei no Local</span>
+                    </button>
+                  ) : (
+                    <div className="h-16 px-6 bg-yellow-500/90 backdrop-blur rounded-full flex flex-col items-center justify-center gap-1 shadow-lg border border-yellow-400/50">
+                      <Navigation size={20} className="text-white animate-pulse" />
+                      <span className="text-[10px] uppercase font-bold text-white whitespace-nowrap">
+                        Aproxime-se ({Math.round(dist * 1000)}m)
+                      </span>
+                    </div>
+                  );
+                })()
+              ) : (
+                <button
+                  onClick={() => setIsNavigating(false)}
+                  className="w-16 h-16 bg-red-50 dark:bg-red-900/10 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-full flex flex-col items-center justify-center gap-1 transition-colors group"
+                >
+                  <X size={26} className="text-red-500 group-hover:scale-110 transition-transform" />
+                  <span className="text-[10px] uppercase font-bold text-red-400">Sair</span>
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -606,16 +685,23 @@ export const DriverApp = () => {
 
             <div className="flex justify-between items-start mb-6">
               <div>
-                <Badge className="bg-orange-100 text-orange-600 dark:bg-orange-900/30 dark:text-orange-400 mb-2 border-none px-3 py-1">
-                  Nova Corrida • {currentRequest.distance}
-                </Badge>
+                <div className="flex gap-2 mb-2">
+                  <Badge className="bg-primary-100 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400 border-none px-3 py-1">
+                    Nova Corrida • {currentRequest.distance}
+                  </Badge>
+                  {(currentRequest.serviceType === 'DELIVERY_MOTO' || currentRequest.serviceType === 'DELIVERY_BIKE') && (
+                    <Badge className="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300 border-none px-3 py-1 flex items-center gap-1 animate-pulse">
+                      <Package size={12} /> ENTREGA
+                    </Badge>
+                  )}
+                </div>
                 <h2 className="text-3xl font-black text-gray-900 dark:text-white">
                   R$ {(currentRequest.price || 0).toFixed(2)}
                 </h2>
               </div>
               <img
                 src={currentRequest.passenger?.avatar || `https://ui-avatars.com/api/?background=f97316&color=fff&name=${encodeURIComponent(currentRequest.passenger?.name || 'P')}`}
-                className="w-14 h-14 rounded-full border-[3px] border-orange-500 object-cover shadow-md"
+                className="w-14 h-14 rounded-full border-[3px] border-primary-500 object-cover shadow-md"
                 alt="Passageiro"
               />
             </div>
@@ -644,7 +730,7 @@ export const DriverApp = () => {
                       {cleanAddress(currentRequest.origin)}
                     </p>
                     {currentRequest.pickupReference && (
-                      <p className="text-xs text-orange-500 mt-1 flex items-center gap-1">
+                      <p className="text-xs text-primary-500 mt-1 flex items-center gap-1">
                         <MapPin size={10} /> {currentRequest.pickupReference}
                       </p>
                     )}
@@ -695,7 +781,7 @@ export const DriverApp = () => {
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center overflow-hidden">
                   {activeRide.passenger?.avatar ? (
-                    <img src={activeRide.passenger.avatar} alt={activeRide.passenger.name} className="w-full h-full object-cover" />
+                    <img src={activeRide.passenger.avatar} alt={activeRide.passenger.name || "Passageiro"} className="w-full h-full object-cover" />
                   ) : (
                     <User size={24} className="text-gray-600 dark:text-gray-300" />
                   )}
@@ -722,14 +808,68 @@ export const DriverApp = () => {
 
             <div className="grid grid-cols-2 gap-3 mb-4">
               {activeRide.status === 'accepted' && (
-                <SwipeableButton
-                  label="Deslize para iniciar"
-                  successLabel="Iniciando"
-                  onSwipeSuccess={handleStartRide}
-                  isLoading={processingId === 'starting'}
-                  className="col-span-2"
-                  color="blue"
-                />
+                <>
+                  {/* Delivery Mode Logic */}
+                  {(activeRide.serviceType === 'DELIVERY_MOTO' || activeRide.serviceType === 'DELIVERY_BIKE') ? (
+                    <div className="col-span-2 space-y-3">
+                      {!hasArrivedAtPickup ? (
+                        /* Step 1: Navigation Actions (If exited manually) */
+                        <button
+                          onClick={() => setIsNavigating(true)}
+                          className="w-full py-4 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-bold text-lg flex items-center justify-center gap-2 shadow-lg shadow-blue-500/30 active:scale-[0.98] transition-all"
+                        >
+                          <Navigation size={24} />
+                          Navegar para Coleta
+                        </button>
+                      ) : (
+                        /* Step 2: Security Code Input (Only after arrival) */
+                        <div className="bg-primary-50/50 dark:bg-primary-900/10 px-5 py-4 rounded-2xl border border-primary-100 dark:border-primary-800/30 animate-fade-in">
+                          <div className="flex items-center justify-between mb-3">
+                            <h4 className="font-bold text-primary-800 dark:text-primary-200 text-sm uppercase flex items-center gap-2">
+                              <Shield size={16} className="text-primary-600" /> Código de Início
+                            </h4>
+                            <span className="text-[10px] font-bold bg-primary-100 text-primary-700 px-2 py-0.5 rounded-full">
+                              OBRIGATÓRIO
+                            </span>
+                          </div>
+
+                          <div className="flex gap-3">
+                            <div className="relative flex-1">
+                              <input
+                                type="tel"
+                                maxLength={4}
+                                value={startCode}
+                                onChange={(e) => setStartCode(e.target.value.replace(/\D/g, ''))}
+                                placeholder="----"
+                                className="w-full text-center text-3xl font-black tracking-[0.5em] py-4 rounded-xl border-2 border-primary-200 focus:border-primary-500 outline-none transition bg-white dark:bg-gray-800 text-gray-800 dark:text-white shadow-sm placeholder-gray-300 dark:placeholder-gray-600"
+                              />
+                            </div>
+                            <button
+                              onClick={handleStartDelivery}
+                              disabled={startCode.length !== 4 || isVerifyingCode}
+                              className="bg-primary-600 text-white font-bold w-16 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary-700 active:scale-95 transition shadow-lg shadow-primary-600/20 flex items-center justify-center"
+                            >
+                              {isVerifyingCode ? <Loader2 className="animate-spin" size={24} /> : <ArrowRight size={28} />}
+                            </button>
+                          </div>
+                          <p className="text-xs text-center text-primary-600/80 dark:text-primary-400 mt-2 font-medium">
+                            Solicite ao remetente
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    /* Passenger Mode: Slide to Start */
+                    <SwipeableButton
+                      label="Deslize para iniciar"
+                      successLabel="Iniciando"
+                      onSwipeSuccess={handleStartRide}
+                      isLoading={processingId === 'starting'}
+                      className="col-span-2"
+                      color="blue"
+                    />
+                  )}
+                </>
               )}
 
               {activeRide.status === 'in_progress' && (
@@ -743,6 +883,68 @@ export const DriverApp = () => {
               )}
             </div>
 
+            {/* Delivery Details Section - Show ONLY if Arrived OR In Progress */}
+            {(activeRide.serviceType === 'DELIVERY_MOTO' || activeRide.serviceType === 'DELIVERY_BIKE') &&
+              activeRide.deliveryDetails &&
+              (hasArrivedAtPickup || activeRide.status === 'in_progress') && (
+                <div className="bg-white dark:bg-gray-800 rounded-2xl p-0 mb-4 border border-gray-100 dark:border-gray-700 shadow-sm overflow-hidden">
+                  <div className="bg-blue-50/50 dark:bg-blue-900/10 p-3 border-b border-blue-100 dark:border-blue-800/30">
+                    <h4 className="font-bold text-blue-900 dark:text-blue-100 text-sm flex items-center gap-2">
+                      <Zap size={16} className="text-blue-600 fill-blue-600" /> Detalhes da Encomenda
+                    </h4>
+                  </div>
+
+                  <div className="p-4 space-y-4">
+                    {/* Recipient */}
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                        <User size={20} />
+                      </div>
+                      <div>
+                        <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Entregar para</p>
+                        <p className="font-bold text-gray-800 dark:text-gray-200 text-base leading-tight">
+                          {activeRide.deliveryDetails.contactName}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="h-px bg-gray-100 dark:bg-gray-700"></div>
+
+                    {/* Phone */}
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center shrink-0">
+                          <Phone size={20} />
+                        </div>
+                        <div>
+                          <p className="text-[10px] text-gray-400 uppercase font-bold tracking-wider">Contato</p>
+                          <p className="font-medium text-gray-700 dark:text-gray-300 text-sm">
+                            {activeRide.deliveryDetails.contactPhone}
+                          </p>
+                        </div>
+                      </div>
+                      <a
+                        href={`tel:${activeRide.deliveryDetails.contactPhone}`}
+                        className="bg-green-500 text-white px-4 py-2 rounded-lg text-sm font-bold shadow-lg shadow-green-500/20 active:scale-95 transition"
+                      >
+                        Ligar
+                      </a>
+                    </div>
+
+                    {activeRide.deliveryDetails.instructions && (
+                      <div className="bg-yellow-50 dark:bg-yellow-900/10 p-3 rounded-lg border border-yellow-100 dark:border-yellow-800/30 text-sm">
+                        <p className="text-xs text-yellow-600 dark:text-yellow-500 font-bold mb-1 flex items-center gap-1">
+                          <AlertCircle size={12} /> INSTRUÇÕES
+                        </p>
+                        <p className="text-gray-700 dark:text-gray-300 italic leading-relaxed">
+                          "{activeRide.deliveryDetails.instructions}"
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
             {/* Ride Details Toggle */}
             <div className="bg-gray-50 dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 mb-3">
               <div
@@ -750,7 +952,7 @@ export const DriverApp = () => {
                 className="p-3 flex items-center justify-between cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700/50 transition"
               >
                 <div className="flex items-center gap-3">
-                  <MapPin size={18} className="text-orange-500" />
+                  <MapPin size={18} className="text-primary-500" />
                   <p className="text-sm font-medium text-gray-700 dark:text-gray-300 max-w-[220px] truncate">
                     {cleanAddress(activeRide.status === 'in_progress' ? activeRide.destination : activeRide.origin)}
                   </p>
@@ -768,7 +970,7 @@ export const DriverApp = () => {
                       <div className="flex flex-col items-center mt-1">
                         <div className="w-2.5 h-2.5 rounded-full bg-green-500" />
                         <div className="w-0.5 h-5 bg-gray-300 dark:bg-gray-600 my-0.5" />
-                        <div className="w-2.5 h-2.5 rounded-full bg-orange-500" />
+                        <div className="w-2.5 h-2.5 rounded-full bg-primary-500" />
                       </div>
                       <div className="flex-1 space-y-2">
                         <div>
@@ -812,14 +1014,19 @@ export const DriverApp = () => {
               )}
             </div>
 
-            {/* Compact Navigation Button */}
-            <button
-              onClick={() => setShowNavOptions(true)}
-              className="w-full flex items-center justify-center gap-2 py-2.5 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-bold text-sm transition active:scale-[0.98] shadow-lg shadow-blue-500/20 mb-1"
-            >
-              <Navigation size={16} />
-              Navegar
-            </button>
+            {/* Compact Navigation Button - Hide for Delivery when Accepted (Force Code) */}
+            {!(
+              (activeRide.serviceType === 'DELIVERY_MOTO' || activeRide.serviceType === 'DELIVERY_BIKE') &&
+              activeRide.status === 'accepted'
+            ) && (
+                <button
+                  onClick={() => setShowNavOptions(true)}
+                  className="w-full flex items-center justify-center gap-2 py-2.5 bg-blue-500 hover:bg-blue-600 text-white rounded-xl font-bold text-sm transition active:scale-[0.98] shadow-lg shadow-blue-500/20 mb-1"
+                >
+                  <Navigation size={16} />
+                  Navegar
+                </button>
+              )}
 
             {/* Navigation Options Bottom Sheet */}
             {showNavOptions && (() => {
@@ -829,25 +1036,25 @@ export const DriverApp = () => {
               const lng = targetCoords?.lng || 0;
               return (
                 <>
-                  <div className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-sm animate-fade-in" onClick={() => setShowNavOptions(false)} />
-                  <div className="fixed inset-x-0 bottom-0 z-[61] bg-white dark:bg-gray-900 rounded-t-3xl shadow-2xl p-6 pb-safe-4 animate-slide-up">
+                  <div className="absolute inset-0 z-[60] bg-black/40 backdrop-blur-sm animate-fade-in" onClick={() => setShowNavOptions(false)} />
+                  <div className="absolute inset-x-0 bottom-0 z-[61] bg-white dark:bg-gray-900 rounded-t-3xl shadow-2xl p-6 pb-safe-4 animate-slide-up">
                     <div className="w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full mx-auto mb-4" />
                     <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Como deseja navegar?</h3>
                     <p className="text-sm text-gray-500 mb-5 truncate">Destino: {targetAddr}</p>
                     <div className="space-y-3">
-                      {/* Option 1: MotoJá Internal */}
+                      {/* Option 1: Mototaxi Millenio Internal */}
                       <button
                         onClick={() => {
                           setShowNavOptions(false);
                           setIsNavigating(true);
                         }}
-                        className="w-full flex items-center gap-4 p-4 bg-orange-50 dark:bg-orange-900/20 hover:bg-orange-100 dark:hover:bg-orange-900/40 rounded-2xl transition border border-orange-200 dark:border-orange-800"
+                        className="w-full flex items-center gap-4 p-4 bg-primary-50 dark:bg-primary-900/20 hover:bg-primary-100 dark:hover:bg-primary-900/40 rounded-2xl transition border border-primary-200 dark:border-primary-800"
                       >
-                        <div className="w-12 h-12 bg-orange-500 rounded-xl flex items-center justify-center shadow-lg shadow-orange-500/20">
+                        <div className="w-12 h-12 bg-primary-500 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20">
                           <MapPin size={24} className="text-white" />
                         </div>
                         <div className="text-left">
-                          <p className="font-bold text-gray-900 dark:text-white">MotoJá</p>
+                          <p className="font-bold text-gray-900 dark:text-white">Mototaxi Millenio</p>
                           <p className="text-xs text-gray-500">Navegar pelo app</p>
                         </div>
                         <ChevronRight size={16} className="text-gray-300 ml-auto" />
@@ -1009,56 +1216,6 @@ export const DriverApp = () => {
         )
       }
 
-      {/* Full Screen Navigation Overlay */}
-      {
-        isNavigating && activeRide && (
-          <div className="absolute inset-0 z-[100] flex flex-col pointer-events-none">
-            {/* Top HUD: Direction */}
-            <div className="bg-gray-900/90 backdrop-blur-md p-4 pt-safe-top pb-6 rounded-b-[2rem] shadow-2xl pointer-events-auto animate-slide-down">
-              <div className="flex items-start gap-4">
-                <div className="w-16 h-16 bg-green-500 rounded-2xl flex items-center justify-center shadow-lg shadow-green-500/20 shrink-0">
-                  <ArrowRight size={32} className="text-white -rotate-45" />
-                </div>
-                <div className="flex-1">
-                  <p className="text-gray-400 text-xs font-bold uppercase tracking-wider mb-1">Em 200 metros</p>
-                  <h2 className="text-white text-2xl font-black leading-tight">
-                    Vire à direita na {cleanAddress(activeRide.status === 'in_progress' ? activeRide.destination : activeRide.origin).split(',')[0]}
-                  </h2>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex-1" />
-
-            {/* Bottom HUD: Trip Info */}
-            <div className="bg-white dark:bg-gray-900 p-5 pb-safe-4 rounded-t-[2rem] shadow-[0_-10px_40px_rgba(0,0,0,0.4)] pointer-events-auto animate-slide-up">
-              <div className="flex items-center justify-between mb-2">
-                <div>
-                  <p className="text-3xl font-black text-green-500">{(routeMetrics?.duration || activeRide.duration || '12 min').replace(' mins', ' min')}</p>
-                  <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 font-bold">
-                    <span>{routeMetrics?.distance || activeRide.distance || '4.5 km'}</span>
-                    <span>•</span>
-                    <span>12:42</span>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => setIsNavigating(false)}
-                  className="w-14 h-14 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center text-red-600 hover:bg-red-200 dark:hover:bg-red-900/50 transition active:scale-90"
-                >
-                  <X size={28} />
-                </button>
-              </div>
-
-              <div className="w-full bg-gray-200 dark:bg-gray-800 h-1.5 rounded-full mt-4 overflow-hidden">
-                <div className="h-full bg-green-500 w-[45%]" />
-              </div>
-              <p className="text-center text-xs text-gray-400 font-bold mt-2 uppercase tracking-widest">Navegando com MotoJá</p>
-            </div>
-          </div>
-        )
-      }
-
-    </div >
+    </div>
   );
 };

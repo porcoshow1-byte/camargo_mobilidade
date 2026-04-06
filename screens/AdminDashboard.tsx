@@ -84,7 +84,7 @@ const SettingsTab = () => {
         {/* Card: Wait Time Settings */}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
           <div className="flex items-center gap-2 mb-4 pb-2 border-b border-gray-100">
-            <Clock className="text-orange-500" size={20} />
+            <Clock className="text-primary-500" size={20} />
             <h3 className="font-bold text-gray-800">Tempo de Espera e Paradas</h3>
           </div>
 
@@ -293,7 +293,7 @@ const DriverDetailModal = ({ driver: initialDriver, onClose, onRefresh, rides = 
             <div className="bg-gray-50 p-4 rounded-xl border border-gray-100 space-y-3">
               <h3 className="font-bold text-gray-800 border-b border-gray-200 pb-2 mb-2">Veículo</h3>
               <div className="flex items-center gap-4">
-                <div className="bg-orange-100 p-3 rounded-full text-orange-600">
+                <div className="bg-primary-100 p-3 rounded-full text-primary-600">
                   <Car size={24} />
                 </div>
                 <div>
@@ -363,7 +363,7 @@ const DriverDetailModal = ({ driver: initialDriver, onClose, onRefresh, rides = 
           {/* Right Column: CNH & Actions */}
           <div className="space-y-6">
             {/* CNH Preview */}
-            <div className="bg-white border-2 border-dashed border-gray-300 rounded-xl p-4 flex flex-col items-center justify-center min-h-[250px] relative hover:border-orange-300 transition-colors">
+            <div className="bg-white border-2 border-dashed border-gray-300 rounded-xl p-4 flex flex-col items-center justify-center min-h-[250px] relative hover:border-primary-300 transition-colors">
               <h3 className="absolute top-4 left-4 font-bold text-gray-500 text-sm uppercase">Documento CNH</h3>
               {driver.cnhUrl ? (
                 driver.cnhUrl.toLowerCase().endsWith('.pdf') ? (
@@ -553,7 +553,7 @@ const UserDetailModal = ({ user, onClose, rides }: { user: User; onClose: () => 
       case 'completed': return { label: 'Concluída', color: 'text-green-600 bg-green-50 border-green-200' };
       case 'cancelled': return { label: 'Cancelada', color: 'text-red-600 bg-red-50 border-red-200' };
       case 'in_progress': return { label: 'Em Andamento', color: 'text-blue-600 bg-blue-50 border-blue-200' };
-      default: return { label: 'Pendente', color: 'text-orange-600 bg-orange-50 border-orange-200' };
+      default: return { label: 'Pendente', color: 'text-primary-600 bg-primary-50 border-primary-200' };
     }
   };
 
@@ -585,11 +585,11 @@ const UserDetailModal = ({ user, onClose, rides }: { user: User; onClose: () => 
 
         {/* Navigation */}
         <div className="flex border-b border-gray-100 px-6 bg-white shrink-0">
-          <button onClick={() => setActiveTab('info')} className={`pb-3 pt-4 px-2 text-sm font-bold border-b-2 transition ${activeTab === 'info' ? 'border-orange-500 text-orange-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Dados Pessoais</button>
-          <button onClick={() => setActiveTab('wallet')} className={`pb-3 pt-4 px-2 text-sm font-bold border-b-2 transition ${activeTab === 'wallet' ? 'border-orange-500 text-orange-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Carteira Digital</button>
-          <button onClick={() => setActiveTab('history')} className={`pb-3 pt-4 px-2 text-sm font-bold border-b-2 transition ${activeTab === 'history' ? 'border-orange-500 text-orange-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Histórico de Corridas</button>
+          <button onClick={() => setActiveTab('info')} className={`pb-3 pt-4 px-2 text-sm font-bold border-b-2 transition ${activeTab === 'info' ? 'border-primary-500 text-primary-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Dados Pessoais</button>
+          <button onClick={() => setActiveTab('wallet')} className={`pb-3 pt-4 px-2 text-sm font-bold border-b-2 transition ${activeTab === 'wallet' ? 'border-primary-500 text-primary-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Carteira Digital</button>
+          <button onClick={() => setActiveTab('history')} className={`pb-3 pt-4 px-2 text-sm font-bold border-b-2 transition ${activeTab === 'history' ? 'border-primary-500 text-primary-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Histórico de Corridas</button>
           <button
-            className={`pb-3 pt-4 px-2 text-sm font-bold border-b-2 transition ${activeTab === 'settings' ? 'border-orange-500 text-orange-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+            className={`pb-3 pt-4 px-2 text-sm font-bold border-b-2 transition ${activeTab === 'settings' ? 'border-primary-500 text-primary-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
             onClick={() => setActiveTab('settings')}
           >
             Ajustes
@@ -703,9 +703,9 @@ const UserDetailModal = ({ user, onClose, rides }: { user: User; onClose: () => 
                 </div>
               </div>
 
-              <div className="bg-orange-50 rounded-xl p-6 border border-orange-100">
+              <div className="bg-primary-50 rounded-xl p-6 border border-primary-100">
                 <label className="block text-sm font-bold text-gray-800 mb-3 flex items-center gap-2">
-                  <Plus size={16} className="text-orange-600" /> Adicionar Crédito Manualmente
+                  <Plus size={16} className="text-primary-600" /> Adicionar Crédito Manualmente
                 </label>
                 <div className="flex gap-3">
                   <Input
@@ -716,7 +716,7 @@ const UserDetailModal = ({ user, onClose, rides }: { user: User; onClose: () => 
                     icon={<span className="text-gray-500 font-bold">R$</span>}
                     className="text-lg font-bold"
                   />
-                  <Button onClick={handleAddCredit} isLoading={loadingCredit} className="px-6 whitespace-nowrap bg-orange-600 hover:bg-orange-700">
+                  <Button onClick={handleAddCredit} isLoading={loadingCredit} className="px-6 whitespace-nowrap bg-primary-600 hover:bg-primary-700">
                     Adicionar
                   </Button>
                 </div>
@@ -737,12 +737,12 @@ const UserDetailModal = ({ user, onClose, rides }: { user: User; onClose: () => 
                   return (
                     <div
                       key={ride.id}
-                      className={`border rounded-xl transition-all cursor-pointer ${isExpanded ? 'border-orange-200 bg-orange-50/30' : 'border-gray-100 bg-white hover:bg-gray-50'}`}
+                      className={`border rounded-xl transition-all cursor-pointer ${isExpanded ? 'border-primary-200 bg-primary-50/30' : 'border-gray-100 bg-white hover:bg-gray-50'}`}
                       onClick={() => setExpandedRideId(isExpanded ? null : ride.id)}
                     >
                       <div className="p-4 flex justify-between items-start">
                         <div className="flex items-start gap-3">
-                          <div className={`mt-1 p-2 rounded-lg ${ride.serviceType?.includes('DELIVERY') ? 'bg-blue-100 text-blue-600' : 'bg-orange-100 text-orange-600'}`}>
+                          <div className={`mt-1 p-2 rounded-lg ${ride.serviceType?.includes('DELIVERY') ? 'bg-blue-100 text-blue-600' : 'bg-primary-100 text-primary-600'}`}>
                             {ride.serviceType?.includes('DELIVERY') ? <Package size={20} /> : <Bike size={20} />}
                           </div>
                           <div>
@@ -876,8 +876,8 @@ const AddDriverModal = ({ onClose }: { onClose: () => void }) => {
           <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full"><X size={20} /></button>
         </div>
 
-        <div className="bg-orange-50 border border-orange-100 rounded-xl p-4 mb-6">
-          <p className="text-sm text-orange-800 flex items-start gap-2">
+        <div className="bg-primary-50 border border-primary-100 rounded-xl p-4 mb-6">
+          <p className="text-sm text-primary-800 flex items-start gap-2">
             <AlertTriangle size={16} className="shrink-0 mt-0.5" />
             Para garantir a segurança e a verificação de documentos (CNH), recomendamos que o motorista faça o cadastro diretamente pelo aplicativo.
           </p>
@@ -903,7 +903,7 @@ const AddDriverModal = ({ onClose }: { onClose: () => void }) => {
             <div className="bg-gray-100 p-3 rounded-lg flex items-center justify-between font-mono text-xs text-gray-600">
               <span>{window.location.origin}/cadastro-motorista</span>
               <button
-                className="text-orange-600 font-bold hover:underline"
+                className="text-primary-600 font-bold hover:underline"
                 onClick={() => {
                   navigator.clipboard.writeText(`${window.location.origin}/cadastro-motorista`);
                   alert('Link copiado!');
@@ -941,8 +941,8 @@ const AddCompanyModal = ({ onClose }: { onClose: () => void }) => {
           <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full"><X size={20} /></button>
         </div>
 
-        <div className="bg-orange-50 border border-orange-100 rounded-xl p-4 mb-6">
-          <p className="text-sm text-orange-800 flex items-start gap-2">
+        <div className="bg-primary-50 border border-primary-100 rounded-xl p-4 mb-6">
+          <p className="text-sm text-primary-800 flex items-start gap-2">
             <AlertTriangle size={16} className="shrink-0 mt-0.5" />
             Para garantir a segurança jurídica e validação do CNPJ, recomendamos que a empresa faça o cadastro diretamente pelo portal.
           </p>
@@ -968,7 +968,7 @@ const AddCompanyModal = ({ onClose }: { onClose: () => void }) => {
             <div className="bg-gray-100 p-3 rounded-lg flex items-center justify-between font-mono text-xs text-gray-600">
               <span>{window.location.origin}/empresas</span>
               <button
-                className="text-orange-600 font-bold hover:underline"
+                className="text-primary-600 font-bold hover:underline"
                 onClick={() => {
                   navigator.clipboard.writeText(`${window.location.origin}/empresas`);
                   alert('Link copiado!');
@@ -1039,7 +1039,7 @@ const AddressInput = ({
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       autoComplete="off"
-      className={`w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 outline-none transition-all ${className || ''}`}
+      className={`w-full pl-12 pr-4 py-3 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none transition-all ${className || ''}`}
     />
   );
 };
@@ -1050,13 +1050,13 @@ const SearchingOverlay = ({ show }: { show: boolean }) => {
   return (
     <div className="fixed inset-0 z-[100] bg-gray-900/95 backdrop-blur-sm flex flex-col items-center justify-center text-white animate-fade-in">
       <div className="relative w-32 h-32 mb-8 flex items-center justify-center">
-        <div className="absolute inset-0 bg-orange-500/30 rounded-full animate-ping"></div>
-        <div className="absolute inset-2 bg-orange-500/50 rounded-full animate-pulse delay-75"></div>
-        <div className="relative bg-orange-500 p-6 rounded-full shadow-lg shadow-orange-500/50">
+        <div className="absolute inset-0 bg-primary-500/30 rounded-full animate-ping"></div>
+        <div className="absolute inset-2 bg-primary-500/50 rounded-full animate-pulse delay-75"></div>
+        <div className="relative bg-primary-500 p-6 rounded-full shadow-lg shadow-primary-500/50">
           <Search size={40} className="text-white animate-bounce-slight" />
         </div>
       </div>
-      <h2 className="text-2xl font-bold mb-2">Procurando MotoJá...</h2>
+      <h2 className="text-2xl font-bold mb-2">Procurando Mototaxi Millenio...</h2>
       <p className="text-gray-400 text-sm animate-pulse">Contatando motoristas próximos</p>
     </div>
   );
@@ -1208,7 +1208,7 @@ const CompanyFormModal = ({ company, onClose, onSave, onDelete, onNotify }: {
         <div className="space-y-4">
           {/* Logo */}
           <div className="flex justify-center mb-4">
-            <div className="relative group cursor-pointer w-32 h-32 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center bg-gray-50 hover:border-orange-500 transition-colors overflow-hidden">
+            <div className="relative group cursor-pointer w-32 h-32 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center bg-gray-50 hover:border-primary-500 transition-colors overflow-hidden">
               {formData.logoUrl ? (
                 <img src={formData.logoUrl} className="w-full h-full object-contain p-2" />
               ) : (
@@ -1267,7 +1267,7 @@ const CompanyFormModal = ({ company, onClose, onSave, onDelete, onNotify }: {
                     onBlur={handleCepBlur}
                     placeholder="00000-000"
                   />
-                  {loadingCep && <div className="absolute right-3 top-2.5"><Loader2 size={16} className="animate-spin text-orange-500" /></div>}
+                  {loadingCep && <div className="absolute right-3 top-2.5"><Loader2 size={16} className="animate-spin text-primary-500" /></div>}
                 </div>
               </div>
               <div className="col-span-2">
@@ -1349,8 +1349,8 @@ const CompanyFormModal = ({ company, onClose, onSave, onDelete, onNotify }: {
             </label>
           </div>
 
-          <div className="bg-orange-50 p-4 rounded-xl border border-orange-100">
-            <h4 className="font-bold text-orange-800 mb-3 flex items-center gap-2">
+          <div className="bg-primary-50 p-4 rounded-xl border border-primary-100">
+            <h4 className="font-bold text-primary-800 mb-3 flex items-center gap-2">
               <Shield size={16} /> Credenciais de Acesso
             </h4>
             <div className="grid grid-cols-2 gap-4">
@@ -1373,7 +1373,7 @@ const CompanyFormModal = ({ company, onClose, onSave, onDelete, onNotify }: {
                 />
               </div>
             </div>
-            {!company && <p className="text-xs text-orange-600 mt-2">A empresa receberá um e-mail de confirmação, mas a senha definida aqui já permite acesso imediato.</p>}
+            {!company && <p className="text-xs text-primary-600 mt-2">A empresa receberá um e-mail de confirmação, mas a senha definida aqui já permite acesso imediato.</p>}
 
             <div className="mt-4 flex items-center gap-2">
               <input
@@ -1381,7 +1381,7 @@ const CompanyFormModal = ({ company, onClose, onSave, onDelete, onNotify }: {
                 id="isTempPassword"
                 checked={formData.isTempPassword}
                 onChange={(e) => setFormData({ ...formData, isTempPassword: e.target.checked })}
-                className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                className="rounded border-gray-300 text-primary-600 focus:ring-primary-500"
               />
               <label htmlFor="isTempPassword" className="text-sm text-gray-700">Senha Temporária (Usuário deverá trocar no próximo login)</label>
             </div>
@@ -2041,7 +2041,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
 
   // Load occurrence timeline from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem('motoja_occurrence_timeline');
+    const saved = localStorage.getItem('mototaximillenio_occurrence_timeline');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -2060,7 +2060,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
   // Save occurrence timeline to localStorage when it changes
   useEffect(() => {
     if (Object.keys(occurrenceTimeline).length > 0) {
-      localStorage.setItem('motoja_occurrence_timeline', JSON.stringify(occurrenceTimeline));
+      localStorage.setItem('mototaximillenio_occurrence_timeline', JSON.stringify(occurrenceTimeline));
     }
   }, [occurrenceTimeline]);
 
@@ -2112,12 +2112,12 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
   const SidebarItem = ({ id, icon, label, badge }: { id: string, icon: React.ReactNode, label: string, badge?: number | string }) => (
     <div
       onClick={() => setActiveTab(id)}
-      className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all mb-1 ${activeTab === id ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30' : 'text-gray-400 hover:bg-gray-800 hover:text-white'}`}
+      className={`flex items-center gap-3 p-3 rounded-xl cursor-pointer transition-all mb-1 ${activeTab === id ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/30' : 'text-gray-400 hover:bg-gray-800 hover:text-white'}`}
     >
       {icon}
       <span className="font-medium flex-1">{label}</span>
       {badge && (
-        <span className={`px-1.5 h-5 min-w-[20px] rounded-full text-[10px] font-bold flex items-center justify-center ${activeTab === id ? 'bg-white text-orange-500' : 'bg-red-500 text-white'}`}>
+        <span className={`px-1.5 h-5 min-w-[20px] rounded-full text-[10px] font-bold flex items-center justify-center ${activeTab === id ? 'bg-white text-primary-500' : 'bg-red-500 text-white'}`}>
           {badge}
         </span>
       )}
@@ -2125,7 +2125,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
   );
 
   if (loading && !dashboardData) {
-    return <div className="h-screen flex items-center justify-center bg-gray-50 text-orange-500"><Loader2 size={48} className="animate-spin" /></div>;
+    return <div className="h-screen flex items-center justify-center bg-gray-50 text-primary-500"><Loader2 size={48} className="animate-spin" /></div>;
   }
 
   if (viewingCompanyId) {
@@ -2519,7 +2519,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
               <div className={`p-4 rounded-xl mb-6 flex items-center gap-3 ${selectedOccurrence.type === 'ride_issue' ? 'bg-red-500' :
                 selectedOccurrence.type === 'payment' ? 'bg-green-500' :
                   selectedOccurrence.type === 'accident' ? 'bg-red-600' :
-                    'bg-orange-500'
+                    'bg-primary-500'
                 } text-white shadow-lg`}>
                 <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
                   {selectedOccurrence.type === 'ride_issue' && <AlertTriangle size={24} />}
@@ -2620,7 +2620,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
 
                 {/* Status & Actions */}
                 <div className="flex flex-wrap gap-2 pt-2">
-                  <div className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wide ${selectedOccurrence.read ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'}`}>
+                  <div className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wide ${selectedOccurrence.read ? 'bg-green-100 text-green-700' : 'bg-primary-100 text-primary-700'}`}>
                     {selectedOccurrence.read ? 'Status: Resolvido' : 'Status: Pendente'}
                   </div>
                   {selectedOccurrence.amount && (
@@ -2663,13 +2663,13 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                 {/* User Timeline Entries */}
                 {(occurrenceTimeline[selectedOccurrence.id] || []).map((entry) => (
                   <div key={entry.id} className={`flex gap-3 ${entry.author === 'Admin' ? 'flex-row-reverse' : ''}`}>
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${entry.author === 'Admin' ? 'bg-orange-100' : 'bg-blue-100'}`}>
-                      {entry.type === 'comment' && <MessageSquare size={14} className={entry.author === 'Admin' ? 'text-orange-600' : 'text-blue-600'} />}
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${entry.author === 'Admin' ? 'bg-primary-100' : 'bg-blue-100'}`}>
+                      {entry.type === 'comment' && <MessageSquare size={14} className={entry.author === 'Admin' ? 'text-primary-600' : 'text-blue-600'} />}
                       {entry.type === 'status_change' && <CheckCircle size={14} className="text-green-600" />}
                       {entry.type === 'attachment' && <Paperclip size={14} className="text-purple-600" />}
                     </div>
                     <div className={`max-w-[85%]`}>
-                      <div className={`p-3 rounded-xl shadow-sm border ${entry.author === 'Admin' ? 'bg-orange-50 border-orange-100 rounded-tr-none' : 'bg-white border-gray-100 rounded-tl-none'} group relative`}>
+                      <div className={`p-3 rounded-xl shadow-sm border ${entry.author === 'Admin' ? 'bg-primary-50 border-primary-100 rounded-tr-none' : 'bg-white border-gray-100 rounded-tl-none'} group relative`}>
                         <p className="text-sm text-gray-800 whitespace-pre-wrap">{entry.content}</p>
                         {entry.attachmentUrl && (
                           <div className="mt-2 text-xs bg-black/5 p-2 rounded flex items-center gap-2 overflow-hidden max-w-[200px]">
@@ -2712,7 +2712,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
               <div className="p-4 bg-white border-t border-gray-100">
                 <div className="relative">
                   <textarea
-                    className="w-full pl-4 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:bg-white transition-all text-sm resize-none"
+                    className="w-full pl-4 pr-12 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:bg-white transition-all text-sm resize-none"
                     placeholder="Escrever atualização ou comentário..."
                     rows={3}
                     value={newTimelineComment}
@@ -2744,7 +2744,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                     />
                     <button
                       onClick={() => document.getElementById('timeline-file-input')?.click()}
-                      className="p-1.5 text-gray-400 hover:text-orange-500 hover:bg-orange-50 rounded-lg transition"
+                      className="p-1.5 text-gray-400 hover:text-primary-500 hover:bg-primary-50 rounded-lg transition"
                       title="Anexar arquivo (JPG, PNG, PDF)"
                     >
                       <Paperclip size={16} />
@@ -2792,7 +2792,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
       {showNewOccurrenceModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
           <div className="bg-white rounded-2xl w-full max-w-lg shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto">
-            <div className="p-4 bg-orange-500 text-white flex items-center gap-3">
+            <div className="p-4 bg-primary-500 text-white flex items-center gap-3">
               <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
                 <Plus size={24} />
               </div>
@@ -2812,7 +2812,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                 <select
                   value={newOccurrence.type}
                   onChange={(e) => setNewOccurrence({ ...newOccurrence, type: e.target.value as any })}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-orange-500 cursor-pointer"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
                 >
                   <option value="ride_issue">🚨 Problema em Corrida</option>
                   <option value="payment">💰 Pagamento</option>
@@ -2844,7 +2844,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                       className={`py-2 px-3 rounded-lg text-sm font-bold transition-all ${newOccurrence.priority === p
                         ? p === 'low' ? 'bg-blue-100 text-blue-700 border-2 border-blue-500'
                           : p === 'medium' ? 'bg-yellow-100 text-yellow-700 border-2 border-yellow-500'
-                            : p === 'high' ? 'bg-orange-100 text-orange-700 border-2 border-orange-500'
+                            : p === 'high' ? 'bg-primary-100 text-primary-700 border-2 border-primary-500'
                               : 'bg-red-100 text-red-700 border-2 border-red-500'
                         : 'bg-gray-100 text-gray-600 border-2 border-transparent'
                         }`}
@@ -2911,7 +2911,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                             setNewOccurrence({ ...newOccurrence, selectedPassengerId: user.id, selectedRideId: '' });
                             setOccurrencePassengerSearch(user.name || '');
                           }}
-                          className="px-3 py-2 hover:bg-orange-50 cursor-pointer border-b border-gray-100 last:border-0"
+                          className="px-3 py-2 hover:bg-primary-50 cursor-pointer border-b border-gray-100 last:border-0"
                         >
                           <div className="font-medium text-sm">{user.name}</div>
                           <div className="text-xs text-gray-500">
@@ -2935,7 +2935,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                             setNewOccurrence({ ...newOccurrence, selectedPassengerId: `call-client-${call.id}`, selectedRideId: '' });
                             setOccurrencePassengerSearch(call.client.name);
                           }}
-                          className="px-3 py-2 hover:bg-orange-50 cursor-pointer border-b border-gray-100 last:border-0"
+                          className="px-3 py-2 hover:bg-primary-50 cursor-pointer border-b border-gray-100 last:border-0"
                         >
                           <div className="font-medium text-sm">📞 {call.client.name}</div>
                           <div className="text-xs text-gray-500">📱 {call.client.phone}</div>
@@ -2960,7 +2960,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                 <select
                   value={newOccurrence.selectedRideId}
                   onChange={(e) => setNewOccurrence({ ...newOccurrence, selectedRideId: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-orange-500 cursor-pointer"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
                   disabled={!newOccurrence.selectedPassengerId}
                 >
                   <option value="">
@@ -3008,7 +3008,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                   onChange={(e) => setNewOccurrence({ ...newOccurrence, message: e.target.value })}
                   placeholder="Descreva o incidente em detalhes..."
                   rows={4}
-                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-orange-500 resize-none"
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm outline-none focus:ring-2 focus:ring-primary-500 resize-none"
                 />
               </div>
             </div>
@@ -3071,7 +3071,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
             />
           ) : (
             <h1 className="text-2xl font-bold flex items-center gap-2">
-              <span className="text-orange-500">Moto</span>Já
+              <span className="text-primary-500">Millênio</span>
             </h1>
           )}
           <p className="text-gray-500 text-xs mt-1">Painel Administrativo v1.0</p>
@@ -3117,12 +3117,12 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
         <div className="bg-white h-16 border-b border-gray-200 flex items-center justify-between px-6 z-10">
           <h2 className="text-xl font-bold text-gray-800 capitalize flex items-center gap-2">
             {activeTab.replace('_', ' ')}
-            {loading && <Loader2 size={16} className="animate-spin text-orange-500" />}
+            {loading && <Loader2 size={16} className="animate-spin text-primary-500" />}
           </h2>
           <div className="flex items-center gap-4">
             <div className="relative hidden md:block">
               <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
-              <input className="pl-10 pr-4 py-2 bg-gray-50 border-none rounded-lg text-sm w-64 focus:ring-2 focus:ring-orange-500 outline-none" placeholder="Buscar..." />
+              <input className="pl-10 pr-4 py-2 bg-gray-50 border-none rounded-lg text-sm w-64 focus:ring-2 focus:ring-primary-500 outline-none" placeholder="Buscar..." />
             </div>
             <button
               onClick={() => {
@@ -3134,7 +3134,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
               title="Atualizar dados"
               disabled={isRefreshing}
             >
-              <RefreshCcw size={20} className={isRefreshing ? 'animate-spin text-orange-500' : ''} />
+              <RefreshCcw size={20} className={isRefreshing ? 'animate-spin text-primary-500' : ''} />
             </button>
 
 
@@ -3172,7 +3172,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                         <div className="flex justify-between items-center">
                           <div>
                             <h2 className="text-lg font-bold text-white flex items-center gap-2">
-                              <Bell size={20} className="text-orange-400" />
+                              <Bell size={20} className="text-primary-400" />
                               Central de Notificações
                             </h2>
                             <p className="text-xs text-gray-400 mt-0.5">
@@ -3216,14 +3216,14 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                                 key={tab.key}
                                 onClick={() => setNotificationFilter(tab.key)}
                                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition ${notificationFilter === tab.key
-                                  ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/30'
+                                  ? 'bg-primary-500 text-white shadow-lg shadow-primary-500/30'
                                   : 'bg-gray-700/50 text-gray-400 hover:text-white hover:bg-gray-700'
                                   }`}
                               >
                                 {tab.icon}
                                 {tab.label}
                                 {count > 0 && (
-                                  <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${notificationFilter === tab.key ? 'bg-white text-orange-600' : 'bg-red-500 text-white'
+                                  <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${notificationFilter === tab.key ? 'bg-white text-primary-600' : 'bg-red-500 text-white'
                                     }`}>
                                     {count}
                                   </span>
@@ -3267,7 +3267,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                               'ride_issue': { bg: 'bg-red-100', color: 'text-red-600', icon: <AlertTriangle size={18} />, label: 'Ocorrência' },
                               'payment': { bg: 'bg-emerald-100', color: 'text-emerald-600', icon: <DollarSign size={18} />, label: 'Pagamento' },
                               'feedback': { bg: 'bg-yellow-100', color: 'text-yellow-600', icon: <Star size={18} />, label: 'Feedback' },
-                              'support_request': { bg: 'bg-orange-100', color: 'text-orange-600', icon: <LifeBuoy size={18} />, label: 'Suporte' },
+                              'support_request': { bg: 'bg-primary-100', color: 'text-primary-600', icon: <LifeBuoy size={18} />, label: 'Suporte' },
                               'system': { bg: 'bg-gray-100', color: 'text-gray-600', icon: <Settings size={18} />, label: 'Sistema' },
                             };
                             const config = typeConfig[notif.type] || typeConfig['system'];
@@ -3285,7 +3285,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                             return (
                               <div
                                 key={notif.id}
-                                className={`group flex items-start gap-3 p-4 border-b border-gray-50 cursor-pointer transition-all hover:bg-gray-50 ${!notif.read ? 'bg-orange-50/40 border-l-4 border-l-orange-400' : 'border-l-4 border-l-transparent'
+                                className={`group flex items-start gap-3 p-4 border-b border-gray-50 cursor-pointer transition-all hover:bg-gray-50 ${!notif.read ? 'bg-primary-50/40 border-l-4 border-l-primary-400' : 'border-l-4 border-l-transparent'
                                   }`}
                                 onClick={() => {
                                   // Mark individual as read
@@ -3323,7 +3323,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                                   )}
                                 </div>
                                 <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                  {!notif.read && <span className="w-2.5 h-2.5 bg-orange-500 rounded-full flex-shrink-0" />}
+                                  {!notif.read && <span className="w-2.5 h-2.5 bg-primary-500 rounded-full flex-shrink-0" />}
                                   <button
                                     onClick={(e) => { e.stopPropagation(); deleteNotification(e, notif.id); }}
                                     className="p-1 text-gray-300 hover:text-red-500 transition"
@@ -3362,7 +3362,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                       <div className="p-3 border-t border-gray-100 bg-gray-50 flex items-center justify-between">
                         <button
                           onClick={() => { setShowNotifications(false); setActiveTab('occurrences'); }}
-                          className="text-sm text-orange-600 hover:text-orange-700 font-medium flex items-center gap-1"
+                          className="text-sm text-primary-600 hover:text-primary-700 font-medium flex items-center gap-1"
                         >
                           <FileText size={14} />
                           Ver Ocorrências
@@ -3403,7 +3403,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
           )}
           {!dashboardData && !loading ? (
             <div className="flex flex-col items-center justify-center h-full text-gray-400 animate-fade-in">
-              <AlertTriangle size={64} className="mb-4 text-orange-200" />
+              <AlertTriangle size={64} className="mb-4 text-primary-200" />
               <h3 className="text-xl font-medium text-gray-600">Erro ao carregar dados</h3>
               <p className="text-sm mb-4">Verifique sua conexão ou se o banco de dados está vazio.</p>
               <Button onClick={loadData}>Tentar Novamente</Button>
@@ -3412,13 +3412,13 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
             <div className="max-w-7xl mx-auto space-y-6 animate-fade-in">
               {/* Stats Grid */}
               <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <Card className="p-6 border-l-4 border-l-orange-500">
+                <Card className="p-6 border-l-4 border-l-primary-500">
                   <div className="flex justify-between items-start">
                     <div>
                       <p className="text-gray-500 text-sm font-medium">Corridas Totais</p>
                       <h3 className="text-3xl font-bold text-gray-900 mt-1">{safeData.stats.totalRides}</h3>
                     </div>
-                    <div className="bg-orange-100 p-2 rounded-lg text-orange-600">
+                    <div className="bg-primary-100 p-2 rounded-lg text-primary-600">
                       <Bike size={24} />
                     </div>
                   </div>
@@ -3471,7 +3471,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                       <XAxis dataKey="name" axisLine={false} tickLine={false} />
                       <YAxis axisLine={false} tickLine={false} allowDecimals={false} />
                       <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }} />
-                      <Bar dataKey="rides" fill="#f97316" radius={[4, 4, 0, 0]} barSize={30} />
+                      <Bar dataKey="rides" fill="#4A764E" radius={[4, 4, 0, 0]} barSize={30} />
                     </BarChart>
                   </RechartsWrapper>
                 </Card>
@@ -3598,7 +3598,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                                 {company.logoUrl ? <img src={company.logoUrl} className="w-full h-full object-contain" /> : <Building2 size={20} className="text-gray-400" />}
                               </div>
                               <div onClick={() => { setViewingCompanyId(company.id); }} className="cursor-pointer">
-                                <div className="font-bold text-gray-900 hover:text-orange-600">{company.name}</div>
+                                <div className="font-bold text-gray-900 hover:text-primary-600">{company.name}</div>
                                 <div className="text-xs text-gray-500">{company.email}</div>
                               </div>
                             </div>
@@ -3627,7 +3627,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                             >
                               <span className={`${company.status !== 'blocked' ? 'translate-x-6' : 'translate-x-1'} inline-block h-4 w-4 transform rounded-full bg-white transition-transform`} />
                             </button>
-                            {company.status === 'pending' && <span className="ml-2 text-orange-500 text-xs font-bold">Pendente</span>}
+                            {company.status === 'pending' && <span className="ml-2 text-primary-500 text-xs font-bold">Pendente</span>}
                           </td>
                           <td className="p-4">
                             <div className="text-gray-900 font-bold">R$ {(company.usedCredit || 0).toFixed(2)}</div>
@@ -3732,7 +3732,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                             <p className="font-medium text-gray-900 text-sm truncate">{driver.name}</p>
                             {driver.vehicle?.toLowerCase().includes('bike') || driver.vehicle?.toLowerCase().includes('bicicleta')
                               ? <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="#16a34a" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18.5" cy="17.5" r="3.5" /><circle cx="5.5" cy="17.5" r="3.5" /><circle cx="15" cy="5" r="1" /><path d="M12 17.5V14l-3-3 4-3 2 3h2" /></svg>
-                              : <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" stroke="#ea580c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 17.5c0 1.4 1.1 2.5 2.5 2.5s2.5-1.1 2.5-2.5-1.1-2.5-2.5-2.5-2.5 1.1-2.5 2.5z" /><path d="M15 17.5c0 1.4 1.1 2.5 2.5 2.5s2.5-1.1 2.5-2.5-1.1-2.5-2.5-2.5-2.5 1.1-2.5 2.5z" /><path d="M6.5 15l2-5h6l2.5 5" /><path d="M15 10l-2-4h4l1 2" /><path d="M9.5 10l1.5 5" /></svg>
+                              : <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor" stroke="#385b3c" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 17.5c0 1.4 1.1 2.5 2.5 2.5s2.5-1.1 2.5-2.5-1.1-2.5-2.5-2.5-2.5 1.1-2.5 2.5z" /><path d="M15 17.5c0 1.4 1.1 2.5 2.5 2.5s2.5-1.1 2.5-2.5-1.1-2.5-2.5-2.5-2.5 1.1-2.5 2.5z" /><path d="M6.5 15l2-5h6l2.5 5" /><path d="M15 10l-2-4h4l1 2" /><path d="M9.5 10l1.5 5" /></svg>
                             }
                           </div>
                           <p className="text-xs text-gray-400">{driver.vehicle || 'Moto'} • ⭐ {driver.rating}</p>
@@ -3748,13 +3748,13 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                               const formattedHistory = history
                                 .sort((a: any, b: any) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
                                 .map(n => ({
-                                  from: n.title === 'Suporte MotoJá' ? 'admin' : 'driver', // Simple heuristic
+                                  from: n.title === 'Suporte Mototaxi Millenio' ? 'admin' : 'driver', // Simple heuristic
                                   text: n.body,
                                   time: new Date(n.created_at)
                                 }));
                               setChatHistory(formattedHistory);
                             }}
-                            className="p-2 rounded-full bg-orange-100 text-orange-600 hover:bg-orange-200"
+                            className="p-2 rounded-full bg-primary-100 text-primary-600 hover:bg-primary-200"
                             title="Enviar mensagem"
                           >
                             <MessageSquare size={14} />
@@ -3799,9 +3799,9 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                     ) : (
                       chatHistory.map((msg, i) => (
                         <div key={i} className={`flex ${msg.from === 'admin' ? 'justify-end' : 'justify-start'}`}>
-                          <div className={`max-w-[80%] p-2 rounded-lg text-sm ${msg.from === 'admin' ? 'bg-orange-500 text-white' : 'bg-white border border-gray-200'}`}>
+                          <div className={`max-w-[80%] p-2 rounded-lg text-sm ${msg.from === 'admin' ? 'bg-primary-500 text-white' : 'bg-white border border-gray-200'}`}>
                             {msg.text}
-                            <div className={`text-[10px] mt-1 ${msg.from === 'admin' ? 'text-orange-200' : 'text-gray-400'}`}>
+                            <div className={`text-[10px] mt-1 ${msg.from === 'admin' ? 'text-primary-200' : 'text-gray-400'}`}>
                               {msg.time.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
                             </div>
                           </div>
@@ -3823,14 +3823,14 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
 
                           // 2. Send Real Notification
                           await sendNotification(chatDriver.id, 'newMessage', {
-                            title: 'Suporte MotoJá',
+                            title: 'Suporte Mototaxi Millenio',
                             body: msgText,
                             data: { sender: 'admin' }
                           });
                         }
                       }}
                       placeholder="Digite uma mensagem..."
-                      className="flex-1 p-2 text-sm border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-orange-500"
+                      className="flex-1 p-2 text-sm border border-gray-200 rounded-lg outline-none focus:ring-2 focus:ring-primary-500"
                     />
                     <button
                       onClick={async () => {
@@ -3842,13 +3842,13 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
 
                           // 2. Send Real Notification
                           await sendNotification(chatDriver.id, 'newMessage', {
-                            title: 'Suporte MotoJá',
+                            title: 'Suporte Mototaxi Millenio',
                             body: msgText,
                             data: { sender: 'admin' }
                           });
                         }
                       }}
-                      className="p-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition"
+                      className="p-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition"
                     >
                       <Send size={18} />
                     </button>
@@ -3868,7 +3868,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                   <p className="text-xs text-gray-500 mb-3">Monitorando {filteredDrivers.filter(d => d.status === 'online').length} pilotos online em tempo real.</p>
                   <div className="flex gap-2 text-[10px] text-gray-400 font-medium">
                     <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-green-500"></div> Online</span>
-                    <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-orange-500"></div> Ocupado</span>
+                    <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-primary-500"></div> Ocupado</span>
                     <span className="flex items-center gap-1"><div className="w-2 h-2 rounded-full bg-gray-400"></div> Offline</span>
                   </div>
                 </div>
@@ -3932,7 +3932,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                           const formattedHistory = history
                             .sort((a: any, b: any) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
                             .map(n => ({
-                              from: n.title === 'Suporte MotoJá' ? 'admin' : 'driver', // Simple heuristic
+                              from: n.title === 'Suporte Mototaxi Millenio' ? 'admin' : 'driver', // Simple heuristic
                               text: n.body,
                               time: new Date(n.created_at)
                             }));
@@ -4004,7 +4004,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                       <div className="relative">
                         <Filter className="absolute left-3 top-2.5 text-gray-400" size={18} />
                         <select
-                          className="pl-10 pr-8 py-2 bg-gray-50 border border-gray-200 rounded-lg appearance-none outline-none focus:ring-2 focus:ring-orange-500 cursor-pointer"
+                          className="pl-10 pr-8 py-2 bg-gray-50 border border-gray-200 rounded-lg appearance-none outline-none focus:ring-2 focus:ring-primary-500 cursor-pointer"
                           value={filterStatus}
                           onChange={(e) => setFilterStatus(e.target.value as any)}
                         >
@@ -4022,8 +4022,8 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
 
                 {/* Bulk Actions Bar */}
                 {selectedDriverIds.length > 0 && (
-                  <div className="bg-orange-50 border border-orange-200 p-3 rounded-xl mb-4 flex items-center justify-between animate-fade-in">
-                    <span className="text-sm text-orange-800 font-bold ml-2">{selectedDriverIds.length} selecionados</span>
+                  <div className="bg-primary-50 border border-primary-200 p-3 rounded-xl mb-4 flex items-center justify-between animate-fade-in">
+                    <span className="text-sm text-primary-800 font-bold ml-2">{selectedDriverIds.length} selecionados</span>
                     <div className="flex gap-2">
                       <Button variant="outline" className="py-1 px-3 h-8 text-xs bg-white" onClick={() => setSelectedDriverIds([])}>Cancelar</Button>
                       <Button
@@ -4045,13 +4045,13 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                     <thead className="bg-gray-50 text-gray-900 font-semibold border-b border-gray-200">
                       <tr>
                         <th className="p-4 w-10">
-                          <button onClick={handleSelectAll} className="text-gray-400 hover:text-orange-500">
-                            {selectedDriverIds.length === filteredDrivers.length && filteredDrivers.length > 0 ? <CheckSquare size={20} className="text-orange-500" /> : <Square size={20} />}
+                          <button onClick={handleSelectAll} className="text-gray-400 hover:text-primary-500">
+                            {selectedDriverIds.length === filteredDrivers.length && filteredDrivers.length > 0 ? <CheckSquare size={20} className="text-primary-500" /> : <Square size={20} />}
                           </button>
                         </th>
                         {/* Coluna Nome com Ordenação */}
                         <th
-                          className={`p-4 whitespace-nowrap cursor-pointer hover:bg-gray-100 transition rounded-lg ${sortField === 'name' ? 'text-orange-600' : ''}`}
+                          className={`p-4 whitespace-nowrap cursor-pointer hover:bg-gray-100 transition rounded-lg ${sortField === 'name' ? 'text-primary-600' : ''}`}
                           onClick={() => setSortField('name')}
                         >
                           <div className="flex items-center gap-1">
@@ -4062,7 +4062,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                         <th className="p-4 whitespace-nowrap text-center">Verificação</th>
                         {/* Coluna Avaliação com Ordenação */}
                         <th
-                          className={`p-4 flex items-center gap-1 cursor-pointer hover:bg-gray-100 transition rounded-lg whitespace-nowrap ${sortField === 'rating' ? 'text-orange-600' : ''}`}
+                          className={`p-4 flex items-center gap-1 cursor-pointer hover:bg-gray-100 transition rounded-lg whitespace-nowrap ${sortField === 'rating' ? 'text-primary-600' : ''}`}
                           onClick={() => setSortField('rating')}
                         >
                           Avaliação <ArrowUpDown size={14} />
@@ -4079,9 +4079,9 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                         const cancelled = safeData?.recentRides?.filter(r => r.driver?.id === driver.id && r.status === 'cancelled').length || 0;
 
                         return (
-                          <tr key={driver.id} className={`hover:bg-gray-50 transition group cursor-pointer ${selectedDriverIds.includes(driver.id) ? 'bg-orange-50' : ''}`} onClick={() => setViewDriver(driver)}>
+                          <tr key={driver.id} className={`hover:bg-gray-50 transition group cursor-pointer ${selectedDriverIds.includes(driver.id) ? 'bg-primary-50' : ''}`} onClick={() => setViewDriver(driver)}>
                             <td className="p-4" onClick={(e) => { e.stopPropagation(); handleSelectDriver(driver.id); }}>
-                              {selectedDriverIds.includes(driver.id) ? <CheckSquare size={20} className="text-orange-500" /> : <Square size={20} className="text-gray-300" />}
+                              {selectedDriverIds.includes(driver.id) ? <CheckSquare size={20} className="text-primary-500" /> : <Square size={20} className="text-gray-300" />}
                             </td>
                             <td className="p-4 whitespace-nowrap">
                               <div className="flex items-center gap-3">
@@ -4178,8 +4178,8 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
 
               {/* Bulk Actions Bar for Users */}
               {selectedUserIds.length > 0 && (
-                <div className="bg-orange-50 border border-orange-200 p-3 rounded-xl mb-4 flex items-center justify-between animate-fade-in">
-                  <span className="text-sm text-orange-800 font-bold ml-2">
+                <div className="bg-primary-50 border border-primary-200 p-3 rounded-xl mb-4 flex items-center justify-between animate-fade-in">
+                  <span className="text-sm text-primary-800 font-bold ml-2">
                     {selectedUserIds.length} selecionados
                   </span>
                   <div className="flex gap-2">
@@ -4224,7 +4224,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                                 setSelectedUserIds([]);
                               }
                             }}
-                            className="rounded border-gray-300 text-orange-600 focus:ring-orange-500 cursor-pointer"
+                            className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 cursor-pointer"
                           />
                         </th>
                         <th className="p-4">Nome</th>
@@ -4238,7 +4238,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                       {(safeData?.passengers || []).map((user) => (
                         <tr
                           key={user.id}
-                          className={`hover:bg-gray-50 transition ${selectedUserIds.includes(user.id) ? 'bg-orange-50' : ''}`}
+                          className={`hover:bg-gray-50 transition ${selectedUserIds.includes(user.id) ? 'bg-primary-50' : ''}`}
                           onClick={() => setViewUser(user)}
                         >
                           <td className="p-4" onClick={(e) => e.stopPropagation()}>
@@ -4252,7 +4252,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                                   setSelectedUserIds([...selectedUserIds, user.id]);
                                 }
                               }}
-                              className="rounded border-gray-300 text-orange-600 focus:ring-orange-500 cursor-pointer"
+                              className="rounded border-gray-300 text-primary-600 focus:ring-primary-500 cursor-pointer"
                             />
                           </td>
                           <td className="p-4">
@@ -4303,11 +4303,11 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* Pending */}
-                <div className="bg-orange-50 p-4 rounded-xl border border-orange-100">
-                  <h3 className="font-bold text-orange-800 mb-3 flex items-center gap-2"><AlertTriangle size={18} /> Pendentes</h3>
+                <div className="bg-primary-50 p-4 rounded-xl border border-primary-100">
+                  <h3 className="font-bold text-primary-800 mb-3 flex items-center gap-2"><AlertTriangle size={18} /> Pendentes</h3>
                   <div className="space-y-3">
                     {(notifications || []).filter(n => !n.read).map(notif => (
-                      <div key={notif.id} className="bg-white p-3 rounded-lg shadow-sm border border-orange-200 cursor-pointer hover:border-orange-400 transition" onClick={() => setSelectedOccurrence(notif)}>
+                      <div key={notif.id} className="bg-white p-3 rounded-lg shadow-sm border border-primary-200 cursor-pointer hover:border-primary-400 transition" onClick={() => setSelectedOccurrence(notif)}>
                         <p className="font-bold text-sm text-gray-800">{notif.title}</p>
                         <p className="text-xs text-gray-500 line-clamp-2">{notif.message}</p>
                         <p className="text-[10px] text-gray-400 mt-2 text-right">{new Date(notif.time).toLocaleString()}</p>
@@ -4356,7 +4356,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                   <div className="h-64 flex items-end justify-between px-4 gap-2">
                     {[65, 40, 80, 55, 90, 70, 85].map((h, i) => (
                       <div key={i} className="flex flex-col items-center gap-2 w-full">
-                        <div className="w-full bg-orange-500 rounded-t-lg transition hover:bg-orange-600" style={{ height: `${h}%` }}></div>
+                        <div className="w-full bg-primary-500 rounded-t-lg transition hover:bg-primary-600" style={{ height: `${h}%` }}></div>
                         <span className="text-xs text-gray-500">{['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'][i]}</span>
                       </div>
                     ))}
@@ -4366,16 +4366,12 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                   <h3 className="font-bold text-lg mb-4">Faturamento por Categoria</h3>
                   <div className="space-y-4">
                     <div>
-                      <div className="flex justify-between text-sm mb-1"><span>Moto - App</span><span className="font-bold">R$ {(safeData?.stats?.revenue || 12500) * 0.6}</span></div>
-                      <div className="w-full bg-gray-100 rounded-full h-2"><div className="bg-orange-500 h-2 rounded-full" style={{ width: '60%' }}></div></div>
+                      <div className="flex justify-between text-sm mb-1"><span>Moto - App</span><span className="font-bold">R$ {(safeData?.stats?.revenue || 12500) * 0.75}</span></div>
+                      <div className="w-full bg-gray-100 rounded-full h-2"><div className="bg-primary-500 h-2 rounded-full" style={{ width: '75%' }}></div></div>
                     </div>
                     <div>
-                      <div className="flex justify-between text-sm mb-1"><span>Moto - Particular</span><span className="font-bold">R$ {(safeData?.stats?.revenue || 12500) * 0.25}</span></div>
+                      <div className="flex justify-between text-sm mb-1"><span>Entregas</span><span className="font-bold">R$ {(safeData?.stats?.revenue || 12500) * 0.25}</span></div>
                       <div className="w-full bg-gray-100 rounded-full h-2"><div className="bg-blue-500 h-2 rounded-full" style={{ width: '25%' }}></div></div>
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-sm mb-1"><span>Entregas</span><span className="font-bold">R$ {(safeData?.stats?.revenue || 12500) * 0.15}</span></div>
-                      <div className="w-full bg-gray-100 rounded-full h-2"><div className="bg-green-500 h-2 rounded-full" style={{ width: '15%' }}></div></div>
                     </div>
                   </div>
                 </Card>
@@ -4393,46 +4389,48 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
               savingSettings={savingSettings}
             />
           ) : activeTab === 'settings' ? (
-            <div className="max-w-6xl mx-auto animate-fade-in pb-20">
+            <div className="max-w-5xl mx-auto animate-fade-in pb-20">
+              {/* Header */}
               <div className="flex justify-between items-center mb-8">
                 <div>
                   <h2 className="text-3xl font-bold text-gray-800">Ajustes da Plataforma</h2>
-                  <p className="text-gray-500">Configure identidade visual, dados da empresa e precificação</p>
+                  <p className="text-gray-500 mt-1">Configure identidade visual, dados da empresa e precificação</p>
                 </div>
-                <Button onClick={handleSaveSettings} disabled={savingSettings} className="flex items-center gap-2">
+                <Button onClick={handleSaveSettings} disabled={savingSettings} className="flex items-center gap-2 px-6">
                   {savingSettings ? <Loader2 size={18} className="animate-spin" /> : <CheckCircle size={18} />}
                   Salvar Alterações
                 </Button>
               </div>
 
-              <div className="space-y-8">
-                {/* 1. Visual Customization */}
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                  <div className="flex items-center gap-3 mb-6 border-b border-gray-100 pb-4">
-                    <div className="p-3 bg-purple-100 text-purple-600 rounded-xl">
-                      <Palette size={24} />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-gray-800 text-lg">Personalização Visual</h3>
-                      <p className="text-sm text-gray-500">Aparência do painel administrativo e tela de login.</p>
-                    </div>
-                  </div>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* ===== COLUNA ESQUERDA (2/3) ===== */}
+                <div className="lg:col-span-2 space-y-6">
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    {/* Left Col: Brand Identity */}
-                    <div className="space-y-6">
-                      <div className="space-y-4">
-                        <label className="block text-sm font-medium text-gray-700">Logo da Aplicação</label>
-                        <div className="border border-dashed border-gray-300 rounded-xl p-6 flex flex-col items-center justify-center bg-gray-50 hover:border-orange-500 transition-colors relative group h-40">
-                          <div className="w-full h-20 mb-2 flex items-center justify-center bg-white rounded-lg border border-gray-200 overflow-hidden relative">
+                  {/* 1. Personalização Visual */}
+                  <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div className="flex items-center gap-3 px-6 py-4 bg-gray-50 border-b border-gray-100">
+                      <div className="p-2.5 bg-purple-100 text-purple-600 rounded-xl">
+                        <Palette size={20} />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-gray-800">Personalização Visual</h3>
+                        <p className="text-xs text-gray-500">Aparência do painel e tela de login</p>
+                      </div>
+                    </div>
+                    <div className="p-6 space-y-6">
+                      {/* Logo */}
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">Logo da Aplicação</label>
+                        <div className="border border-dashed border-gray-300 rounded-xl p-4 flex flex-col items-center justify-center bg-gray-50/50 hover:border-primary-400 transition-colors relative group h-32">
+                          <div className="w-full h-16 mb-2 flex items-center justify-center bg-white rounded-lg border border-gray-200 overflow-hidden relative">
                             <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#000 1px, transparent 1px)', backgroundSize: '10px 10px' }}></div>
                             {settings.visual?.appLogoUrl ? (
                               <img src={settings.visual.appLogoUrl} className="w-full h-full object-contain p-2 relative z-10" alt="App Logo" />
                             ) : (
-                              <ImageIcon className="text-gray-300" size={32} />
+                              <ImageIcon className="text-gray-300" size={28} />
                             )}
                           </div>
-                          <p className="text-xs text-center text-gray-500">Clique para alterar (PNG)</p>
+                          <p className="text-[11px] text-gray-400">Clique para alterar (PNG)</p>
                           <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" accept="image/*" onChange={async (e) => {
                             if (e.target.files?.[0]) {
                               try {
@@ -4445,146 +4443,188 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                         </div>
                       </div>
 
+                      {/* Cor + Nome */}
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Cor Principal</label>
+                          <label className="block text-sm font-semibold text-gray-700 mb-1.5">Cor Principal</label>
                           <div className="flex gap-2 items-center">
-                            <input type="color" value={settings.visual?.primaryColor || '#f97316'} onChange={(e) => setSettings({ ...settings, visual: { ...settings.visual, primaryColor: e.target.value } })} className="w-10 h-10 rounded-lg cursor-pointer border-0 p-0 shadow-sm" />
-                            <Input value={settings.visual?.primaryColor || '#f97316'} onChange={(e: any) => setSettings({ ...settings, visual: { ...settings.visual, primaryColor: e.target.value } })} className="flex-1" />
+                            <input type="color" value={settings.visual?.primaryColor || '#4A764E'} onChange={(e) => setSettings({ ...settings, visual: { ...settings.visual, primaryColor: e.target.value } })} className="w-10 h-10 rounded-lg cursor-pointer border-0 p-0 shadow-sm" />
+                            <Input value={settings.visual?.primaryColor || '#4A764E'} onChange={(e: any) => setSettings({ ...settings, visual: { ...settings.visual, primaryColor: e.target.value } })} className="flex-1" />
                           </div>
                         </div>
                         <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">Nome do App</label>
-                          <Input value={settings.appName} onChange={(e: any) => setSettings({ ...settings, appName: e.target.value })} placeholder="MotoJá" />
+                          <label className="block text-sm font-semibold text-gray-700 mb-1.5">Nome do App</label>
+                          <Input value={settings.appName} onChange={(e: any) => setSettings({ ...settings, appName: e.target.value })} placeholder="Mototaxi Millenio" />
                         </div>
                       </div>
-                    </div>
 
-                    {/* Right Col: Login Screen Config */}
-                    <div className="space-y-4">
-                      <h4 className="font-bold text-gray-700 text-sm uppercase">Tela de Login</h4>
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="space-y-2">
-                          <label className="text-xs text-gray-500">Fundo (Desktop)</label>
-                          <div className="aspect-video bg-gray-100 rounded-lg border border-gray-200 relative overflow-hidden group cursor-pointer">
-                            {settings.visual?.loginBackgroundImage ? (
-                              <img src={settings.visual.loginBackgroundImage} className="w-full h-full object-cover" />
-                            ) : (<div className="w-full h-full flex items-center justify-center text-gray-400"><ImageIcon size={20} /></div>)}
-                            <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition text-white text-xs font-bold">Alterar</div>
-                            <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" accept="image/*" onChange={async (e) => {
-                              if (e.target.files?.[0]) {
-                                try {
-                                  const url = await uploadFile(e.target.files[0], `app/login_bg_${Date.now()}`);
-                                  setSettings(prev => ({ ...prev, visual: { ...prev.visual, loginBackgroundImage: url } }));
-                                } catch { toast.error('Erro no upload'); }
-                              }
-                            }} />
+                      {/* Tela de Login */}
+                      <div className="border-t border-gray-100 pt-5">
+                        <h4 className="font-bold text-gray-700 text-sm uppercase tracking-wider mb-4">Tela de Login</h4>
+                        <div className="grid grid-cols-3 gap-4 mb-4">
+                          <div className="col-span-2 space-y-1">
+                            <label className="text-xs font-medium text-gray-500">Fundo (Desktop)</label>
+                            <div className="aspect-video bg-gray-100 rounded-xl border border-gray-200 relative overflow-hidden group cursor-pointer">
+                              {settings.visual?.loginBackgroundImage ? (
+                                <img src={settings.visual.loginBackgroundImage} className="w-full h-full object-cover" />
+                              ) : (<div className="w-full h-full flex items-center justify-center text-gray-400"><ImageIcon size={20} /></div>)}
+                              <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition text-white text-xs font-bold">Alterar</div>
+                              <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" accept="image/*" onChange={async (e) => {
+                                if (e.target.files?.[0]) {
+                                  try {
+                                    const url = await uploadFile(e.target.files[0], `app/login_bg_${Date.now()}`);
+                                    setSettings(prev => ({ ...prev, visual: { ...prev.visual, loginBackgroundImage: url } }));
+                                  } catch { toast.error('Erro no upload'); }
+                                }
+                              }} />
+                            </div>
+                          </div>
+                          <div className="space-y-1">
+                            <label className="text-xs font-medium text-gray-500">Fundo (Mobile)</label>
+                            <div className="aspect-[9/16] w-full max-w-[80px] mx-auto bg-gray-100 rounded-xl border border-gray-200 relative overflow-hidden group cursor-pointer">
+                              {settings.visual?.mobileBackgroundImage ? (
+                                <img src={settings.visual.mobileBackgroundImage} className="w-full h-full object-cover" />
+                              ) : (<div className="w-full h-full flex items-center justify-center text-gray-400"><Smartphone size={16} /></div>)}
+                              <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition text-white text-[10px] font-bold text-center p-1">Alterar</div>
+                              <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" accept="image/*" onChange={async (e) => {
+                                if (e.target.files?.[0]) {
+                                  try {
+                                    const url = await uploadFile(e.target.files[0], `app/mobile_bg_${Date.now()}`);
+                                    setSettings(prev => ({ ...prev, visual: { ...prev.visual, mobileBackgroundImage: url } }));
+                                  } catch { toast.error('Erro no upload'); }
+                                }
+                              }} />
+                            </div>
                           </div>
                         </div>
-                        <div className="space-y-2">
-                          <label className="text-xs text-gray-500">Fundo (Mobile)</label>
-                          <div className="aspect-[9/16] w-20 mx-auto bg-gray-100 rounded-lg border border-gray-200 relative overflow-hidden group cursor-pointer">
-                            {settings.visual?.mobileBackgroundImage ? (
-                              <img src={settings.visual.mobileBackgroundImage} className="w-full h-full object-cover" />
-                            ) : (<div className="w-full h-full flex items-center justify-center text-gray-400"><Smartphone size={20} /></div>)}
-                            <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition text-white text-[10px] font-bold text-center p-1">Alterar</div>
-                            <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" accept="image/*" onChange={async (e) => {
-                              if (e.target.files?.[0]) {
-                                try {
-                                  const url = await uploadFile(e.target.files[0], `app/mobile_bg_${Date.now()}`);
-                                  setSettings(prev => ({ ...prev, visual: { ...prev.visual, mobileBackgroundImage: url } }));
-                                } catch { toast.error('Erro no upload'); }
-                              }
-                            }} />
+                        <div className="grid grid-cols-2 gap-4">
+                          <Input label="Título Login" value={settings.visual?.loginTitle || ''} onChange={(e: any) => setSettings({ ...settings, visual: { ...settings.visual, loginTitle: e.target.value } })} placeholder="Bem-vindo" />
+                          <Input label="Subtítulo Login" value={settings.visual?.loginSubtitle || ''} onChange={(e: any) => setSettings({ ...settings, visual: { ...settings.visual, loginSubtitle: e.target.value } })} placeholder="Acesse sua conta" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 2. Precificação */}
+                  <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div className="flex items-center gap-3 px-6 py-4 bg-gray-50 border-b border-gray-100">
+                      <div className="p-2.5 bg-primary-100 text-primary-600 rounded-xl">
+                        <DollarSign size={20} />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-gray-800">Precificação</h3>
+                        <p className="text-xs text-gray-500">Valores base, por km e taxas da plataforma</p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-100">
+                      {/* Mototaxi */}
+                      <div className="p-5">
+                        <div className="flex items-center gap-2 mb-4">
+                          <Bike size={18} className="text-primary-600" />
+                          <h4 className="font-bold text-gray-800 text-sm">Mototaxi</h4>
+                        </div>
+                        <div className="space-y-3">
+                          <Input label="Preço Base (R$)" type="number" value={settings.basePrice} onChange={(e: any) => setSettings({ ...settings, basePrice: parseFloat(e.target.value) })} />
+                          <Input label="Preço / KM (R$)" type="number" value={settings.pricePerKm} onChange={(e: any) => setSettings({ ...settings, pricePerKm: parseFloat(e.target.value) })} />
+                          <Input label="Taxa Plataforma (%)" type="number" value={settings.platformFee} onChange={(e: any) => setSettings({ ...settings, platformFee: parseFloat(e.target.value) })} />
+                          <div className="p-2.5 bg-primary-50 rounded-lg text-xs text-gray-600">
+                            <span className="block text-gray-400">Simulação 5km</span>
+                            <span className="font-bold text-gray-800 text-sm">R$ {(settings.basePrice + (settings.pricePerKm * 5)).toFixed(2)}</span>
                           </div>
                         </div>
                       </div>
-                      <div className="space-y-3">
-                        <Input label="Título Login" value={settings.visual?.loginTitle || ''} onChange={(e: any) => setSettings({ ...settings, visual: { ...settings.visual, loginTitle: e.target.value } })} placeholder="Bem-vindo" />
-                        <Input label="Subtítulo Login" value={settings.visual?.loginSubtitle || ''} onChange={(e: any) => setSettings({ ...settings, visual: { ...settings.visual, loginSubtitle: e.target.value } })} placeholder="Acesse sua conta" />
+
+                      {/* Bicicleta */}
+                      <div className="p-5">
+                        <div className="flex items-center gap-2 mb-4">
+                          <Leaf size={18} className="text-green-600" />
+                          <h4 className="font-bold text-gray-800 text-sm">Bicicleta / Eco</h4>
+                        </div>
+                        <div className="space-y-3">
+                          <Input label="Preço Base (R$)" type="number" value={settings.bikeBasePrice} onChange={(e: any) => setSettings({ ...settings, bikeBasePrice: parseFloat(e.target.value) })} />
+                          <Input label="Preço / KM (R$)" type="number" value={settings.bikePricePerKm} onChange={(e: any) => setSettings({ ...settings, bikePricePerKm: parseFloat(e.target.value) })} />
+                          <Input label="Dist. Máx (KM)" type="number" value={settings.bikeMaxDistance} onChange={(e: any) => setSettings({ ...settings, bikeMaxDistance: parseFloat(e.target.value) })} />
+                          <div className="p-2.5 bg-green-50 rounded-lg text-xs text-gray-600">
+                            <span className="block text-gray-400">Simulação 3km</span>
+                            <span className="font-bold text-gray-800 text-sm">R$ {(settings.bikeBasePrice + (settings.bikePricePerKm * 3)).toFixed(2)}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Entregas */}
+                      <div className="p-5">
+                        <div className="flex items-center gap-2 mb-4">
+                          <Package size={18} className="text-blue-600" />
+                          <h4 className="font-bold text-gray-800 text-sm">Entregas</h4>
+                        </div>
+                        <div className="space-y-3">
+                          <Input label="Preço Base (R$)" type="number" value={settings.deliveryMotoBasePrice} onChange={(e: any) => setSettings({ ...settings, deliveryMotoBasePrice: parseFloat(e.target.value) })} />
+                          <Input label="Preço / KM (R$)" type="number" value={settings.deliveryMotoPricePerKm} onChange={(e: any) => setSettings({ ...settings, deliveryMotoPricePerKm: parseFloat(e.target.value) })} />
+                          <div className="p-2.5 bg-blue-50 rounded-lg text-xs text-gray-600 mt-auto">
+                            <span className="block text-gray-400">Simulação 8km</span>
+                            <span className="font-bold text-gray-800 text-sm">R$ {(settings.deliveryMotoBasePrice + (settings.deliveryMotoPricePerKm * 8)).toFixed(2)}</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* 2. Company Information */}
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                  <div className="flex items-center gap-3 mb-6 border-b border-gray-100 pb-4">
-                    <div className="p-3 bg-blue-100 text-blue-600 rounded-xl">
-                      <Building2 size={24} />
+                {/* ===== COLUNA DIREITA (1/3) ===== */}
+                <div className="space-y-6">
+
+                  {/* Tempo de Espera e Paradas */}
+                  <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div className="flex items-center gap-3 px-5 py-4 bg-gray-50 border-b border-gray-100">
+                      <div className="p-2.5 bg-primary-100 text-primary-600 rounded-xl">
+                        <Clock size={20} />
+                      </div>
+                      <h3 className="font-bold text-gray-800">Tempo de Espera</h3>
                     </div>
-                    <div>
-                      <h3 className="font-bold text-gray-800 text-lg">Dados da Empresa</h3>
-                      <p className="text-sm text-gray-500">Informações legais e de contato para suporte.</p>
+                    <div className="p-5 space-y-4">
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-1">Tolerância (min)</label>
+                        <Input type="number" value={settings.waitTimeLimit} onChange={(e: any) => setSettings({ ...settings, waitTimeLimit: Number(e.target.value) })} />
+                        <p className="text-[11px] text-gray-400 mt-1">Tempo máx. sem cobrança extra por parada.</p>
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-1">Taxa / Min Excedente (R$)</label>
+                        <Input type="number" step="0.10" value={settings.waitTimeFee} onChange={(e: any) => setSettings({ ...settings, waitTimeFee: Number(e.target.value) })} />
+                        <p className="text-[11px] text-gray-400 mt-1">Cobrado por minuto após a tolerância.</p>
+                      </div>
                     </div>
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Input label="Razão Social" value={settings.companyName} onChange={(e: any) => setSettings({ ...settings, companyName: e.target.value })} placeholder="Empresa LTDA" />
-                    <Input label="CNPJ" value={settings.companyCnpj} onChange={(e: any) => setSettings({ ...settings, companyCnpj: e.target.value })} placeholder="00.000.000/0000-00" maxLength={18} />
-                    <Input label="Endereço Completo" value={settings.companyAddress} onChange={(e: any) => setSettings({ ...settings, companyAddress: e.target.value })} className="md:col-span-2" />
-                    <div className="grid grid-cols-3 gap-4 md:col-span-2">
-                      <Input label="Cidade" value={settings.companyCity} onChange={(e: any) => setSettings({ ...settings, companyCity: e.target.value })} className="col-span-1" />
-                      <Input label="Estado" value={settings.companyState} onChange={(e: any) => setSettings({ ...settings, companyState: e.target.value })} className="col-span-1" />
-                      <Input label="CEP" value={settings.companyCep} onChange={(e: any) => setSettings({ ...settings, companyCep: e.target.value })} className="col-span-1" />
+
+                  {/* Informações da Empresa */}
+                  <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div className="flex items-center gap-3 px-5 py-4 bg-gray-50 border-b border-gray-100">
+                      <div className="p-2.5 bg-blue-100 text-blue-600 rounded-xl">
+                        <Building2 size={20} />
+                      </div>
+                      <h3 className="font-bold text-gray-800">Informações da Empresa</h3>
                     </div>
-                    <Input label="Email de Suporte" value={settings.supportEmail} onChange={(e: any) => setSettings({ ...settings, supportEmail: e.target.value })} />
-                    <Input label="Telefone / WhatsApp" value={settings.supportPhone} onChange={(e: any) => setSettings({ ...settings, supportPhone: e.target.value })} />
+                    <div className="p-5 space-y-4">
+                      <Input label="Nome da Empresa" value={settings.companyName} onChange={(e: any) => setSettings({ ...settings, companyName: e.target.value })} placeholder="Empresa LTDA" />
+                      <Input label="Email de Suporte" value={settings.supportEmail} onChange={(e: any) => setSettings({ ...settings, supportEmail: e.target.value })} />
+                      <Input label="CNPJ" value={settings.companyCnpj} onChange={(e: any) => setSettings({ ...settings, companyCnpj: e.target.value })} placeholder="00.000.000/0000-00" maxLength={18} />
+                      <Input label="Telefone / WhatsApp" value={settings.supportPhone} onChange={(e: any) => setSettings({ ...settings, supportPhone: e.target.value })} />
+                      <Input label="Endereço" value={settings.companyAddress} onChange={(e: any) => setSettings({ ...settings, companyAddress: e.target.value })} />
+                      <div className="grid grid-cols-2 gap-3">
+                        <Input label="Cidade" value={settings.companyCity} onChange={(e: any) => setSettings({ ...settings, companyCity: e.target.value })} />
+                        <Input label="Estado" value={settings.companyState} onChange={(e: any) => setSettings({ ...settings, companyState: e.target.value })} />
+                      </div>
+                      <Input label="CEP" value={settings.companyCep} onChange={(e: any) => setSettings({ ...settings, companyCep: e.target.value })} />
+                      <p className="text-xs text-primary-600 cursor-pointer hover:underline">Para alterar dados da empresa, contate o suporte técnico.</p>
+                    </div>
                   </div>
+
+                  {/* Botão Salvar fixo no lado direito */}
+                  <Button onClick={handleSaveSettings} disabled={savingSettings} className="w-full flex items-center justify-center gap-2">
+                    {savingSettings ? <Loader2 size={18} className="animate-spin" /> : <CheckCircle size={18} />}
+                    Salvar Alterações
+                  </Button>
                 </div>
-
-                {/* 3. Pricing Configuration */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  {/* Moto (Standard) */}
-                  <Card className="p-5 border-t-4 border-t-orange-500">
-                    <div className="flex items-center gap-2 mb-4">
-                      <Bike className="text-orange-600" />
-                      <h3 className="font-bold text-gray-800">Mototaxi</h3>
-                    </div>
-                    <div className="space-y-3">
-                      <Input label="Preço Base (R$)" type="number" value={settings.basePrice} onChange={(e: any) => setSettings({ ...settings, basePrice: parseFloat(e.target.value) })} />
-                      <Input label="Preço / KM (R$)" type="number" value={settings.pricePerKm} onChange={(e: any) => setSettings({ ...settings, pricePerKm: parseFloat(e.target.value) })} />
-                      <Input label="Taxa Plataforma (%)" type="number" value={settings.platformFee} onChange={(e: any) => setSettings({ ...settings, platformFee: parseFloat(e.target.value) })} />
-                      <div className="p-3 bg-gray-50 rounded text-xs text-gray-500 mt-2">
-                        <p>Simulação 5km:</p>
-                        <p className="font-bold text-gray-800">R$ {(settings.basePrice + (settings.pricePerKm * 5)).toFixed(2)}</p>
-                      </div>
-                    </div>
-                  </Card>
-
-                  {/* Bike (Eco) */}
-                  <Card className="p-5 border-t-4 border-t-green-500">
-                    <div className="flex items-center gap-2 mb-4">
-                      <Leaf className="text-green-600" />
-                      <h3 className="font-bold text-gray-800">Bicicleta / Eco</h3>
-                    </div>
-                    <div className="space-y-3">
-                      <Input label="Preço Base (R$)" type="number" value={settings.bikeBasePrice} onChange={(e: any) => setSettings({ ...settings, bikeBasePrice: parseFloat(e.target.value) })} />
-                      <Input label="Preço / KM (R$)" type="number" value={settings.bikePricePerKm} onChange={(e: any) => setSettings({ ...settings, bikePricePerKm: parseFloat(e.target.value) })} />
-                      <Input label="Distância Máx (KM)" type="number" value={settings.bikeMaxDistance} onChange={(e: any) => setSettings({ ...settings, bikeMaxDistance: parseFloat(e.target.value) })} />
-                      <div className="p-3 bg-gray-50 rounded text-xs text-gray-500 mt-2">
-                        <p>Simulação 3km:</p>
-                        <p className="font-bold text-gray-800">R$ {(settings.bikeBasePrice + (settings.bikePricePerKm * 3)).toFixed(2)}</p>
-                      </div>
-                    </div>
-                  </Card>
-
-                  {/* Delivery */}
-                  <Card className="p-5 border-t-4 border-t-blue-500">
-                    <div className="flex items-center gap-2 mb-4">
-                      <Package className="text-blue-600" />
-                      <h3 className="font-bold text-gray-800">Entregas</h3>
-                    </div>
-                    <div className="space-y-3">
-                      <Input label="Preço Base (R$)" type="number" value={settings.deliveryMotoBasePrice} onChange={(e: any) => setSettings({ ...settings, deliveryMotoBasePrice: parseFloat(e.target.value) })} />
-                      <Input label="Preço / KM (R$)" type="number" value={settings.deliveryMotoPricePerKm} onChange={(e: any) => setSettings({ ...settings, deliveryMotoPricePerKm: parseFloat(e.target.value) })} />
-                      <div className="p-3 bg-gray-50 rounded text-xs text-gray-500 mt-2">
-                        <p>Simulação 8km:</p>
-                        <p className="font-bold text-gray-800">R$ {(settings.deliveryMotoBasePrice + (settings.deliveryMotoPricePerKm * 8)).toFixed(2)}</p>
-                      </div>
-                    </div>
-                  </Card>
-                </div>
-
               </div>
             </div>
           ) : (
@@ -4597,8 +4637,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
         </div>
       </div >
 
-      {activeTab === 'settings' && <SettingsTab />}
-      {activeTab === 'campaigns' && <CampaignsTab />}
+
 
       {showCompanyModal && <CompanyFormModal company={editingCompany} onClose={() => setShowCompanyModal(false)} onSave={handleSaveCompany} onDelete={handleDeleteCompany} onNotify={handleNotify} />}
       {viewDriver && <DriverDetailModal driver={viewDriver} rides={safeData.recentRides} onClose={() => setViewDriver(null)} onRefresh={loadData} />}
@@ -4628,7 +4667,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                         {(selectedOccurrence.protocol || selectedOccurrence.id).substring(0, 11)}
                       </span>
                       <span className={`px-2 py-1 rounded text-xs font-bold uppercase border ${selectedOccurrence.priority === 'critical' ? 'bg-red-900/30 border-red-800 text-white' :
-                        selectedOccurrence.priority === 'high' ? 'bg-orange-900 text-orange-100' :
+                        selectedOccurrence.priority === 'high' ? 'bg-primary-900 text-primary-100' :
                           selectedOccurrence.priority === 'medium' ? 'bg-yellow-900 text-yellow-100' :
                             'bg-gray-700 text-gray-100'
                         }`}>
@@ -4655,7 +4694,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                 <div className="flex-1 overflow-y-auto p-6 space-y-6">
                   {/* Status */}
                   <div className="flex items-center gap-4">
-                    <span className={`px-4 py-2 rounded-full font-bold text-sm ${selectedOccurrence.read ? 'bg-green-100 text-green-700' : 'bg-orange-100 text-orange-700'
+                    <span className={`px-4 py-2 rounded-full font-bold text-sm ${selectedOccurrence.read ? 'bg-green-100 text-green-700' : 'bg-primary-100 text-primary-700'
                       }`}>
                       {selectedOccurrence.read ? '✓ Resolvido' : '⏳ Pendente'}
                     </span>

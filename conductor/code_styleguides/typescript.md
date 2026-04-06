@@ -1,4 +1,4 @@
-# TypeScript Style Guide - MotoJá
+# TypeScript Style Guide - Mototaxi Millenio
 
 ## Naming Conventions
 
@@ -15,7 +15,7 @@
 ## File Organization
 
 ```
-motojá/
+mototaxi-millenio/
 ├── components/      # Componentes reutilizáveis
 ├── screens/         # Telas completas (pages)
 ├── services/        # Lógica de negócio e APIs

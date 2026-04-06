@@ -76,7 +76,7 @@ export const FavoriteDriversScreen: React.FC<FavoriteDriversScreenProps> = ({ fa
                                         <h3 className="font-bold text-gray-800">{driver.name}</h3>
                                         <p className="text-xs text-gray-500 mb-1">{driver.vehicle}</p>
                                         <div className="flex items-center gap-1 bg-gray-50 px-2 py-0.5 rounded-md w-fit">
-                                            <Star size={12} className="text-orange-500 fill-orange-500" />
+                                            <Star size={12} className="text-primary-500 fill-primary-500" />
                                             <span className="text-xs font-bold text-gray-700">{driver.rating.toFixed(1)}</span>
                                         </div>
                                     </div>

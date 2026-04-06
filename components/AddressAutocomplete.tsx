@@ -141,7 +141,7 @@ export const AddressAutocomplete = ({ value, onChange, onSelect, placeholder, us
           placeholder={placeholder || "Digite o endereço"}
           className={`w-full h-14 ${transparent ? 'pl-4 pr-12' : 'pl-12 pr-4'} ${transparent ? 'bg-transparent border-0' : 'bg-gray-100 border-0'} focus:bg-white focus:ring-2 focus:ring-black/5 rounded-lg outline-none transition-all font-semibold text-gray-900 placeholder:text-gray-500 text-base`}
         />
-        <div className={`absolute top-1/2 -translate-y-1/2 transition-colors pointer-events-none ${transparent ? 'right-4' : 'left-4'} ${loading ? 'text-orange-500' : 'text-gray-500'}`}>
+        <div className={`absolute top-1/2 -translate-y-1/2 transition-colors pointer-events-none ${transparent ? 'right-4' : 'left-4'} ${loading ? 'text-primary-500' : 'text-gray-500'}`}>
           {loading ? <Loader2 className="animate-spin" size={20} /> : (leftIcon || null)}
         </div>
       </div>
@@ -162,7 +162,7 @@ export const AddressAutocomplete = ({ value, onChange, onSelect, placeholder, us
               <div
                 key={item.placeId}
                 onClick={() => handleSelect(item)}
-                className="flex items-center gap-3 p-3.5 hover:bg-orange-50 cursor-pointer transition-colors border-b border-gray-50 last:border-0"
+                className="flex items-center gap-3 p-3.5 hover:bg-primary-50 cursor-pointer transition-colors border-b border-gray-50 last:border-0"
               >
                 <div className="bg-gray-100 p-2 rounded-full text-gray-500 flex-shrink-0">
                   <MapPin size={16} />

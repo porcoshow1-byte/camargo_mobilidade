@@ -23,7 +23,7 @@ export const Button = ({
   const baseStyle = "px-4 py-2 rounded-xl font-semibold transition-all duration-200 flex items-center justify-center gap-2 active:scale-95 disabled:opacity-50 disabled:pointer-events-none";
 
   const variants = {
-    primary: "bg-orange-500 text-white hover:bg-orange-600 shadow-lg shadow-orange-500/20",
+    primary: "bg-primary-500 text-white hover:bg-primary-600 shadow-lg shadow-primary-500/20",
     secondary: "bg-gray-800 text-white hover:bg-gray-900",
     outline: "border-2 border-gray-200 text-gray-700 hover:bg-gray-50",
     danger: "bg-red-500 text-white hover:bg-red-600",
@@ -82,7 +82,7 @@ export const Input = ({
           readOnly={readOnly}
           className={`w-full p-3 ${icon ? 'pl-10' : ''} ${isPassword ? 'pr-12' : ''} bg-gray-50 border rounded-xl outline-none transition-all ${hasError
             ? 'border-red-500 focus:ring-2 focus:ring-red-400 focus:border-transparent bg-red-50/30'
-            : 'border-gray-200 focus:ring-2 focus:ring-orange-500 focus:border-transparent'
+            : 'border-gray-200 focus:ring-2 focus:ring-primary-500 focus:border-transparent'
             } ${readOnly ? 'opacity-70 cursor-not-allowed' : ''}`}
           {...props}
         />
@@ -122,7 +122,7 @@ export const Badge = ({ children, color = 'gray', size = 'md', className = '' }:
     green: 'bg-green-100 text-green-700',
     red: 'bg-red-100 text-red-700',
     blue: 'bg-blue-100 text-blue-700',
-    orange: 'bg-orange-100 text-orange-700',
+    orange: 'bg-primary-100 text-primary-700',
     gray: 'bg-gray-100 text-gray-700',
   };
 

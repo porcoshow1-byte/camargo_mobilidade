@@ -75,13 +75,13 @@ const mapToDbCompany = (data: Partial<Company>): any => {
 
 const getMockData = (): Company[] => {
     try {
-        const stored = JSON.parse(localStorage.getItem('motoja_mock_companies') || '[]');
+        const stored = JSON.parse(localStorage.getItem('mototaximillenio_mock_companies') || '[]');
         return stored.length > 0 ? stored : INITIAL_COMPANIES;
     } catch { return INITIAL_COMPANIES; }
 };
 
 const saveMockData = (companies: Company[]) => {
-    localStorage.setItem('motoja_mock_companies', JSON.stringify(companies));
+    localStorage.setItem('mototaximillenio_mock_companies', JSON.stringify(companies));
 };
 
 export const getCompany = async (companyId: string): Promise<Company | null> => {

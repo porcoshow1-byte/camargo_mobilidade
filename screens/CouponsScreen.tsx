@@ -66,12 +66,12 @@ export const CouponsScreen: React.FC<CouponsScreenProps> = ({ coupons, onBack, o
                 ) : (
                     <div className="space-y-4">
                         {coupons.map(coupon => (
-                            <div key={coupon.id} className="bg-white p-4 rounded-xl border border-l-4 border-l-orange-500 shadow-sm flex items-center justify-between">
+                            <div key={coupon.id} className="bg-white p-4 rounded-xl border border-l-4 border-l-primary-500 shadow-sm flex items-center justify-between">
                                 <div>
                                     <h3 className="font-bold text-gray-800">{coupon.code}</h3>
                                     <p className="text-sm text-gray-500">{coupon.description}</p>
                                 </div>
-                                <div className="bg-orange-50 text-orange-600 px-3 py-1 rounded-full text-xs font-bold">
+                                <div className="bg-primary-50 text-primary-600 px-3 py-1 rounded-full text-xs font-bold">
                                     {coupon.type === 'percent' ? `${coupon.discount}% OFF` : `R$ ${coupon.discount} OFF`}
                                 </div>
                             </div>
@@ -84,7 +84,7 @@ export const CouponsScreen: React.FC<CouponsScreenProps> = ({ coupons, onBack, o
             <div className="p-4 bg-white border-t border-gray-100">
                 <Button
                     onClick={() => setShowModal(true)}
-                    className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-4 rounded-full shadow-lg"
+                    className="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-4 rounded-full shadow-lg"
                 >
                     Resgatar cupom
                 </Button>
@@ -117,7 +117,7 @@ export const CouponsScreen: React.FC<CouponsScreenProps> = ({ coupons, onBack, o
                         <Button
                             onClick={handleRedeemClick}
                             disabled={!code || loading}
-                            className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-4 rounded-full shadow-lg flex items-center justify-center gap-2"
+                            className="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-4 rounded-full shadow-lg flex items-center justify-center gap-2"
                         >
                             {loading ? 'Validando...' : 'Confirmar'}
                         </Button>

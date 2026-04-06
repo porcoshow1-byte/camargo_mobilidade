@@ -26,9 +26,9 @@ export const ReferralScreen: React.FC<ReferralScreenProps> = ({ referralCode, on
         if (navigator.share) {
             try {
                 await navigator.share({
-                    title: 'Ganhe R$ 1 no MotoJá!',
-                    text: `Use meu código ${referralCode} e ganhe descontos no MotoJá!`,
-                    url: 'https://motoja.app.br'
+                    title: 'Ganhe R$ 1 no Mototaxi Millenio!',
+                    text: `Use meu código ${referralCode} e ganhe descontos no Mototaxi Millenio!`,
+                    url: 'https://mototaximillenio.app.br'
                 });
             } catch (err) {
                 console.log('Error sharing:', err);
@@ -59,13 +59,13 @@ export const ReferralScreen: React.FC<ReferralScreenProps> = ({ referralCode, on
             <div className="flex border-b border-gray-100">
                 <button
                     onClick={() => setActiveTab('campaign')}
-                    className={`flex-1 py-4 font-bold text-sm text-center border-b-2 transition-colors ${activeTab === 'campaign' ? 'border-orange-600 text-orange-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+                    className={`flex-1 py-4 font-bold text-sm text-center border-b-2 transition-colors ${activeTab === 'campaign' ? 'border-primary-600 text-primary-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
                 >
                     Campanha
                 </button>
                 <button
                     onClick={() => setActiveTab('referrals')}
-                    className={`flex-1 py-4 font-bold text-sm text-center border-b-2 transition-colors ${activeTab === 'referrals' ? 'border-orange-600 text-orange-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+                    className={`flex-1 py-4 font-bold text-sm text-center border-b-2 transition-colors ${activeTab === 'referrals' ? 'border-primary-600 text-primary-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
                 >
                     Minhas indicações
                 </button>
@@ -83,8 +83,8 @@ export const ReferralScreen: React.FC<ReferralScreenProps> = ({ referralCode, on
                                         Convide seus amigos para <span className="font-bold">se cadastrarem no app com seu código</span> e receba R$ 1 em créditos quando eles completarem 1 corrida.
                                     </p>
                                 </div>
-                                <div className="bg-orange-100 p-4 rounded-2xl rotate-3">
-                                    <Gift size={48} className="text-orange-600" />
+                                <div className="bg-primary-100 p-4 rounded-2xl rotate-3">
+                                    <Gift size={48} className="text-primary-600" />
                                 </div>
                             </div>
 
@@ -106,7 +106,7 @@ export const ReferralScreen: React.FC<ReferralScreenProps> = ({ referralCode, on
 
                             <Button
                                 onClick={handleShare}
-                                className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-4 rounded-full shadow-lg flex items-center justify-center gap-2"
+                                className="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-4 rounded-full shadow-lg flex items-center justify-center gap-2"
                             >
                                 <Share2 size={20} /> Compartilhar
                             </Button>
@@ -114,10 +114,10 @@ export const ReferralScreen: React.FC<ReferralScreenProps> = ({ referralCode, on
                     </div>
                 ) : (
                     <div>
-                        <div className="bg-orange-50 rounded-xl p-4 mb-6 flex items-center justify-between border border-orange-100">
+                        <div className="bg-primary-50 rounded-xl p-4 mb-6 flex items-center justify-between border border-primary-100">
                             <div>
-                                <p className="text-orange-800 text-sm font-bold">Total ganho</p>
-                                <h3 className="text-2xl font-bold text-orange-600">R$ {referralStats.earnings.toFixed(2).replace('.', ',')}</h3>
+                                <p className="text-primary-800 text-sm font-bold">Total ganho</p>
+                                <h3 className="text-2xl font-bold text-primary-600">R$ {referralStats.earnings.toFixed(2).replace('.', ',')}</h3>
                             </div>
                             <div className="text-right">
                                 <p className="text-gray-500 text-xs">Indicações</p>
@@ -142,7 +142,7 @@ export const ReferralScreen: React.FC<ReferralScreenProps> = ({ referralCode, on
                                     {ref.status === 'completed' ? (
                                         <span className="text-green-600 font-bold text-sm">+ R$ {ref.reward.toFixed(2)}</span>
                                     ) : (
-                                        <span className="text-orange-500 text-xs font-bold bg-orange-50 px-2 py-1 rounded-full">Pendente</span>
+                                        <span className="text-primary-500 text-xs font-bold bg-primary-50 px-2 py-1 rounded-full">Pendente</span>
                                     )}
                                 </div>
                             ))}

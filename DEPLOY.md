@@ -1,6 +1,6 @@
 # Guia de Implantação (Deployment)
 
-Este guia descreve como colocar o **MotoJá** em produção.
+Este guia descreve como colocar o **Mototaxi Millenio** em produção.
 
 ## 1. Variáveis de Ambiente
 
@@ -36,7 +36,7 @@ Isso criará a pasta `dist` com os arquivos estáticos.
 
 ## 3. Hospedagem (Exemplo: Vercel)
 
-O MotoJá é um SPA (Single Page Application). Certifique-se de configurar o "Output Directory" como `dist`.
+O Mototaxi Millenio é um SPA (Single Page Application). Certifique-se de configurar o "Output Directory" como `dist`.
 
 Normalmente a Vercel detecta automaticamente:
 - **Build Command:** `npm run build` or `vite build`

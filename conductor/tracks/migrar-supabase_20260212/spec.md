@@ -11,7 +11,7 @@ Migração completa do backend de Firebase (Firestore, Auth, Realtime DB, Storag
 
 ## Context
 
-O MotoJá atualmente usa Firebase como BaaS com 4 serviços:
+O Mototaxi Millenio atualmente usa Firebase como BaaS com 4 serviços:
 - **Firebase Auth** → login/registro de passageiros, pilotos, admins e empresas
 - **Firestore** → banco de dados NoSQL para corridas, usuários, empresas, settings, tickets
 - **Realtime Database** → chat em tempo real e rastreamento GPS do piloto

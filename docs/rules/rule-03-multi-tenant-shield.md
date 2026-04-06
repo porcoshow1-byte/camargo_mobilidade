@@ -1,4 +1,4 @@
-# Rule 03: Blindagem Multi-Tenant / User Isolation (MotoJá)
+# Rule 03: Blindagem Multi-Tenant / User Isolation (Mototaxi Millenio)
 
 ## MOTIVO
 Evitar vazamento de dados entre usuários ou empresas (ex: Um motorista ver o histórico de outro).

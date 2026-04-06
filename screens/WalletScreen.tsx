@@ -64,7 +64,7 @@ export const WalletScreen: React.FC<WalletScreenProps> = ({ balance, history, on
                                     setAmount(val);
                                 }}
                                 placeholder="R$ 0,00"
-                                className="text-3xl font-bold p-4 h-16 border-gray-300 focus:border-orange-500 rounded-xl"
+                                className="text-3xl font-bold p-4 h-16 border-gray-300 focus:border-primary-500 rounded-xl"
                             />
                             <p className="text-xs text-gray-500 mt-2">Digite um valor entre R$2,00 e R$500,00</p>
                         </div>
@@ -74,7 +74,7 @@ export const WalletScreen: React.FC<WalletScreenProps> = ({ balance, history, on
                                 <button
                                     key={val}
                                     onClick={() => handleQuickAmount(val)}
-                                    className={`px-6 py-2 rounded-full border border-gray-300 font-medium whitespace-nowrap transition-colors ${amount === val.toString() ? 'bg-orange-50 border-orange-500 text-orange-700' : 'text-gray-600 hover:bg-gray-50'}`}
+                                    className={`px-6 py-2 rounded-full border border-gray-300 font-medium whitespace-nowrap transition-colors ${amount === val.toString() ? 'bg-primary-50 border-primary-500 text-primary-700' : 'text-gray-600 hover:bg-gray-50'}`}
                                 >
                                     R$ {val},00
                                 </button>
@@ -83,7 +83,7 @@ export const WalletScreen: React.FC<WalletScreenProps> = ({ balance, history, on
 
                         <div className="mt-auto">
                             <p className="text-sm font-bold text-gray-700 mb-4">Método de recarga</p>
-                            <div className="flex items-center justify-between p-4 border border-orange-200 bg-orange-50/50 rounded-xl cursor-pointer">
+                            <div className="flex items-center justify-between p-4 border border-primary-200 bg-primary-50/50 rounded-xl cursor-pointer">
                                 <div className="flex items-center gap-3">
                                     {/* Pix Icon SVG (Simulated) */}
                                     <div className="w-8 h-8 flex items-center justify-center">
@@ -91,15 +91,15 @@ export const WalletScreen: React.FC<WalletScreenProps> = ({ balance, history, on
                                     </div>
                                     <span className="font-bold text-gray-800">Pix</span>
                                 </div>
-                                <div className="w-5 h-5 rounded-full border-2 border-orange-500 flex items-center justify-center">
-                                    <div className="w-2.5 h-2.5 rounded-full bg-orange-500"></div>
+                                <div className="w-5 h-5 rounded-full border-2 border-primary-500 flex items-center justify-center">
+                                    <div className="w-2.5 h-2.5 rounded-full bg-primary-500"></div>
                                 </div>
                             </div>
 
                             <Button
                                 onClick={handleGeneratePix}
                                 disabled={!amount || parseFloat(amount) < 2}
-                                className="w-full mt-6 py-4 text-lg font-bold shadow-lg bg-orange-600 hover:bg-orange-700 text-white rounded-full"
+                                className="w-full mt-6 py-4 text-lg font-bold shadow-lg bg-primary-600 hover:bg-primary-700 text-white rounded-full"
                             >
                                 Adicionar saldo
                             </Button>
@@ -108,9 +108,9 @@ export const WalletScreen: React.FC<WalletScreenProps> = ({ balance, history, on
                 ) : (
                     /* TELA DO PIX (Simulada) */
                     <div className="p-6 flex-1 flex flex-col items-center animate-fade-in">
-                        <div className="w-full bg-orange-50 border border-orange-100 rounded-2xl p-6 text-center mb-6">
+                        <div className="w-full bg-primary-50 border border-primary-100 rounded-2xl p-6 text-center mb-6">
                             <p className="text-sm text-gray-500 mb-2">Valor da recarga</p>
-                            <h2 className="text-4xl font-bold text-orange-600">{formatCurrency(parseFloat(amount))}</h2>
+                            <h2 className="text-4xl font-bold text-primary-600">{formatCurrency(parseFloat(amount))}</h2>
                         </div>
 
                         <div className="bg-white p-4 rounded-xl border-2 border-dashed border-gray-300 mb-6 aspect-square w-64 flex items-center justify-center">
@@ -125,8 +125,8 @@ export const WalletScreen: React.FC<WalletScreenProps> = ({ balance, history, on
                         <p className="text-gray-500 text-center mb-6 text-sm">Escaneie o QR Code ou copie a chave Pix abaixo para pagar.</p>
 
                         <div className="flex items-center gap-2 bg-gray-100 p-3 rounded-xl w-full mb-8">
-                            <span className="flex-1 truncate text-xs text-gray-500 font-mono">00020126360014BR.GOV.BCB.PIX0114+551199999999520400005303986540510.005802BR5913MotoJa Recarga6008SAO PAULO62070503***6304E2CA</span>
-                            <button className="text-orange-600 font-bold text-sm flex items-center gap-1 hover:bg-orange-50 p-2 rounded-lg transition">
+                            <span className="flex-1 truncate text-xs text-gray-500 font-mono">00020126360014BR.GOV.BCB.PIX0114+551199999999520400005303986540510.005802BR5913Mototaxi Millenio Recarga6008SAO PAULO62070503***6304E2CA</span>
+                            <button className="text-primary-600 font-bold text-sm flex items-center gap-1 hover:bg-primary-50 p-2 rounded-lg transition">
                                 <Copy size={16} /> Copiar
                             </button>
                         </div>
@@ -159,7 +159,7 @@ export const WalletScreen: React.FC<WalletScreenProps> = ({ balance, history, on
 
                 <Button
                     onClick={() => setView('add')}
-                    className="w-full flex items-center justify-center gap-2 bg-orange-600 hover:bg-orange-700 text-white font-bold py-4 rounded-full shadow-lg shadow-orange-500/20 active:scale-95 transition-all"
+                    className="w-full flex items-center justify-center gap-2 bg-primary-600 hover:bg-primary-700 text-white font-bold py-4 rounded-full shadow-lg shadow-primary-500/20 active:scale-95 transition-all"
                 >
                     <Plus size={20} strokeWidth={3} /> Adicionar
                 </Button>

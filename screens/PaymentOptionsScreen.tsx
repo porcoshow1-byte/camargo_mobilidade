@@ -67,7 +67,7 @@ export const PaymentOptionsScreen: React.FC<PaymentOptionsScreenProps> = ({
                     <span className="text-gray-700 font-medium">Usar saldo disponível em viagens</span>
                     <button
                         onClick={() => onToggleWallet(!useWallet)}
-                        className={`w-12 h-7 rounded-full transition-colors relative flex items-center ${useWallet ? 'bg-orange-500' : 'bg-gray-300'}`}
+                        className={`w-12 h-7 rounded-full transition-colors relative flex items-center ${useWallet ? 'bg-primary-500' : 'bg-gray-300'}`}
                     >
                         <div className={`w-5 h-5 bg-white rounded-full shadow-md absolute transition-transform ${useWallet ? 'translate-x-6' : 'translate-x-1'}`} />
                     </button>

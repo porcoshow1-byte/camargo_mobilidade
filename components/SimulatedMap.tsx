@@ -77,8 +77,8 @@ const MapboxMapInner: React.FC<MapProps> = (props) => {
   const [viewState, setViewState] = useState({
     longitude: props.initialCenter?.lng || defaultCenter.lng,
     latitude: props.initialCenter?.lat || defaultCenter.lat,
-    zoom: navigationMode ? 17.5 : 14,
-    pitch: navigationMode ? 60 : 0,
+    zoom: navigationMode ? 16.5 : 14,
+    pitch: navigationMode ? 50 : 0,
     bearing: 0
   });
 
@@ -217,18 +217,20 @@ const MapboxMapInner: React.FC<MapProps> = (props) => {
 
       mapRef.current.flyTo({
         center: [driverLocation.lng, driverLocation.lat],
-        zoom: 17.5,
-        pitch: 60,
+        zoom: 16.5,
+        pitch: 50,
         bearing: bearing,
         duration: 1000,
+        padding: { top: 0, bottom: 0 }, // Strict center
         essential: true
       });
     } else {
       // First update - just center
       mapRef.current.flyTo({
         center: [driverLocation.lng, driverLocation.lat],
-        zoom: 17.5,
-        pitch: 60,
+        zoom: 16.5,
+        pitch: 50,
+        padding: { top: 0, bottom: 0 }, // Strict center
         duration: 500,
         essential: true
       });
@@ -344,11 +346,11 @@ const MapboxMapInner: React.FC<MapProps> = (props) => {
 
             {/* Marker Dot - Reverted to Orange Pulsing as requested */}
             <div className="relative flex items-center justify-center">
-              <div className="w-5 h-5 rounded-full bg-orange-500 border-[3px] border-white shadow-lg z-10 flex items-center justify-center">
+              <div className="w-5 h-5 rounded-full bg-primary-500 border-[3px] border-white shadow-lg z-10 flex items-center justify-center">
                 <div className="w-1.5 h-1.5 bg-white rounded-full"></div>
               </div>
               {/* Always pulse for current location/origin */}
-              <div className="absolute inset-0 bg-orange-400 rounded-full animate-ping opacity-60 z-0"></div>
+              <div className="absolute inset-0 bg-primary-400 rounded-full animate-ping opacity-60 z-0"></div>
             </div>
           </div>
         </MapboxMarker>
@@ -394,7 +396,7 @@ const MapboxMapInner: React.FC<MapProps> = (props) => {
             </div>
 
             {/* Flag Marker - Purple/Orange Circle */}
-            <div className="w-9 h-9 bg-orange-500 rounded-full border-[3px] border-white shadow-xl flex items-center justify-center">
+            <div className="w-9 h-9 bg-primary-500 rounded-full border-[3px] border-white shadow-xl flex items-center justify-center">
               <Flag size={16} className="text-white fill-white" />
             </div>
           </div>
@@ -405,10 +407,10 @@ const MapboxMapInner: React.FC<MapProps> = (props) => {
       {waypoints && showRoute && waypoints.map((waypoint, index) => (
         <MapboxMarker key={`waypoint-${index}`} longitude={waypoint.lng} latitude={waypoint.lat} anchor="bottom">
           <div className="relative flex items-center justify-center">
-            <div className="w-6 h-6 bg-white rounded-full border-2 border-orange-500 flex items-center justify-center shadow-md z-10">
-              <span className="text-orange-600 font-bold text-xs">{index + 1}</span>
+            <div className="w-6 h-6 bg-white rounded-full border-2 border-primary-500 flex items-center justify-center shadow-md z-10">
+              <span className="text-primary-600 font-bold text-xs">{index + 1}</span>
             </div>
-            <div className="absolute top-5 w-0.5 h-2 bg-orange-500"></div>
+            <div className="absolute top-5 w-0.5 h-2 bg-primary-500"></div>
           </div>
         </MapboxMarker>
       ))}
@@ -425,7 +427,7 @@ const MapboxMapInner: React.FC<MapProps> = (props) => {
               }}
             >
               <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                <circle cx="24" cy="24" r="22" fill="#f97316" stroke="white" strokeWidth="3" />
+                <circle cx="24" cy="24" r="22" fill="#4A764E" stroke="white" strokeWidth="3" />
                 <path d="M24 10 L34 32 L24 26 L14 32 Z" fill="white" />
               </svg>
             </div>
@@ -464,7 +466,7 @@ const MapboxMapInner: React.FC<MapProps> = (props) => {
 
               {/* Icon Container */}
               <div className={`w-8 h-8 rounded-full border-2 border-white shadow-md flex items-center justify-center z-10 transition-transform hover:scale-110 text-white ${d.status === 'online' ? 'bg-green-500' :
-                d.status === 'busy' ? 'bg-orange-500' :
+                d.status === 'busy' ? 'bg-primary-500' :
                   'bg-gray-500'
                 }`}>
                 <FaMotorcycle size={14} />
@@ -485,7 +487,7 @@ const MapboxMapInner: React.FC<MapProps> = (props) => {
             id="route-line"
             type="line"
             layout={{ "line-join": "round", "line-cap": "round" }}
-            paint={{ "line-color": "#f97316", "line-width": 5, "line-opacity": 0.8 }}
+            paint={{ "line-color": "#4A764E", "line-width": 5, "line-opacity": 0.8 }}
           />
         </Source>
       )}
@@ -820,7 +822,7 @@ const GoogleMapInner: React.FC<MapProps> = ({ showDriver, showRoute, status, ori
         <GoogleMarker position={origin} icon={{
           path: window.google.maps.SymbolPath.CIRCLE,
           scale: 8,
-          fillColor: "#f97316",
+          fillColor: "#4A764E",
           fillOpacity: 1,
           strokeWeight: 2,
           strokeColor: "#ffffff",
@@ -876,7 +878,7 @@ const GoogleMapInner: React.FC<MapProps> = ({ showDriver, showRoute, status, ori
             suppressMarkers: true,
             preserveViewport: true,
             polylineOptions: {
-              strokeColor: "#f97316",
+              strokeColor: "#4A764E",
               strokeWeight: 5
             }
           }}
@@ -917,7 +919,7 @@ export const SimulatedMap: React.FC<MapProps> = (props) => {
   if (props.isLoading) {
     return (
       <div className="w-full h-full bg-gray-100 flex flex-col items-center justify-center animate-pulse z-50">
-        <Loader2 className="w-10 h-10 text-orange-500 animate-spin mb-4" />
+        <Loader2 className="w-10 h-10 text-primary-500 animate-spin mb-4" />
         <p className="text-gray-500 font-medium text-sm">Localizando GPS...</p>
       </div>
     );

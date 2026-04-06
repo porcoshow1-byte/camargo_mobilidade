@@ -13,7 +13,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { isAppContext, getAppUrl } from './utils/url';
 
 // --- APP ROUTER (Functional Application) ---
-// This component runs ONLY when on 'app.motoja.top' or 'localhost/app/*'
+// This component runs ONLY when on 'app.mototaximillenio.top' or 'localhost/app/*'
 const AppRouter = () => {
   const { user } = useAuth();
 
@@ -106,7 +106,7 @@ const AppRouter = () => {
           if (window.location.hostname.includes('localhost')) {
             window.location.href = '/';
           } else {
-            window.location.href = 'https://motoja.top';
+            window.location.href = 'https://mototaximillenio.top';
           }
         }}
       />
@@ -128,9 +128,25 @@ const AppRouter = () => {
     );
   }
 
+  // App Wrapper to simulate mobile view on Desktop gracefully
+  const AppWrapper = ({ children }: { children: React.ReactNode }) => (
+    <div className="min-h-[100dvh] w-full bg-gray-100 md:bg-gray-200 lg:bg-[#0c1510] flex items-center justify-center font-sans overflow-hidden">
+      {/* 
+        This transform trick creates a new containing block for 'fixed' elements,
+        so full-screen modals inside UserApp/DriverApp won't break out of the phone frame! 
+      */}
+      <div 
+        className="w-full h-[100dvh] md:max-h-[85vh] md:h-[900px] md:max-w-[400px] bg-white relative overflow-hidden md:rounded-[40px] md:shadow-2xl md:border-[10px] md:border-gray-900 shadow-[0_0_50px_rgba(0,0,0,0.5)] transform scale-100 translate-z-0"
+        style={{ transform: 'scale(1) translateZ(0)' }}
+      >
+        {children}
+      </div>
+    </div>
+  );
+
   // Logged In Views
-  if (role === 'user') return <UserApp />;
-  if (role === 'driver') return <DriverApp />;
+  if (role === 'user') return <AppWrapper><UserApp /></AppWrapper>;
+  if (role === 'driver') return <AppWrapper><DriverApp /></AppWrapper>;
   if (role === 'admin') return <AdminDashboard onLogout={logout} />;
   if (role === 'company') return <CompanyDashboard onBack={logout} />;
 
@@ -139,7 +155,7 @@ const AppRouter = () => {
     <div className="h-screen flex flex-col items-center justify-center bg-gray-50">
       <h1 className="text-xl font-bold mb-4">Selecione o Acesso</h1>
       <div className="space-x-4">
-        <button className="px-4 py-2 bg-orange-500 text-white rounded" onClick={() => setRole('user')}>Passageiro</button>
+        <button className="px-4 py-2 bg-primary-500 text-white rounded" onClick={() => setRole('user')}>Passageiro</button>
         <button className="px-4 py-2 bg-gray-800 text-white rounded" onClick={() => setRole('driver')}>Piloto</button>
       </div>
     </div>
@@ -147,7 +163,7 @@ const AppRouter = () => {
 }
 
 // --- SITE ROUTER (Marketing & Presentation) ---
-// This runs on 'motoja.top' or 'localhost:3000/' (root)
+// This runs on 'mototaximillenio.top' or 'localhost:3000/' (root)
 const SiteRouter = () => {
   const [view, setView] = useState<'landing' | 'presentation'>('landing');
 
@@ -185,7 +201,7 @@ const DemoPresentation = ({ onBack }: { onBack: () => void }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-500 to-red-600 flex flex-col items-center justify-center p-4 animate-fade-in relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-primary-500 to-primary-900 flex flex-col items-center justify-center p-4 animate-fade-in relative overflow-hidden">
       <div className="absolute top-6 left-6 z-10">
         <button
           onClick={onBack}
@@ -244,14 +260,14 @@ const RoleCard = ({ title, description, icon, onClick }: { title: string, descri
     onClick={onClick}
     className="bg-white rounded-3xl p-8 cursor-pointer hover:-translate-y-2 transition-all duration-300 shadow-xl group relative overflow-hidden h-full flex flex-col"
   >
-    <div className="absolute top-0 right-0 w-24 h-24 bg-orange-50 rounded-bl-[100px] -mr-4 -mt-4 z-0 transition-transform group-hover:scale-110"></div>
+    <div className="absolute top-0 right-0 w-24 h-24 bg-primary-50 rounded-bl-[100px] -mr-4 -mt-4 z-0 transition-transform group-hover:scale-110"></div>
     <div className="relative z-10 flex-1 flex flex-col">
-      <div className="bg-orange-100 w-16 h-16 rounded-2xl flex items-center justify-center text-orange-600 mb-6 group-hover:bg-orange-500 group-hover:text-white transition-colors shadow-sm">
+      <div className="bg-primary-100 w-16 h-16 rounded-2xl flex items-center justify-center text-primary-600 mb-6 group-hover:bg-primary-500 group-hover:text-white transition-colors shadow-sm">
         {icon}
       </div>
       <h2 className="text-2xl font-bold text-gray-900 mb-2">{title}</h2>
       <p className="text-gray-500 leading-relaxed mb-4 flex-1">{description}</p>
-      <div className="mt-auto flex items-center text-orange-600 font-bold group-hover:translate-x-2 transition-transform">
+      <div className="mt-auto flex items-center text-primary-600 font-bold group-hover:translate-x-2 transition-transform">
         Acessar <ArrowRight size={18} className="ml-2" />
       </div>
     </div>

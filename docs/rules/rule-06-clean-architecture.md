@@ -1,4 +1,4 @@
-# Rule 06: Arquitetura Limpa (MotoJá)
+# Rule 06: Arquitetura Limpa (Mototaxi Millenio)
 
 ## MOTIVO
 Combater arquivos "God Class" (como `UserApp.tsx` gigante) e duplicidade de lógica. Facilitar testes e manutenção.

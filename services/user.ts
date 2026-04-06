@@ -136,7 +136,7 @@ export const getOrCreateUserProfile = async (
 
   // MOCK MODE
   if (isMockMode || !supabase) {
-    const storageKey = `motoja_user_${uid}`;
+    const storageKey = `mototaximillenio_user_${uid}`;
     const stored = localStorage.getItem(storageKey);
 
     if (stored) {
@@ -286,7 +286,7 @@ export const getOrCreateUserProfile = async (
 
 export const updateUserProfile = async (uid: string, data: Partial<User | Driver>) => {
   if (isMockMode || !supabase) {
-    const storageKey = `motoja_user_${uid}`;
+    const storageKey = `mototaximillenio_user_${uid}`;
     const stored = localStorage.getItem(storageKey);
     let updated;
     if (stored) {
@@ -310,7 +310,7 @@ export const updateUserProfile = async (uid: string, data: Partial<User | Driver
 
 export const deleteUser = async (uid: string) => {
   if (isMockMode || !supabase) {
-    localStorage.removeItem(`motoja_user_${uid}`);
+    localStorage.removeItem(`mototaximillenio_user_${uid}`);
     return;
   }
 
@@ -326,11 +326,11 @@ const generateSessionId = () => {
 };
 
 export const getLocalSessionId = () => {
-  return localStorage.getItem('motoja_session_id');
+  return localStorage.getItem('mototaximillenio_session_id');
 };
 
 const setLocalSessionId = (sessionId: string) => {
-  localStorage.setItem('motoja_session_id', sessionId);
+  localStorage.setItem('mototaximillenio_session_id', sessionId);
 };
 
 export const registerSession = async (uid: string): Promise<string> => {
@@ -363,5 +363,5 @@ export const validateSession = async (uid: string): Promise<boolean> => {
 };
 
 export const clearSession = () => {
-  localStorage.removeItem('motoja_session_id');
+  localStorage.removeItem('mototaximillenio_session_id');
 };

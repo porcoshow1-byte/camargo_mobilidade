@@ -6,7 +6,7 @@ import {
   RefreshCw, Package, Bike, Plus, Trash2, HelpCircle, ChevronRight,
   FileQuestion, ExternalLink, Crosshair, ArrowDownUp, Navigation, Lock,
   GripVertical, ShieldCheck, Eye, EyeOff, Map as MapIcon, Copy, QrCode,
-  Ticket, Bell, Home, Briefcase, Pencil, Building2, AlertTriangle, Banknote, UserCircle, Heart, Smartphone, MessageCircle, Pin
+  Ticket, Bell, Home, Briefcase, Pencil, Building2, AlertTriangle, Banknote, UserCircle, Heart, Smartphone, MessageCircle, Pin, Shield
 } from 'lucide-react';
 import { PaymentOptionsScreen } from './PaymentOptionsScreen';
 import { logout } from '../services/auth';
@@ -96,7 +96,7 @@ const SortableRouteItem = ({
     <div
       ref={setNodeRef}
       style={style}
-      className={`relative flex items-center gap-0 transition-all ${isDragging ? 'bg-white shadow-2xl ring-2 ring-orange-500 rounded-lg z-50' : ''}`}
+      className={`relative flex items-center gap-0 transition-all ${isDragging ? 'bg-white shadow-2xl ring-2 ring-primary-500 rounded-lg z-50' : ''}`}
     >
       {/* Drag Handle & Timeline Icon */}
       {/* Icon Column - Fixed Width 44px (Uber Standard) */}
@@ -217,7 +217,7 @@ const SchedulePicker: React.FC<SchedulePickerProps> = ({ onBack, onConfirm }) =>
       <div className="pt-4 pb-2 px-4 flex items-center justify-between bg-white z-10">
         <button
           onClick={onBack}
-          className="p-2 -ml-2 text-orange-500 font-medium text-lg hover:opacity-70 transition-opacity"
+          className="p-2 -ml-2 text-primary-500 font-medium text-lg hover:opacity-70 transition-opacity"
         >
           Cancelar
         </button>
@@ -349,7 +349,7 @@ const SchedulePicker: React.FC<SchedulePickerProps> = ({ onBack, onConfirm }) =>
               handleConfirmSchedule();
             }
           }}
-          className="w-full bg-orange-500 text-white font-bold text-lg py-4 rounded-2xl hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/20 active:scale-[0.98]"
+          className="w-full bg-primary-500 text-white font-bold text-lg py-4 rounded-2xl hover:bg-primary-600 transition-colors shadow-lg shadow-primary-500/20 active:scale-[0.98]"
         >
           {activeTab === 'departure'
             ? 'Confirmar partida agora'
@@ -629,9 +629,9 @@ export const UserApp = () => {
 
   useEffect(() => {
     // Restore state from localStorage on mount
-    const savedRideId = localStorage.getItem('motoja_current_ride_id');
-    const savedStep = localStorage.getItem('motoja_step');
-    const savedBookingMode = localStorage.getItem('motoja_booking_mode');
+    const savedRideId = localStorage.getItem('mototaximillenio_current_ride_id');
+    const savedStep = localStorage.getItem('mototaximillenio_step');
+    const savedBookingMode = localStorage.getItem('mototaximillenio_booking_mode');
 
     if (savedRideId) {
       setCurrentRideId(savedRideId);
@@ -644,7 +644,7 @@ export const UserApp = () => {
     } else if (savedStep === 'searching') {
       // Edge case: searching but no ID yet (maybe just clicked button before ID returned)
       // For now, if no ID, clearer to reset to home to avoid stuck state
-      localStorage.removeItem('motoja_step');
+      localStorage.removeItem('mototaximillenio_step');
       setStep('home');
     }
 
@@ -656,14 +656,14 @@ export const UserApp = () => {
   // Sync state to localStorage
   useEffect(() => {
     if (currentRideId) {
-      localStorage.setItem('motoja_current_ride_id', currentRideId);
+      localStorage.setItem('mototaximillenio_current_ride_id', currentRideId);
     } else {
-      localStorage.removeItem('motoja_current_ride_id');
+      localStorage.removeItem('mototaximillenio_current_ride_id');
     }
   }, [currentRideId]);
 
   useEffect(() => {
-    localStorage.setItem('motoja_step', step);
+    localStorage.setItem('mototaximillenio_step', step);
   }, [step]);
 
   // Reset service selection whenever route is recalculated
@@ -674,7 +674,7 @@ export const UserApp = () => {
   }, [routeInfo]);
 
   useEffect(() => {
-    localStorage.setItem('motoja_booking_mode', bookingMode);
+    localStorage.setItem('mototaximillenio_booking_mode', bookingMode);
   }, [bookingMode]);
 
   // Force reset service when entering confirmation screen
@@ -746,7 +746,7 @@ export const UserApp = () => {
   const [favorites, setFavorites] = useState<SavedAddress[]>(() => {
     try {
       if (typeof window !== 'undefined') {
-        const saved = localStorage.getItem('motoja_favorites');
+        const saved = localStorage.getItem('mototaximillenio_favorites');
         if (saved) return JSON.parse(saved);
       }
     } catch (e) { console.error('Failed to load favorites', e); }
@@ -757,7 +757,7 @@ export const UserApp = () => {
   });
 
   useEffect(() => {
-    localStorage.setItem('motoja_favorites', JSON.stringify(favorites));
+    localStorage.setItem('mototaximillenio_favorites', JSON.stringify(favorites));
 
     // Sync to Firestore if user is logged in (Debounced)
     if (currentUser?.id) {
@@ -871,7 +871,7 @@ export const UserApp = () => {
       // Sync Favorites from Cloud
       if ((profile as User).savedAddresses && (profile as User).savedAddresses!.length > 0) {
         setFavorites((profile as User).savedAddresses!);
-        localStorage.setItem('motoja_favorites', JSON.stringify((profile as User).savedAddresses));
+        localStorage.setItem('mototaximillenio_favorites', JSON.stringify((profile as User).savedAddresses));
       }
     } catch (err: any) {
       console.error("Erro crítico ao carregar perfil:", err);
@@ -1250,7 +1250,7 @@ export const UserApp = () => {
           setCurrentUser(updatedUser);
 
           // Persist
-          localStorage.setItem(`motoja_user_${currentUser.id}`, JSON.stringify(updatedUser));
+          localStorage.setItem(`mototaximillenio_user_${currentUser.id}`, JSON.stringify(updatedUser));
           const { updateUserProfile } = await import('../services/user');
           updateUserProfile(currentUser.id, { walletBalance: newBalance });
         }
@@ -1311,7 +1311,7 @@ export const UserApp = () => {
       const payment = await createPixPayment(
         currentRide.id,
         currentRide.price || 0,
-        currentUser?.email || 'user@motoja.com'
+        currentUser?.email || 'user@mototaximillenio.com'
       );
 
       setPixData(payment);
@@ -1378,7 +1378,7 @@ export const UserApp = () => {
           favoriteDrivers: [...currentFavorites, driverId]
         };
         setCurrentUser(updatedUser);
-        localStorage.setItem(`motoja_user_${currentUser.id}`, JSON.stringify(updatedUser));
+        localStorage.setItem(`mototaximillenio_user_${currentUser.id}`, JSON.stringify(updatedUser));
         setToast({ message: 'Motorista adicionado aos favoritos!', type: 'success', visible: true });
         setTimeout(() => setToast(null), 3000);
       }
@@ -1406,7 +1406,7 @@ export const UserApp = () => {
 
   const getServiceIcon = (type: string) => {
     switch (type) {
-      case 'passenger': return <div className="relative flex items-center justify-center p-3 bg-orange-100 text-orange-600 rounded-full"><UserIcon size={24} fill="currentColor" className="opacity-20" /><UserIcon size={24} className="absolute" /></div>;
+      case 'passenger': return <div className="relative flex items-center justify-center p-3 bg-primary-100 text-primary-600 rounded-full"><UserIcon size={24} fill="currentColor" className="opacity-20" /><UserIcon size={24} className="absolute" /></div>;
       case 'package': return <div className="p-3 bg-blue-100 text-blue-600 rounded-full"><Package size={24} /></div>;
       case 'bike': return <div className="p-3 bg-green-100 text-green-600 rounded-full"><Bike size={24} /></div>;
       default: return <div className="p-3 bg-gray-100 text-gray-600 rounded-full"><Search size={24} /></div>;
@@ -1414,17 +1414,17 @@ export const UserApp = () => {
   };
 
   if (loadingProfile) {
-    return <div className="h-full flex flex-col items-center justify-center bg-gray-50"><Loader2 className="animate-spin text-orange-500 mb-4" size={48} /><p className="text-gray-500 font-medium">Carregando seu perfil...</p></div>;
+    return <div className="h-full flex flex-col items-center justify-center bg-gray-50"><Loader2 className="animate-spin text-primary-500 mb-4" size={48} /><p className="text-gray-500 font-medium">Carregando seu perfil...</p></div>;
   }
 
   const RenderSideMenu = () => (
     <>
       <div className={`absolute inset-0 z-40 bg-black/50 transition-opacity duration-300 ${showMenu ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={() => setShowMenu(false)} />
       <div className={`absolute top-0 left-0 bottom-0 w-3/4 max-w-xs bg-white z-50 shadow-2xl transition-transform duration-300 transform ${showMenu ? 'translate-x-0' : '-translate-x-full'}`}>
-        <div className="p-6 bg-orange-500 text-white pt-12">
+        <div className="p-6 bg-primary-500 text-white pt-12">
           <div className="flex items-center gap-4 mb-4">
             <img src={currentUser?.avatar} alt="User" className="w-16 h-16 rounded-full border-4 border-white/30 object-cover" />
-            <div><h3 className="font-bold text-lg capitalize">{currentUser?.name}</h3><div className="flex items-center gap-1 text-orange-100 text-sm"><Star size={12} fill="currentColor" /><span>{currentUser?.rating}</span></div></div>
+            <div><h3 className="font-bold text-lg capitalize">{currentUser?.name}</h3><div className="flex items-center gap-1 text-primary-100 text-sm"><Star size={12} fill="currentColor" /><span>{currentUser?.rating}</span></div></div>
           </div>
         </div>
         <div className="p-4 space-y-2">
@@ -1458,12 +1458,12 @@ export const UserApp = () => {
       <div className="flex-1 overflow-y-auto p-4">
         <div className="flex flex-col gap-3">
           {/* Mock Notifications */}
-          <div className="p-4 bg-orange-50 border border-orange-100 rounded-xl flex gap-3">
-            <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600 shrink-0">
+          <div className="p-4 bg-primary-50 border border-primary-100 rounded-xl flex gap-3">
+            <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 shrink-0">
               <Ticket size={20} />
             </div>
             <div>
-              <h3 className="font-bold text-gray-800 text-sm">Bem-vindo ao MotoJá!</h3>
+              <h3 className="font-bold text-gray-800 text-sm">Bem-vindo ao Mototaxi Millenio!</h3>
               <p className="text-xs text-gray-500 mt-1">Ganhe 10% OFF na sua primeira corrida com o cupom MOTOJA10.</p>
               <p className="text-[10px] text-gray-400 mt-2 font-medium">Há 2 horas</p>
             </div>
@@ -1490,8 +1490,8 @@ export const UserApp = () => {
         <>
           {/* Top Left: Brand Pill */}
           <div className="absolute left-6 z-20 animate-fade-in-down" style={{ top: 'calc(1.5rem + env(safe-area-inset-top))' }}>
-            <div className="bg-orange-500 text-white px-6 py-2 rounded-full shadow-lg shadow-orange-500/30 flex items-center gap-2">
-              <span className="font-bold text-lg">MotoJá</span>
+            <div className="bg-primary-500 text-white px-6 py-2 rounded-full shadow-lg shadow-primary-500/30 flex items-center gap-2">
+              <span className="font-bold text-lg">Mototaxi Millenio</span>
             </div>
           </div>
 
@@ -1567,7 +1567,7 @@ export const UserApp = () => {
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none mb-10">
               <div className="relative flex flex-col items-center group">
                 {/* The Pin */}
-                <div className="relative z-10 -mb-1 text-orange-600 drop-shadow-2xl filter transform transition-transform duration-300">
+                <div className="relative z-10 -mb-1 text-primary-600 drop-shadow-2xl filter transform transition-transform duration-300">
                   {/* Custom Lollipop Pin SVG */}
                   <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="block drop-shadow-xl">
                     {/* Stick */}
@@ -1609,7 +1609,7 @@ export const UserApp = () => {
                   handleCenterLocation();
                   setMapMoved(false);
                 }}
-                className="bg-white p-3 rounded-full shadow-xl text-gray-700 active:bg-gray-100 active:scale-95 transition-all text-orange-500"
+                className="bg-white p-3 rounded-full shadow-xl text-gray-700 active:bg-gray-100 active:scale-95 transition-all text-primary-500"
               >
                 {loadingLocation ? <Loader2 size={24} className="animate-spin" /> : <Crosshair size={24} />}
               </button>
@@ -1624,7 +1624,7 @@ export const UserApp = () => {
               onClick={() => setIsRecentExpanded(!isRecentExpanded)}
               className="w-full flex justify-center pt-3 pb-2 cursor-pointer active:opacity-50"
             >
-              <div className={`w-12 h-1.5 bg-gray-200 rounded-full transition-colors ${!isRecentExpanded ? 'bg-orange-200' : ''}`}></div>
+              <div className={`w-12 h-1.5 bg-gray-200 rounded-full transition-colors ${!isRecentExpanded ? 'bg-primary-200' : ''}`}></div>
             </div>
 
             <div className="px-6 pb-0 pt-2">
@@ -1670,8 +1670,8 @@ export const UserApp = () => {
 
               {/* Bottom Nav */}
               <div className="flex justify-between items-center border-t border-gray-100 pt-3 pb-safe-4 mt-0 bg-white">
-                <div className="flex flex-col items-center gap-1 cursor-pointer text-orange-600">
-                  <div className="bg-orange-50 p-2 rounded-full px-5 mb-1">
+                <div className="flex flex-col items-center gap-1 cursor-pointer text-primary-600">
+                  <div className="bg-primary-50 p-2 rounded-full px-5 mb-1">
                     <Home size={24} fill="currentColor" />
                   </div>
                   <span className="text-xs font-bold">Início</span>
@@ -1684,7 +1684,7 @@ export const UserApp = () => {
                   <span className="text-xs font-medium">Atividade</span>
                 </div>
 
-                <button onClick={() => setStep('account')} className={`flex flex-col items-center gap-1 mb-1 ${step === 'account' ? 'text-orange-600 font-bold' : 'text-gray-400'}`}>
+                <button onClick={() => setStep('account')} className={`flex flex-col items-center gap-1 mb-1 ${step === 'account' ? 'text-primary-600 font-bold' : 'text-gray-400'}`}>
                   <div className="p-2">
                     <UserCircle size={24} />
                   </div>
@@ -1755,8 +1755,8 @@ export const UserApp = () => {
                   <h3 className="text-lg font-bold text-gray-900">{searchStatus}</h3>
                   <p className="text-xs text-gray-500">Tempo estimado: poucos segundos</p>
                 </div>
-                <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
-                  <MapPin size={24} className="text-orange-500" />
+                <div className="w-12 h-12 bg-primary-100 rounded-xl flex items-center justify-center">
+                  <MapPin size={24} className="text-primary-500" />
                 </div>
               </div>
               {/* Pulsing Infinite Bar */}
@@ -1810,7 +1810,7 @@ export const UserApp = () => {
               <div className="flex flex-col items-center gap-1">
                 <div className="w-2 h-2 rounded-full bg-green-500"></div>
                 <div className="w-0.5 h-3 bg-gray-200"></div>
-                <div className="w-2 h-2 rounded-full bg-orange-500"></div>
+                <div className="w-2 h-2 rounded-full bg-primary-500"></div>
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
@@ -1892,7 +1892,7 @@ export const UserApp = () => {
                 className="p-3 flex items-center justify-between cursor-pointer hover:bg-gray-100 transition-colors"
               >
                 <div className="flex items-center gap-2">
-                  <MapPin size={16} className="text-orange-500" />
+                  <MapPin size={16} className="text-primary-500" />
                   <span className="font-bold text-gray-700">Detalhes da Rota</span>
                 </div>
                 {isRouteOpen ? <ChevronUp size={16} className="text-gray-400" /> : <ChevronDown size={16} className="text-gray-400" />}
@@ -1913,7 +1913,7 @@ export const UserApp = () => {
 
                         return (
                           <div key={index} className="flex items-start gap-2 relative z-10">
-                            <div className={`w-2 h-2 mt-1.5 rounded-full shrink-0 ${isOrigin ? 'bg-green-500' : isDest ? 'bg-red-500' : 'bg-orange-400'}`} />
+                            <div className={`w-2 h-2 mt-1.5 rounded-full shrink-0 ${isOrigin ? 'bg-green-500' : isDest ? 'bg-red-500' : 'bg-primary-400'}`} />
                             <div className="flex-1 min-w-0">
                               <span className="text-xs font-bold text-gray-500 uppercase block">
                                 {isOrigin ? 'Local de Partida' : isDest ? 'Destino Final' : `Parada ${index}`}
@@ -1936,7 +1936,7 @@ export const UserApp = () => {
                       <div className="flex bg-gray-100 p-1 rounded-lg mb-4">
                         <button
                           onClick={() => setDeliveryType('send')}
-                          className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-md text-sm font-bold transition-all ${deliveryType === 'send' ? 'bg-white text-orange-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+                          className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-md text-sm font-bold transition-all ${deliveryType === 'send' ? 'bg-white text-primary-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
                         >
                           <Navigation size={16} className="rotate-45" /> Enviar
                         </button>
@@ -1993,11 +1993,11 @@ export const UserApp = () => {
 
                           {/* Display generated code inline */}
                           {useSecurityCode && securityToken && (
-                            <div className="mt-4 bg-orange-50 border border-orange-200 p-3 rounded-xl flex flex-col items-center justify-center animate-fade-in text-center shadow-sm">
-                              <div className="text-3xl font-mono font-bold text-gray-900 tracking-widest bg-white px-4 py-1 rounded-lg border border-orange-100 mb-1">
+                            <div className="mt-4 bg-primary-50 border border-primary-200 p-3 rounded-xl flex flex-col items-center justify-center animate-fade-in text-center shadow-sm">
+                              <div className="text-3xl font-mono font-bold text-gray-900 tracking-widest bg-white px-4 py-1 rounded-lg border border-primary-100 mb-1">
                                 {securityToken}
                               </div>
-                              <p className="text-[10px] text-orange-700 max-w-[240px] leading-tight">
+                              <p className="text-[10px] text-primary-700 max-w-[240px] leading-tight">
                                 Compartilhe com quem receberá a encomenda.
                               </p>
                             </div>
@@ -2051,7 +2051,7 @@ export const UserApp = () => {
                 const isDisabled = isBike && isDistanceTooFar;
 
                 const renderServiceIcon = () => {
-                  const iconClass = selectedService === service.id ? "text-orange-600" : "text-gray-600";
+                  const iconClass = selectedService === service.id ? "text-primary-600" : "text-gray-600";
                   const bikeClass = selectedService === service.id ? "text-green-600" : "text-gray-600";
 
                   if (service.id === ServiceType.MOTO_TAXI) return <span className={iconClass}><FaMotorcycle size={24} /></span>;
@@ -2076,12 +2076,12 @@ export const UserApp = () => {
                     }}
                     className={`relative flex items-center justify-between p-3 rounded-xl transition-all duration-300 cursor-pointer overflow-hidden group
                       ${isSelected
-                        ? 'bg-white ring-2 ring-orange-500 shadow-lg scale-[1.01] z-10'
-                        : 'bg-white border border-gray-100 hover:border-orange-200 hover:shadow-sm'}`}
+                        ? 'bg-white ring-2 ring-primary-500 shadow-lg scale-[1.01] z-10'
+                        : 'bg-white border border-gray-100 hover:border-primary-200 hover:shadow-sm'}`}
                   >
                     <div className="flex items-center gap-3 relative z-10">
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors duration-300
-                        ${isSelected ? 'bg-orange-50' : 'bg-gray-50 group-hover:bg-orange-50/50'}`}>
+                        ${isSelected ? 'bg-primary-50' : 'bg-gray-50 group-hover:bg-primary-50/50'}`}>
                         {renderServiceIcon()}
                       </div>
                       <div>
@@ -2100,7 +2100,7 @@ export const UserApp = () => {
             {/* PAYMENT METHOD SELECTOR (Redesigned) */}
             <div
               onClick={() => setStep('payment_options')}
-              className="mb-4 bg-white border border-gray-100 p-3 rounded-xl flex items-center justify-between shadow-sm cursor-pointer hover:border-orange-200 transition-colors"
+              className="mb-4 bg-white border border-gray-100 p-3 rounded-xl flex items-center justify-between shadow-sm cursor-pointer hover:border-primary-200 transition-colors"
             >
               <div className="flex items-center gap-3">
                 <div className="bg-green-50 p-2.5 rounded-full text-green-600">
@@ -2125,7 +2125,7 @@ export const UserApp = () => {
                       {selectedPaymentMethod === 'corporate' && 'Corporativo'}
                     </p>
                     {useWalletBalance && (
-                      <span className="text-[10px] bg-orange-100 text-orange-700 px-1.5 py-0.5 rounded font-bold border border-orange-200">
+                      <span className="text-[10px] bg-primary-100 text-primary-700 px-1.5 py-0.5 rounded font-bold border border-primary-200">
                         + SALDO
                       </span>
                     )}
@@ -2142,7 +2142,7 @@ export const UserApp = () => {
               fullWidth
               onClick={handleBook}
               disabled={isBooking}
-              className={`text-lg shadow-xl shadow-orange-500/20 py-4 ${bookingMode === 'delivery' && (!contactName.trim() || !contactPhone.trim()) ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`text-lg shadow-xl shadow-primary-500/20 py-4 ${bookingMode === 'delivery' && (!contactName.trim() || !contactPhone.trim()) ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               Confirmar {SERVICES.find(s => s.id === selectedService)?.name}
             </Button>
@@ -2255,7 +2255,7 @@ export const UserApp = () => {
 
         {/* Top Floating Status Pill - Glassmorphism */}
         <div className="absolute top-12 left-0 right-0 z-10 flex justify-center pointer-events-none fade-in">
-          <div className="bg-white/95 backdrop-blur-md px-6 py-3 rounded-full shadow-lg border-l-4 border-orange-500 flex items-center gap-3 animate-slide-down pointer-events-auto ring-1 ring-black/5">
+          <div className="bg-white/95 backdrop-blur-md px-6 py-3 rounded-full shadow-lg border-l-4 border-primary-500 flex items-center gap-3 animate-slide-down pointer-events-auto ring-1 ring-black/5">
             {rideStatus === 'accepted' && (
               <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse ring-2 ring-green-200"></div>
             )}
@@ -2291,13 +2291,47 @@ export const UserApp = () => {
               <p className="text-xs text-gray-400 mt-1 font-medium">Previsão atualizada em tempo real</p>
             </div>
 
+            {/* Delivery Security Code Card (Passenger View) */}
+            {(currentRide?.serviceType === 'DELIVERY_MOTO' || currentRide?.serviceType === 'DELIVERY_BIKE') && currentRide?.securityCode && (
+              <div className="bg-primary-50 border border-primary-100 rounded-2xl p-4 mb-6 text-center shadow-sm">
+                {currentRide.status === 'accepted' ? (
+                  <>
+                    <p className="text-xs text-primary-600 font-bold uppercase tracking-wider mb-2 flex items-center justify-center gap-1">
+                      <Shield size={12} /> Código de Início
+                    </p>
+                    <div className="bg-white rounded-xl py-2 px-8 shadow-sm inline-block mb-2 border border-primary-200">
+                      <span className="text-4xl font-black text-gray-800 tracking-[0.25em] font-mono">{currentRide.securityCode}</span>
+                    </div>
+                    <p className="text-xs text-primary-500 font-bold">
+                      Compartilhe com o motorista ao chegar
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-xs text-blue-600 font-bold uppercase tracking-wider mb-2 flex items-center justify-center gap-1">
+                      <Package size={12} /> Código de Entrega
+                    </p>
+                    <div className="bg-white rounded-xl py-2 px-8 shadow-sm inline-block mb-2 border border-blue-200">
+                      {/* MOCK: Start Code reversed for End Code, just for visual distiction */}
+                      <span className="text-4xl font-black text-gray-800 tracking-[0.25em] font-mono">
+                        {currentRide.securityCode.split('').reverse().join('')}
+                      </span>
+                    </div>
+                    <p className="text-xs text-blue-500 font-bold">
+                      Para o recebedor confirmar a entrega
+                    </p>
+                  </>
+                )}
+              </div>
+            )}
+
             {/* Driver Profile Section */}
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-4">
                 <div className="relative">
                   <img
                     src={currentRide?.driver?.avatar || MOCK_DRIVER.avatar}
-                    className="w-16 h-16 rounded-full border-[3px] border-orange-500 p-0.5 object-cover shadow-sm"
+                    className="w-16 h-16 rounded-full border-[3px] border-primary-500 p-0.5 object-cover shadow-sm"
                     alt="Driver"
                   />
                   <div className="absolute -bottom-1 -right-1 bg-white rounded-full px-1.5 py-0.5 shadow border border-gray-100 flex items-center gap-0.5">
@@ -2331,7 +2365,7 @@ export const UserApp = () => {
                   onClick={() => {
                     window.location.href = `tel:${currentRide?.driver?.phone || ''}`;
                   }}
-                  className="w-12 h-12 rounded-full bg-orange-100 hover:bg-orange-200 flex items-center justify-center text-orange-600 transition"
+                  className="w-12 h-12 rounded-full bg-primary-100 hover:bg-primary-200 flex items-center justify-center text-primary-600 transition"
                 >
                   <Phone size={22} />
                 </button>
@@ -2348,7 +2382,7 @@ export const UserApp = () => {
                 className="w-full p-4 flex items-center justify-between bg-gray-50 hover:bg-gray-100 transition cursor-pointer select-none"
               >
                 <div className="flex items-center gap-2">
-                  <MapPin size={18} className="text-orange-500" />
+                  <MapPin size={18} className="text-primary-500" />
                   <span className="font-bold text-gray-700">Detalhes da Corrida</span>
                 </div>
                 {showRideDetails ? <ChevronUp size={20} className="text-gray-400" /> : <ChevronDown size={20} className="text-gray-400" />}
@@ -2362,7 +2396,7 @@ export const UserApp = () => {
                       <div className="flex flex-col items-center mt-1">
                         <div className="w-2.5 h-2.5 rounded-full bg-green-500"></div>
                         <div className="w-0.5 h-6 bg-gray-300 my-0.5"></div>
-                        <div className="w-2.5 h-2.5 rounded-full bg-orange-500"></div>
+                        <div className="w-2.5 h-2.5 rounded-full bg-primary-500"></div>
                       </div>
                       <div className="flex-1 space-y-3">
                         <div>
@@ -2383,7 +2417,7 @@ export const UserApp = () => {
                       <p className="text-xs text-gray-400 font-bold mb-0.5">Pagamento</p>
                       <p className="font-bold text-gray-700 flex items-center gap-1">
                         {currentRide?.paymentMethod === 'cash' && <Banknote size={14} className="text-green-600" />}
-                        {currentRide?.paymentMethod === 'pix' && <QrCode size={14} className="text-orange-600" />}
+                        {currentRide?.paymentMethod === 'pix' && <QrCode size={14} className="text-primary-600" />}
                         <span>
                           {currentRide?.paymentMethod === 'cash' ? 'Dinheiro' :
                             currentRide?.paymentMethod === 'pix' ? 'PIX' :
@@ -2401,10 +2435,10 @@ export const UserApp = () => {
             </div>
 
             {/* Vehicle Info Card */}
-            <div className="bg-gradient-to-r from-gray-50 to-orange-50 rounded-2xl p-4 flex items-center justify-between border border-orange-100 mb-6">
+            <div className="bg-gradient-to-r from-gray-50 to-primary-50 rounded-2xl p-4 flex items-center justify-between border border-primary-100 mb-6">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center">
-                  <FaMotorcycle size={24} className="text-orange-600" />
+                <div className="w-12 h-12 rounded-xl bg-primary-100 flex items-center justify-center">
+                  <FaMotorcycle size={24} className="text-primary-600" />
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 font-medium mb-0.5">
@@ -2416,9 +2450,9 @@ export const UserApp = () => {
                 </div>
               </div>
               {currentRide?.securityCode && (
-                <div className="text-right bg-white rounded-xl px-4 py-2 border border-orange-200 shadow-sm">
-                  <p className="text-[10px] font-bold text-orange-500 uppercase">Código PIN</p>
-                  <p className="text-2xl font-black text-orange-600 tracking-widest">{currentRide.securityCode}</p>
+                <div className="text-right bg-white rounded-xl px-4 py-2 border border-primary-200 shadow-sm">
+                  <p className="text-[10px] font-bold text-primary-500 uppercase">Código PIN</p>
+                  <p className="text-2xl font-black text-primary-600 tracking-widest">{currentRide.securityCode}</p>
                 </div>
               )}
             </div>
@@ -2501,7 +2535,7 @@ export const UserApp = () => {
       }
 
       // PERSIST TO STORAGE
-      localStorage.setItem('motoja_favorites', JSON.stringify(newFavs));
+      localStorage.setItem('mototaximillenio_favorites', JSON.stringify(newFavs));
       return newFavs;
     });
 
@@ -2524,7 +2558,7 @@ export const UserApp = () => {
       <div className="flex-1 overflow-y-auto p-4 space-y-3 pb-24">
         {favorites.map((fav) => (
           <div key={fav.id} className="flex items-center gap-4 p-4 bg-white border border-gray-100 rounded-xl shadow-sm hover:shadow-md transition-shadow">
-            <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${fav.type === 'home' ? 'bg-blue-100 text-blue-600' : fav.type === 'work' ? 'bg-orange-100 text-orange-600' : 'bg-gray-100 text-gray-600'}`}>
+            <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${fav.type === 'home' ? 'bg-blue-100 text-blue-600' : fav.type === 'work' ? 'bg-primary-100 text-primary-600' : 'bg-gray-100 text-gray-600'}`}>
               {fav.type === 'home' ? <Home size={24} /> : fav.type === 'work' ? <Briefcase size={24} /> : <Star size={24} />}
             </div>
 
@@ -2553,7 +2587,7 @@ export const UserApp = () => {
                 setEditingFavoriteAddress(fav.address);
                 setEditingFavoriteCoords(fav.coords);
               }}
-              className="p-3 text-gray-400 hover:text-orange-500 hover:bg-orange-50 rounded-full transition-colors"
+              className="p-3 text-gray-400 hover:text-primary-500 hover:bg-primary-50 rounded-full transition-colors"
             >
               <Pencil size={20} />
             </button>
@@ -2579,7 +2613,7 @@ export const UserApp = () => {
             setEditingFavoriteAddress('');
             setEditingFavoriteCoords(null);
           }}
-          className="w-full py-4 flex items-center justify-center gap-2 text-orange-600 font-bold bg-orange-50 rounded-xl hover:bg-orange-100 transition-colors border border-dashed border-orange-200"
+          className="w-full py-4 flex items-center justify-center gap-2 text-primary-600 font-bold bg-primary-50 rounded-xl hover:bg-primary-100 transition-colors border border-dashed border-primary-200"
         >
           <Plus size={20} />
           Adicionar Novo Favorito
@@ -2609,7 +2643,7 @@ export const UserApp = () => {
           <button
             onClick={() => setStep('schedule_picker')}
             className={`flex items-center gap-2 px-4 py-2.5 rounded-full font-bold text-sm transition-all whitespace-nowrap border
-              ${!rideDate ? 'bg-orange-500 border-orange-500 text-white shadow-lg shadow-orange-200' : 'bg-gray-50 border-orange-500 text-orange-700 hover:bg-orange-50'}`}
+              ${!rideDate ? 'bg-primary-500 border-primary-500 text-white shadow-lg shadow-primary-200' : 'bg-gray-50 border-primary-500 text-primary-700 hover:bg-primary-50'}`}
           >
             <Clock size={16} />
             {rideDate ? `Agendado ${rideDate.getHours()}:${rideDate.getMinutes().toString().padStart(2, '0')}` : 'Ir agora'}
@@ -2700,7 +2734,7 @@ export const UserApp = () => {
                     const destIndex = routePoints.length - 1;
                     handlePointUpdate(destIndex, fav.address, fav.coords);
                   }}
-                  className="flex items-center gap-2 px-4 py-3 bg-gray-50 rounded-xl border border-gray-100 whitespace-nowrap hover:bg-orange-50 hover:border-orange-200 hover:text-orange-700 transition-colors"
+                  className="flex items-center gap-2 px-4 py-3 bg-gray-50 rounded-xl border border-gray-100 whitespace-nowrap hover:bg-primary-50 hover:border-primary-200 hover:text-primary-700 transition-colors"
                 >
                   {fav.type === 'home' ? <Home size={16} /> : fav.type === 'work' ? <Briefcase size={16} /> : <Star size={16} />}
                   <span className="font-bold text-gray-700">{fav.label}</span>
@@ -2716,7 +2750,7 @@ export const UserApp = () => {
               className="w-full p-4 flex items-center justify-between cursor-pointer hover:bg-gray-50 transition-colors group"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center group-hover:bg-orange-200 transition-colors">
+                <div className="w-10 h-10 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center group-hover:bg-primary-200 transition-colors">
                   <Star size={20} fill="currentColor" />
                 </div>
                 <div className="text-left">
@@ -2724,7 +2758,7 @@ export const UserApp = () => {
                   <p className="text-xs text-gray-500">Gerenciar todos os endereços salvos</p>
                 </div>
               </div>
-              <ChevronRight size={20} className="text-gray-400 group-hover:text-orange-500" />
+              <ChevronRight size={20} className="text-gray-400 group-hover:text-primary-500" />
             </button>
           </div>
 
@@ -2748,7 +2782,7 @@ export const UserApp = () => {
           onClick={handleConfirmRoute}
           isLoading={calculatingRoute}
           disabled={calculatingRoute}
-          className="h-14 text-lg bg-orange-500 hover:bg-orange-600 shadow-xl shadow-orange-500/20 text-white"
+          className="h-14 text-lg bg-primary-500 hover:bg-primary-600 shadow-xl shadow-primary-500/20 text-white"
         >
           Confirmar
         </Button>
@@ -2803,8 +2837,8 @@ export const UserApp = () => {
 
                       {/* Ponto B */}
                       <div className="relative flex flex-col items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-white border-4 border-orange-500 shadow-sm flex items-center justify-center z-10">
-                          <span className="text-[10px] font-bold text-orange-700">B</span>
+                        <div className="w-8 h-8 rounded-full bg-white border-4 border-primary-500 shadow-sm flex items-center justify-center z-10">
+                          <span className="text-[10px] font-bold text-primary-700">B</span>
                         </div>
                         <span className="text-[10px] font-bold text-gray-400 bg-white/80 px-1 rounded">Destino</span>
                       </div>
@@ -2816,7 +2850,7 @@ export const UserApp = () => {
                 {!mapImageError && <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none"></div>}
 
                 <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur px-3 py-1.5 rounded-lg text-xs font-bold text-gray-600 shadow-sm z-10 flex items-center gap-1.5 border border-gray-100">
-                  <MapIcon size={12} className="text-orange-500" />
+                  <MapIcon size={12} className="text-primary-500" />
                   Rota Registrada
                 </div>
               </div>
@@ -2828,10 +2862,10 @@ export const UserApp = () => {
                 <div>
                   <span className="text-xs text-gray-400 font-bold uppercase tracking-wider">Data e Hora</span>
                   <p className="font-medium text-gray-800 flex items-center gap-2 mt-1">
-                    <Calendar size={16} className="text-orange-500" />
+                    <Calendar size={16} className="text-primary-500" />
                     {new Date(ride.createdAt).toLocaleDateString()}
                     <span className="text-gray-300">|</span>
-                    <Clock size={16} className="text-orange-500" />
+                    <Clock size={16} className="text-primary-500" />
                     {new Date(ride.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </p>
                 </div>
@@ -2851,7 +2885,7 @@ export const UserApp = () => {
                 </div>
 
                 <div className="relative pl-6">
-                  <div className="absolute left-0 top-1.5 w-4 h-4 rounded-full border-[3px] border-orange-500 bg-orange-500 z-10"></div>
+                  <div className="absolute left-0 top-1.5 w-4 h-4 rounded-full border-[3px] border-primary-500 bg-primary-500 z-10"></div>
                   <p className="text-xs text-gray-400 font-bold uppercase mb-1">Destino</p>
                   <p className="text-gray-800 font-medium leading-tight">{ride.destination}</p>
                 </div>
@@ -2881,7 +2915,7 @@ export const UserApp = () => {
                 <div>
                   <p className="text-xs text-gray-400 font-bold uppercase mb-1">Pagamento</p>
                   <p className="text-gray-800 font-semibold flex items-center gap-1.5">
-                    {ride.paymentMethod === 'pix' && <><QrCode size={14} className="text-orange-500" /> PIX</>}
+                    {ride.paymentMethod === 'pix' && <><QrCode size={14} className="text-primary-500" /> PIX</>}
                     {ride.paymentMethod === 'cash' && <><Banknote size={14} className="text-green-500" /> Dinheiro</>}
                     {ride.paymentMethod === 'debit' && <><CreditCard size={14} className="text-blue-500" /> Débito</>}
                     {ride.paymentMethod === 'credit' && <><CreditCard size={14} className="text-purple-500" /> Crédito</>}
@@ -3008,7 +3042,7 @@ export const UserApp = () => {
               <img
                 src={currentRide.driver.avatar || 'https://ui-avatars.com/api/?name=Driver'}
                 alt="Driver"
-                className="w-20 h-20 rounded-full mx-auto border-4 border-orange-500 object-cover"
+                className="w-20 h-20 rounded-full mx-auto border-4 border-primary-500 object-cover"
               />
             </div>
 
@@ -3099,7 +3133,7 @@ export const UserApp = () => {
             setCurrentUser(updatedUser);
 
             // Persist to localStorage (backup)
-            localStorage.setItem(`motoja_user_${currentUser.id}`, JSON.stringify(updatedUser));
+            localStorage.setItem(`mototaximillenio_user_${currentUser.id}`, JSON.stringify(updatedUser));
 
             // SYNC TO FIRESTORE SERVER
             import('../services/user').then(({ updateUserProfile }) => {
@@ -3145,7 +3179,7 @@ export const UserApp = () => {
               };
 
               setCurrentUser(updatedUser);
-              localStorage.setItem(`motoja_user_${currentUser!.id}`, JSON.stringify(updatedUser));
+              localStorage.setItem(`mototaximillenio_user_${currentUser!.id}`, JSON.stringify(updatedUser));
 
               setToast({ message: 'Cupom resgatado com sucesso!', type: 'success', visible: true });
               setTimeout(() => setToast(null), 3000);
@@ -3175,7 +3209,7 @@ export const UserApp = () => {
                 favoriteDrivers: (currentUser.favoriteDrivers || []).filter(id => id !== driverId)
               };
               setCurrentUser(updatedUser);
-              localStorage.setItem(`motoja_user_${currentUser.id}`, JSON.stringify(updatedUser));
+              localStorage.setItem(`mototaximillenio_user_${currentUser.id}`, JSON.stringify(updatedUser));
               // Optional: Toast message
             }
           }}
@@ -3220,7 +3254,7 @@ export const UserApp = () => {
 
           // FORCE localStorage persistence (backup)
           if (updated && updated.id) {
-            localStorage.setItem(`motoja_user_${updated.id}`, JSON.stringify(updated));
+            localStorage.setItem(`mototaximillenio_user_${updated.id}`, JSON.stringify(updated));
             console.log("Profile saved to localStorage:", updated);
           }
 
@@ -3235,7 +3269,7 @@ export const UserApp = () => {
                 newFavs = [...prev, { id: 'fav_home', label: 'Casa', address: updated.address, coords: null, type: 'home' }];
               }
               // Persist Update Immediately
-              localStorage.setItem('motoja_favorites', JSON.stringify(newFavs));
+              localStorage.setItem('mototaximillenio_favorites', JSON.stringify(newFavs));
               return newFavs;
             });
           }
@@ -3343,7 +3377,7 @@ export const UserApp = () => {
                   type="text"
                   value={editingFavoriteLabel}
                   onChange={(e) => setEditingFavoriteLabel(e.target.value)}
-                  className="w-full p-3 bg-gray-50 rounded-xl border border-gray-100 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full p-3 bg-gray-50 rounded-xl border border-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
                   placeholder="Nome do local"
                 />
               </div>
@@ -3378,7 +3412,7 @@ export const UserApp = () => {
               </Button>
               <Button
                 onClick={() => handleSaveFavorite(editingFavoriteId === 'new' ? null : editingFavoriteId, editingFavoriteLabel, editingFavoriteAddress, editingFavoriteCoords)}
-                className="flex-1 bg-orange-500 text-white hover:bg-orange-600"
+                className="flex-1 bg-primary-500 text-white hover:bg-primary-600"
                 disabled={!editingFavoriteAddress || !editingFavoriteLabel}
               >
                 Salvar

@@ -112,29 +112,29 @@ export const DEFAULT_SETTINGS: SystemSettings = {
     deliveryMotoBasePrice: 6.00,
     deliveryMotoPricePerKm: 2.20,
 
-    appName: 'MotoJá',
+    appName: 'Mototaxi Millenio',
     supportPhone: '(11) 99999-9999',
-    supportEmail: 'suporte@motoja.com.br',
+    supportEmail: 'suporte@mototaximillenio.com.br',
 
     // Default Wait Settings
     waitTimeLimit: 5,   // 5 minutes tolerance
     waitTimeFee: 0.50,  // R$ 0.50 per excess minute
 
-    companyName: 'MotoJá Transportes LTDA',
+    companyName: 'Mototaxi Millenio Transportes LTDA',
     companyCnpj: '00.000.000/0001-00',
     companyAddress: 'Rua das Motos, 123 - Centro',
     companyCity: 'Avaré',
     companyState: 'SP',
     companyCep: '18700-000',
-    companyEmail: 'contato@motoja.com.br',
+    companyEmail: 'contato@mototaximillenio.com.br',
     companyPhone: '(14) 3732-0000',
 
     visual: {
         loginBackgroundImage: '/assets/admin_login.png',
         mobileBackgroundImage: '',
         appLogoUrl: '',
-        primaryColor: '#f97316', // Orange-500
-        loginTitle: 'MotoJá',
+        primaryColor: '#4A764E', // Green-500
+        loginTitle: 'Mototaxi Millenio',
         loginSubtitle: 'Gestão completa da plataforma de mobilidade em um único lugar.',
     },
 
@@ -158,14 +158,14 @@ export const DEFAULT_SETTINGS: SystemSettings = {
         user: 'user@example.com',
         pass: '',
         secure: true,
-        fromName: 'MotoJá Notificações',
-        fromEmail: 'noreply@motoja.com.br'
+        fromName: 'Mototaxi Millenio Notificações',
+        fromEmail: 'noreply@mototaximillenio.com.br'
     },
     campaigns: [],
     activeCampaignBanner: null
 };
 
-const STORAGE_KEY = 'motoja_system_settings';
+const STORAGE_KEY = 'mototaximillenio_system_settings';
 export const SETTINGS_TABLE = 'settings';
 
 /**

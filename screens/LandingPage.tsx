@@ -1,270 +1,369 @@
-import React from 'react';
-import {
-  Shield, Zap, TrendingUp, Users, Map,
-  CheckCircle, ArrowRight, LayoutDashboard, Globe
-} from 'lucide-react';
-import { Button } from '../components/UI';
+import React from "react";
+import { Phone, MapPin, ShieldCheck, Clock3, Package, Smartphone, Bike, Star, ChevronRight, CheckCircle } from "lucide-react";
+
+// Fallback shadow Card and CardContent components that map directly to standard divs to avoid breaking ui structure
+const Card = ({ className = '', children, ...props }: any) => <div className={className} {...props}>{children}</div>;
+const CardContent = ({ className = '', children, ...props }: any) => <div className={className} {...props}>{children}</div>;
 
 export const LandingPage = ({ onStartDemo }: { onStartDemo: () => void }) => {
-  return (
-    <div className="min-h-screen bg-white font-sans text-gray-900">
+  const phoneRaw = "1437336660";
+  const phoneDisplay = "(14) 3733-6660";
+  const whatsappLink = `https://wa.me/55${phoneRaw}`;
+  const callLink = `tel:${phoneRaw}`;
+  const mapLink = "https://www.google.com/maps/search/?api=1&query=Av.+Maj.+Rangel,+1376+-+Centro,+Avar%C3%A9+-+SP,+18705-040";
+  const appLink = "#baixar-app";
 
-      {/* Navbar */}
-      <nav className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            <div className="flex items-center gap-2">
-              <img src="/logo-new.jpg" alt="MotoJá" className="h-10 w-10 rounded-lg object-cover" />
-              <span className="text-2xl font-bold tracking-tight text-gray-900">
-                Moto<span className="text-orange-500">Já</span>
-              </span>
+  const benefits = [
+    {
+      icon: Clock3,
+      title: "Agilidade no dia a dia",
+      text: "Chegue mais rápido aos seus compromissos com um atendimento ágil e prático em Avaré.",
+    },
+    {
+      icon: ShieldCheck,
+      title: "Confiança e segurança",
+      text: "Serviço profissional para quem busca mais tranquilidade em cada corrida.",
+    },
+    {
+      icon: Smartphone,
+      title: "App para chamar fácil",
+      text: "Solicite sua corrida de forma moderna e simples, direto pelo celular.",
+    },
+    {
+      icon: Package,
+      title: "Pequenas entregas",
+      text: "Envie documentos, objetos e pequenas encomendas com mais rapidez e praticidade.",
+    },
+  ];
+
+  const services = [
+    "Corridas rápidas pela cidade",
+    "Transporte para trabalho, banco, consultas e compromissos",
+    "Atendimento no Centro e bairros de Avaré",
+    "Pequenas entregas com agilidade",
+    "Solicitação prática por telefone ou app",
+  ];
+
+  const trafficHighlights = [
+    "Atendimento rápido em Avaré",
+    "Chame pelo app ou telefone",
+    "Corridas e pequenas entregas",
+    "Mais praticidade no seu dia a dia",
+  ];
+
+  return (
+    <div className="min-h-screen bg-[#07110c] text-white font-sans selection:bg-[#759a75] selection:text-black">
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(117,154,117,0.22),transparent_35%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.06),transparent_30%)] pointer-events-none" />
+        <div className="mx-auto max-w-7xl px-6 py-6 sm:px-8 lg:px-10">
+          <div className="flex items-center justify-between rounded-full border border-white/10 bg-white/5 px-4 py-3 backdrop-blur z-20 relative">
+            <div className="flex items-center gap-3">
+              <img src="/logo-transparent.png" alt="Logo Mototaxi Millênio" className="h-12 w-12 drop-shadow-[0_0_15px_rgba(117,154,117,0.4)]" />
+              <div>
+                <p className="text-lg font-semibold tracking-tight">Mototaxi <span className="text-[#759a75]">Millênio</span></p>
+                <p className="text-xs text-white/65">Avaré • Corridas • Entregas</p>
+              </div>
             </div>
-            <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
-              <a href="#benefits" className="hover:text-orange-500 transition">Benefícios</a>
-              <a href="#features" className="hover:text-orange-500 transition">Recursos</a>
-              <a href="#admin" className="hover:text-orange-500 transition">Gestão</a>
+            <div className="hidden md:flex items-center gap-3">
+              <button onClick={onStartDemo} className="text-sm font-medium text-white/70 hover:text-white transition px-4">
+                Administração
+              </button>
+              <a href={callLink}>
+                <button className="rounded-full bg-white text-[#07110c] hover:bg-gray-100 font-semibold px-4 py-2 transition-all">Ligar agora</button>
+              </a>
             </div>
-            <Button onClick={onStartDemo} className="hidden md:flex shadow-orange-500/20">
-              Ver Demonstração
-            </Button>
           </div>
         </div>
-      </nav>
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden pt-16 pb-20 lg:pt-32 lg:pb-28">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-50 text-orange-600 font-semibold text-sm mb-8 animate-fade-in border border-orange-100">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
-              </span>
-              Tecnologia de Ponta para sua Frota
+        <div className="relative mx-auto grid max-w-7xl gap-12 px-6 pb-20 pt-8 sm:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:px-10 lg:pb-28 lg:pt-10 z-10">
+          <div className="max-w-2xl animate-fade-in">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#759a75]/30 bg-[#759a75]/10 px-4 py-2 text-sm text-[#dfe8df]">
+              <Star className="h-4 w-4 text-[#759a75]" />
+              Mobilidade ágil e atendimento confiável em Avaré - SP
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-gray-900 mb-8 animate-slide-up leading-tight">
-              Seu Próprio App de <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-red-600">
-                Mobilidade Urbana
-              </span>
+            <h1 className="text-4xl font-black leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl animate-slide-up">
+              Mototáxi premium para quem precisa de <span className="text-[#759a75]">rapidez</span>,
+              <span className="text-[#c7d4c7]"> praticidade</span> e confiança.
             </h1>
 
-            <p className="text-xl text-gray-500 mb-10 max-w-2xl mx-auto leading-relaxed animate-slide-up" style={{ animationDelay: '0.1s' }}>
-              Chega de perder corridas no WhatsApp. Tenha uma plataforma completa tipo Uber/99 com a
-              <strong> sua marca</strong>. Automatize despachos, controle pagamentos e escale seu negócio.
+            <p className="mt-6 max-w-xl text-lg leading-8 text-white/75 sm:text-xl animate-slide-up" style={{ animationDelay: "100ms" }}>
+              O <strong className="text-white">Mototaxi Millênio</strong> leva você com mais agilidade pela cidade e também realiza
+              <strong className="text-[#dfe8df]"> pequenas entregas</strong> com eficiência. Peça sua corrida pelo telefone ou baixe o app.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-slide-up" style={{ animationDelay: '0.2s' }}>
-              <button
-                onClick={onStartDemo}
-                className="px-8 py-4 bg-orange-600 text-white rounded-2xl font-bold text-lg hover:bg-orange-700 hover:scale-105 transition-all shadow-xl shadow-orange-500/30 flex items-center gap-3"
-              >
-                Acessar Demonstração <ArrowRight size={20} />
-              </button>
-              <button
-                onClick={() => window.open('https://wa.me/5511913372770', '_blank')}
-                className="px-8 py-4 bg-white text-gray-700 border border-gray-200 rounded-2xl font-bold text-lg hover:bg-gray-50 transition-all flex items-center gap-2"
-              >
-                Falar com Consultor
-              </button>
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row animate-slide-up" style={{ animationDelay: "200ms" }}>
+              <a href={appLink}>
+                <button className="flex items-center justify-center h-12 w-full sm:w-auto rounded-full bg-[#759a75] px-7 text-base font-semibold text-[#07110c] hover:bg-[#89ad89] transition-all">
+                  Baixar o app
+                  <ChevronRight className="ml-2 h-4 w-4" />
+                </button>
+              </a>
+              <a href={whatsappLink} target="_blank" rel="noreferrer">
+                <button className="flex items-center justify-center h-12 w-full sm:w-auto rounded-full border border-white/20 bg-white/5 px-7 text-base font-medium text-white hover:bg-white/10 transition-all">
+                  Chamar agora
+                </button>
+              </a>
+            </div>
+
+            <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4 animate-slide-up" style={{ animationDelay: "300ms" }}>
+              {[
+                "Atendimento rápido",
+                "Motoristas experientes",
+                "Pequenas entregas",
+                "App e telefone",
+              ].map((item) => (
+                <div key={item} className="rounded-2xl border border-white/10 bg-[#0c1510]/50 p-4 text-sm font-medium text-white/80 backdrop-blur text-center flex items-center justify-center">
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="lg:pl-4 animate-slide-up" style={{ animationDelay: "300ms" }}>
+            <div className="rounded-[32px] border border-white/10 bg-gradient-to-b from-white/10 to-white/5 p-5 shadow-2xl shadow-black/30 backdrop-blur">
+              <div className="rounded-[28px] border border-white/10 bg-[#0d1812] p-6">
+                <div className="mb-5 flex items-center justify-between">
+                  <div>
+                    <p className="text-sm uppercase tracking-[0.25em] text-[#9fba9f] font-semibold">Mototaxi Millênio</p>
+                    <p className="mt-2 text-2xl font-bold">Rápido. Seguro. Profissional.</p>
+                  </div>
+                  <img src="/logo-transparent.png" alt="Logo" className="h-14 w-14 drop-shadow-lg" />
+                </div>
+
+                <div className="space-y-4">
+                  <div className="rounded-2xl bg-white/5 p-4">
+                    <p className="text-sm font-medium text-white/60">Serviço principal</p>
+                    <p className="mt-1 text-lg font-semibold">Corridas urbanas com agilidade</p>
+                  </div>
+                  <div className="rounded-2xl bg-white/5 p-4">
+                    <p className="text-sm font-medium text-white/60">Extra</p>
+                    <p className="mt-1 text-lg font-semibold">Pequenas entregas pela cidade</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="rounded-2xl bg-[#759a75]/12 p-4">
+                      <p className="text-sm font-medium text-[#cfe0cf]">Contato</p>
+                      <p className="mt-1 font-semibold lg:text-lg">{phoneDisplay}</p>
+                    </div>
+                    <div className="rounded-2xl bg-[#759a75]/12 p-4">
+                      <p className="text-sm font-medium text-[#cfe0cf]">Local</p>
+                      <p className="mt-1 font-semibold lg:text-lg">Centro de Avaré</p>
+                    </div>
+                  </div>
+                  <div className="rounded-2xl border border-[#759a75]/20 bg-[#759a75]/10 p-4 text-sm leading-7 text-[#e4ece4]">
+                    Ideal para trabalho, compromissos, banco, consultas, deslocamentos rápidos e entregas menores com praticidade.
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
+      </section>
 
-        {/* Background Decorative Elements */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full z-[-1] overflow-hidden pointer-events-none opacity-40">
-          <div className="absolute top-0 left-1/4 w-96 h-96 bg-orange-200 rounded-full mix-blend-multiply filter blur-3xl animate-pulse-slow"></div>
-          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-yellow-200 rounded-full mix-blend-multiply filter blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+      <section className="mx-auto max-w-7xl px-6 py-6 sm:px-8 lg:px-10">
+        <div className="grid gap-4 rounded-[28px] border border-white/10 bg-white/[0.04] p-5 md:grid-cols-4">
+          {trafficHighlights.map((item) => (
+            <div key={item} className="rounded-2xl bg-[#0c1510] border border-white/5 p-4 text-sm font-medium text-white/75 text-center">
+              {item}
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Pain Points / Solution */}
-      <section id="benefits" className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-gray-900">Por que modernizar sua frota?</h2>
-            <p className="text-gray-500 mt-4 max-w-2xl mx-auto">
-              O modelo antigo via rádio e WhatsApp limita seu crescimento. Veja como a tecnologia transforma sua operação.
+      <section className="mx-auto max-w-7xl px-6 py-20 sm:px-8 lg:px-10">
+        <div className="max-w-3xl">
+          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#8fb28f]">Por que escolher</p>
+          <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl leading-tight">
+            Um serviço pensado para facilitar sua rotina com mais velocidade e confiança.
+          </h2>
+          <p className="mt-5 text-lg leading-8 text-white/70">
+            Quando o tempo é curto, você precisa de um atendimento ágil, prático e confiável. O Mototaxi Millênio ajuda você a se deslocar com rapidez e também resolve pequenas entregas sem complicação.
+          </p>
+        </div>
+
+        <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          {benefits.map(({ icon: Icon, title, text }) => (
+            <Card key={title} className="rounded-[28px] border border-white/10 bg-white/[0.04] text-white shadow-xl shadow-black/20 hover:bg-white/[0.06] transition-colors">
+              <CardContent className="p-8">
+                <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#759a75] text-[#07110c]">
+                  <Icon className="h-7 w-7" />
+                </div>
+                <h3 className="text-xl font-bold">{title}</h3>
+                <p className="mt-3 leading-7 text-white/70">{text}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </section>
+
+      <section className="border-y border-white/10 bg-[#0c1510] overflow-hidden">
+        <div className="mx-auto grid max-w-7xl gap-12 px-6 py-20 sm:px-8 lg:grid-cols-2 lg:px-10">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#8fb28f]">Serviços</p>
+            <h2 className="mt-4 text-3xl font-black tracking-tight sm:text-4xl leading-tight">
+              Corridas e pequenas entregas com atendimento rápido em Avaré.
+            </h2>
+            <p className="mt-5 text-lg leading-8 text-white/70">
+              Seja para chegar logo ao seu destino ou enviar uma pequena encomenda com praticidade, o Mototaxi Millênio oferece uma solução moderna para o dia a dia.
             </p>
+            <div className="mt-8 grid gap-4">
+              {services.map((service) => (
+                <div key={service} className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-4 transition hover:bg-white/10">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#759a75] text-[#07110c] shrink-0">
+                    <ChevronRight className="h-5 w-5" />
+                  </div>
+                  <p className="text-white/80 font-medium">{service}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            <FeatureCard
-              icon={<Shield size={32} className="text-orange-500" />}
-              title="Marca Própria (White Label)"
-              description="O aplicativo é entregue com seu logo, suas cores e seu nome. Seus clientes vão amar a sua nova identidade profissional."
-            />
-            <FeatureCard
-              icon={<TrendingUp size={32} className="text-blue-500" />}
-              title="Faturamento Automático"
-              description="Chega de caderninho. O sistema calcula rotas, preços e gera relatórios financeiros precisos em tempo real."
-            />
-            <FeatureCard
-              icon={<Map size={32} className="text-green-500" />}
-              title="Rastreamento em Tempo Real"
-              description="Segurança para o passageiro e controle para você. Saiba exatamente onde cada moto está a cada segundo."
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* App Showcase */}
-      <section id="features" className="py-20 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row items-center gap-16">
-            <div className="lg:w-1/2 space-y-8">
-              <h2 className="text-4xl font-bold text-gray-900 leading-tight">
-                A experiência perfeita para <span className="text-orange-500">Passageiros</span> e <span className="text-orange-500">Pilotos</span>
-              </h2>
-              <p className="text-lg text-gray-500">
-                Entregamos 3 aplicativos conectados: App do Passageiro (Android/iOS), App do Piloto e Painel Administrativo Web.
+          <div className="rounded-[32px] border border-white/10 bg-gradient-to-br from-[#759a75]/18 to-white/5 p-6 shadow-2xl shadow-black/20 h-auto self-center">
+            <div className="h-full rounded-[28px] border border-white/10 bg-[#07110c] p-8 lg:p-10">
+              <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#9fba9f]">Contato Direto</p>
+              <h3 className="mt-4 text-3xl font-black leading-tight">Precisa chegar rápido ou fazer uma entrega?</h3>
+              <p className="mt-4 text-lg leading-8 text-white/75">
+                Chame o <strong className="text-white">Mototaxi Millênio</strong>. Atendimento ágil em Avaré para corridas e pequenas entregas com praticidade no seu dia.
               </p>
 
-              <div className="space-y-4">
-                <CheckItem text="Geolocalização precisa com Google Maps" />
-                <CheckItem text="Opção de Mototáxi e Entregas (Moto/Bike)" />
-                <CheckItem text="Chat integrado entre motorista e cliente" />
-                <CheckItem text="Histórico de corridas e avaliação 5 estrelas" />
+              <div className="mt-8 space-y-3">
+                {[
+                  "Atendimento rápido",
+                  "Ligue ou peça pelo app",
+                  "Centro e toda Avaré",
+                  "Mais comodidade no dia a dia",
+                ].map((bullet) => (
+                  <div key={bullet} className="rounded-2xl bg-white/5 border border-white/5 px-4 py-3 text-white/80 font-medium flex gap-3 items-center">
+                    <CheckCircle className="h-5 w-5 text-[#759a75]" /> {bullet}
+                  </div>
+                ))}
               </div>
 
-              <div className="pt-4">
-                <Button onClick={onStartDemo} className="px-8" variant="secondary">
-                  Testar Aplicativo Agora
-                </Button>
-              </div>
-            </div>
-
-            <div className="lg:w-1/2 relative">
-              {/* Abstract Phone Representation */}
-              <div className="relative mx-auto border-gray-800 bg-gray-800 border-[14px] rounded-[2.5rem] h-[600px] w-[300px] shadow-2xl flex flex-col overflow-hidden">
-                <div className="h-[32px] w-[3px] bg-gray-800 absolute -left-[17px] top-[72px] rounded-l-lg"></div>
-                <div className="h-[46px] w-[3px] bg-gray-800 absolute -left-[17px] top-[124px] rounded-l-lg"></div>
-                <div className="h-[64px] w-[3px] bg-gray-800 absolute -right-[17px] top-[142px] rounded-r-lg"></div>
-                <div className="rounded-[2rem] overflow-hidden w-full h-full bg-white relative">
-                  {/* Mock Screen Content (Mini version of UserApp) */}
-                  <div className="bg-orange-500 h-1/2 w-full absolute top-0 rounded-b-[3rem]"></div>
-                  <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
-                    <div className="bg-white p-4 rounded-2xl shadow-xl w-full mb-4 flex items-center gap-3">
-                      <div className="bg-orange-100 p-2 rounded-full"><Map size={20} className="text-orange-500" /></div>
-                      <div className="text-left">
-                        <div className="h-2 w-24 bg-gray-200 rounded mb-1"></div>
-                        <div className="h-2 w-16 bg-gray-100 rounded"></div>
-                      </div>
-                    </div>
-                    <div className="bg-white p-6 rounded-2xl shadow-xl w-full">
-                      <h3 className="font-bold text-gray-800 mb-2">Para onde vamos?</h3>
-                      <div className="w-full h-10 bg-gray-100 rounded-lg mb-4"></div>
-                      <div className="w-full h-10 bg-orange-500 rounded-lg"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Floating Badges */}
-              <div className="absolute top-20 -right-10 bg-white p-4 rounded-xl shadow-xl border border-gray-100 animate-pulse-slow">
-                <div className="flex items-center gap-3">
-                  <div className="bg-green-100 p-2 rounded-full text-green-600"><Users size={20} /></div>
-                  <div>
-                    <p className="text-xs text-gray-400">Motoristas</p>
-                    <p className="font-bold text-gray-800">Online</p>
-                  </div>
-                </div>
-              </div>
-              <div className="absolute bottom-20 -left-10 bg-white p-4 rounded-xl shadow-xl border border-gray-100 animate-pulse-slow" style={{ animationDelay: '1.5s' }}>
-                <div className="flex items-center gap-3">
-                  <div className="bg-blue-100 p-2 rounded-full text-blue-600"><TrendingUp size={20} /></div>
-                  <div>
-                    <p className="text-xs text-gray-400">Receita</p>
-                    <p className="font-bold text-gray-800">+ 145%</p>
-                  </div>
-                </div>
+              <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+                <a href={callLink} className="w-full">
+                  <button className="h-14 w-full rounded-full bg-[#759a75] px-6 text-base font-bold text-[#07110c] hover:bg-[#89ad89] transition-all relative overflow-hidden group">
+                    <span className="relative z-10 flex items-center justify-center gap-2"><Phone size={18} /> Ligar agora</span>
+                    <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                  </button>
+                </a>
+                <a href={whatsappLink} target="_blank" rel="noreferrer" className="w-full">
+                  <button className="h-14 w-full rounded-full border border-white/15 bg-white/5 px-6 text-base font-medium text-white hover:bg-white/10 transition-all">
+                    Chamar no WhatsApp
+                  </button>
+                </a>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Admin Section */}
-      <section id="admin" className="py-20 bg-gray-900 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold mb-4">Controle Total na Palma da Mão</h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
-              O Painel Administrativo Web oferece visão de águia sobre toda sua operação.
+      <section id="baixar-app" className="mx-auto max-w-7xl px-6 py-20 sm:px-8 lg:px-10">
+        <div className="grid gap-8 rounded-[32px] border border-white/10 bg-gradient-to-r from-[#759a75]/16 to-white/5 p-8 lg:grid-cols-[1fr_0.8fr] lg:p-12 shadow-2xl shadow-[#759a75]/5">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#9fba9f]">App Mototaxi Millênio</p>
+            <h2 className="mt-4 text-4xl font-black tracking-tight leading-tight">
+              Baixe o app e tenha mais praticidade.
+            </h2>
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-white/75">
+              Facilite sua rotina com uma experiência moderna. Solicite corridas com mais comodidade e tenha o Mototaxi Millênio sempre à mão, direto no seu smartphone.
             </p>
+            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+              <button className="h-14 w-full sm:w-auto rounded-full bg-[#759a75] px-8 text-base font-bold text-[#07110c] hover:bg-[#89ad89] transition-all shadow-lg shadow-[#759a75]/20">
+                Baixar app Android
+              </button>
+              <button className="h-14 w-full sm:w-auto rounded-full border-2 border-white/15 bg-transparent px-8 text-base font-bold text-white hover:bg-white/10 transition-all">
+                Baixar app iPhone
+              </button>
+            </div>
           </div>
 
-          <div className="relative bg-gray-800 rounded-2xl p-4 md:p-8 border border-gray-700 shadow-2xl">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-              <div className="bg-gray-700 p-6 rounded-xl border border-gray-600">
-                <LayoutDashboard className="text-orange-500 mb-4" size={32} />
-                <h3 className="font-bold text-lg mb-2">Dashboard em Tempo Real</h3>
-                <p className="text-sm text-gray-400">Acompanhe corridas, motoristas ativos e faturamento ao vivo.</p>
-              </div>
-              <div className="bg-gray-700 p-6 rounded-xl border border-gray-600">
-                <Users className="text-blue-500 mb-4" size={32} />
-                <h3 className="font-bold text-lg mb-2">Gestão de Motoristas</h3>
-                <p className="text-sm text-gray-400">Aprovação de documentos, bloqueio, e controle de comissões.</p>
-              </div>
-              <div className="bg-gray-700 p-6 rounded-xl border border-gray-600">
-                <Globe className="text-green-500 mb-4" size={32} />
-                <h3 className="font-bold text-lg mb-2">Mapa de Calor</h3>
-                <p className="text-sm text-gray-400">Entenda onde estão as chamadas e posicione sua frota estrategicamente.</p>
-              </div>
+          <div className="rounded-[28px] border border-white/10 bg-[#0c1510] p-6 lg:ml-auto w-full md:w-[360px]">
+            <div className="rounded-[24px] bg-white/5 p-8 h-full flex flex-col justify-center border border-white/5 shadow-inner">
+               <img src="/logo-transparent.png" alt="Logo Mototaxi Millênio" className="w-44 h-44 mx-auto drop-shadow-[0_20px_30px_rgba(117,154,117,0.3)] mb-6" />
+               <p className="text-center font-bold text-2xl text-white">Mototaxi Millênio</p>
+               <div className="mt-4 inline-flex items-center justify-center self-center rounded-full bg-white/10 px-4 py-2">
+                 <span className="flex h-2 w-2 rounded-full bg-green-500 mr-2 animate-pulse"></span>
+                 <p className="text-center text-white/80 font-medium text-sm">Disponível em breve</p>
+               </div>
             </div>
-
-
           </div>
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="py-24 bg-gradient-to-br from-orange-600 to-red-600 text-white text-center">
-        <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-4xl font-bold mb-6">Pronto para digitalizar sua frota?</h2>
-          <p className="text-xl text-orange-100 mb-10">
-            Não cobramos por corrida. Modelo de assinatura fixa ou porcentagem, você decide.
-            Tenha seu app rodando em menos de 7 dias.
-          </p>
-          <button
-            onClick={onStartDemo}
-            className="px-10 py-5 bg-white text-orange-600 rounded-full font-bold text-xl shadow-2xl hover:bg-gray-50 hover:scale-105 transition-all"
-          >
-            Quero Ver a Demonstração
-          </button>
-          <p className="mt-6 text-sm opacity-70">
-            Sem compromisso • Não requer cartão de crédito para testar
-          </p>
+      <section className="mx-auto max-w-7xl px-6 pb-24 sm:px-8 lg:px-10">
+        <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
+          <div className="rounded-[30px] border border-white/10 bg-white/[0.04] p-8 sm:p-10 shadow-lg">
+            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#8fb28f]">Contato</p>
+            <h2 className="mt-4 text-3xl font-black tracking-tight">Fale com o Mototaxi Millênio</h2>
+            <div className="mt-8 space-y-6 text-white/75">
+              <div className="flex items-start gap-4">
+                <div className="rounded-2xl bg-[#132219] border border-[#759a75]/30 p-4 text-[#759a75] shadow-lg"><Phone className="h-6 w-6" /></div>
+                <div className="pt-1">
+                  <p className="text-sm font-medium text-white/50 text-transform uppercase tracking-wider">Telefone / WhatsApp</p>
+                  <p className="text-xl font-bold text-white mt-1">{phoneDisplay}</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-4">
+                <div className="rounded-2xl bg-[#132219] border border-[#759a75]/30 p-4 text-[#759a75] shadow-lg"><MapPin className="h-6 w-6" /></div>
+                <div className="pt-1">
+                  <p className="text-sm font-medium text-white/50 text-transform uppercase tracking-wider">Endereço</p>
+                  <p className="text-xl font-bold text-white mt-1">Av. Maj. Rangel, 1376</p>
+                  <p className="text-lg">Centro, Avaré - SP, 18705-040</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+              <a href={callLink} className="w-full sm:w-auto">
+                <button className="h-14 w-full rounded-full bg-[#759a75] px-8 text-base font-bold text-[#07110c] hover:bg-[#89ad89] transition-all shadow-lg shadow-[#759a75]/20 hover:shadow-none translate-y-0 hover:translate-y-1">Ligar agora</button>
+              </a>
+              <a href={mapLink} target="_blank" rel="noreferrer" className="w-full sm:w-auto">
+                <button className="h-14 w-full rounded-full border-2 border-white/10 bg-transparent px-8 text-base font-bold text-white hover:bg-white/10 hover:border-white/30 transition-all flex items-center justify-center gap-2">
+                  <MapPin size={18} /> Ver localização
+                </button>
+              </a>
+            </div>
+          </div>
+
+          <div className="rounded-[30px] border border-white/10 bg-gradient-to-br from-white/5 to-[#759a75]/10 p-4">
+            <div className="flex h-full min-h-[320px] items-center justify-center rounded-[26px] overflow-hidden border border-white/10 bg-[#0b140f] relative group shadow-inner">
+              <div className="absolute inset-0 bg-black/40 z-10 group-hover:bg-black/20 transition duration-500"></div>
+              {/* Using the generated og-image as styling fallback */}
+              <img src="/og-image.jpg" alt="Localização Mototaxi" className="absolute inset-0 w-full h-full object-cover scale-105 group-hover:scale-100 transition duration-700 opacity-40 mix-blend-screen grayscale-[50%]" />
+              <div className="relative z-20 text-center flex flex-col items-center">
+                 <div className="bg-[#759a75] p-5 rounded-full mb-5 shadow-2xl text-[#07110c] ring-8 ring-[#759a75]/20">
+                   <MapPin size={32} />
+                 </div>
+                 <p className="font-extrabold text-3xl text-white drop-shadow-md">Avaré - SP</p>
+                 <p className="text-white/80 font-medium mt-2 max-w-xs block mx-auto bg-black/40 px-4 py-1.5 rounded-full border border-white/10 backdrop-blur">Atendimento em toda a cidade e região</p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-50 py-12 border-t border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 text-center text-gray-500 text-sm">
-          <p className="mb-4 font-bold text-gray-900 text-lg">MotoJá Tecnologia</p>
-          <p>&copy; {new Date().getFullYear()} MotoJá. Todos os direitos reservados.</p>
-          <p className="mt-2">Av. Major Rangel, Centro - Avaré, SP</p>
+      <footer className="border-t border-white/10 bg-[#050d09] py-12 md:py-16">
+        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 text-center text-white/50 text-sm flex flex-col items-center gap-6">
+           <div className="flex items-center gap-3 mb-2 p-3 bg-white/5 rounded-2xl border border-white/5">
+              <img src="/logo-transparent.png" alt="Logo Mototaxi Millênio" className="h-9 w-9 drop-shadow-md" />
+              <span className="font-bold text-white text-xl tracking-tight">Mototaxi <span className="text-[#759a75]">Millênio</span></span>
+           </div>
+           <p className="text-base">&copy; {new Date().getFullYear()} Mototaxi Millênio. Avaré - SP. <br className="md:hidden"/> Todos os direitos reservados.</p>
+           <button onClick={onStartDemo} className="text-white/30 hover:text-white/80 hover:bg-white/5 px-6 py-3 rounded-full transition-all mt-4 text-xs font-bold tracking-widest uppercase border border-transparent hover:border-white/10">
+             Área Administrativa e Gestão
+           </button>
         </div>
       </footer>
+
+      <a
+        href={whatsappLink}
+        target="_blank"
+        rel="noreferrer"
+        className="fixed bottom-6 right-6 z-50 rounded-full bg-[#759a75] px-6 py-4 text-base font-extrabold text-[#07110c] shadow-2xl shadow-[#759a75]/40 transition-all hover:scale-105 hover:bg-[#89ad89] flex items-center gap-2"
+      >
+        <span>Chamar agora</span>
+      </a>
     </div>
   );
 };
-
-// Componentes Auxiliares
-const FeatureCard = ({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) => (
-  <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 hover:shadow-xl transition-shadow group">
-    <div className="mb-6 bg-gray-50 w-16 h-16 rounded-xl flex items-center justify-center group-hover:bg-orange-50 transition-colors">
-      {icon}
-    </div>
-    <h3 className="text-xl font-bold text-gray-900 mb-3">{title}</h3>
-    <p className="text-gray-500 leading-relaxed">{description}</p>
-  </div>
-);
-
-const CheckItem = ({ text }: { text: string }) => (
-  <div className="flex items-center gap-3">
-    <CheckCircle size={20} className="text-green-500 flex-shrink-0" />
-    <span className="text-gray-700 font-medium">{text}</span>
-  </div>
-);

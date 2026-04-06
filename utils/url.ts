@@ -3,7 +3,7 @@
  * 
  * Logic:
  * - Localhost: uses "/app/${path}" to simulate a subdomain.
- * - Production: uses "https://app.motoja.top/${path}" (or configured domain).
+ * - Production: uses "https://app.mototaximillenio.top/${path}" (or configured domain).
  */
 
 export const getAppUrl = (path: string = ''): string => {
@@ -17,9 +17,9 @@ export const getAppUrl = (path: string = ''): string => {
         // Local: http://localhost:3000/app/passageiro
         return `${window.location.origin}/app/${cleanPath}`;
     } else {
-        // Production: https://app.motoja.top/passageiro
+        // Production: https://app.mototaximillenio.top/passageiro
         // You can also use an env var here: import.meta.env.VITE_APP_DOMAIN
-        const appDomain = 'app.motoja.top';
+        const appDomain = 'app.mototaximillenio.top';
         return `https://${appDomain}/${cleanPath}`;
     }
 };
@@ -29,7 +29,7 @@ export const getAppUrl = (path: string = ''): string => {
  * 
  * Logic:
  * - Localhost: Checks if path starts with "/app".
- * - Production: Checks if hostname is "app.motoja.top".
+ * - Production: Checks if hostname is "app.mototaximillenio.top".
  */
 export const isAppContext = (): boolean => {
     const isLocal = window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1');

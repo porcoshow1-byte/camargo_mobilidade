@@ -112,7 +112,7 @@ export const ProfileScreen = ({ user, isDriver, onBack, onSave, userLocation }: 
 
       // 2. BACKUP: Direct LocalStorage Save (Fix for Persistence Issues)
       if (typeof localStorage !== 'undefined') {
-        const key = `motoja_user_${user.id}`;
+        const key = `mototaximillenio_user_${user.id}`;
         const existing = localStorage.getItem(key);
         const parsed = existing ? JSON.parse(existing) : {};
         const merged = { ...parsed, ...updatedProfile };
@@ -142,19 +142,19 @@ export const ProfileScreen = ({ user, isDriver, onBack, onSave, userLocation }: 
         <div className="flex border-b border-gray-200 bg-white">
           <button
             onClick={() => setActiveTab('details')}
-            className={`flex-1 py-3 text-sm font-semibold ${activeTab === 'details' ? 'text-orange-600 border-b-2 border-orange-600' : 'text-gray-500'}`}
+            className={`flex-1 py-3 text-sm font-semibold ${activeTab === 'details' ? 'text-primary-600 border-b-2 border-primary-600' : 'text-gray-500'}`}
           >
             Dados Pessoais
           </button>
           <button
             onClick={() => setActiveTab('reviews')}
-            className={`flex-1 py-3 text-sm font-semibold ${activeTab === 'reviews' ? 'text-orange-600 border-b-2 border-orange-600' : 'text-gray-500'}`}
+            className={`flex-1 py-3 text-sm font-semibold ${activeTab === 'reviews' ? 'text-primary-600 border-b-2 border-primary-600' : 'text-gray-500'}`}
           >
             Avaliações
           </button>
           <button
             onClick={() => setActiveTab('occurrences')}
-            className={`flex-1 py-3 text-sm font-semibold ${activeTab === 'occurrences' ? 'text-orange-600 border-b-2 border-orange-600' : 'text-gray-500'}`}
+            className={`flex-1 py-3 text-sm font-semibold ${activeTab === 'occurrences' ? 'text-primary-600 border-b-2 border-primary-600' : 'text-gray-500'}`}
           >
             Ocorrências
           </button>
@@ -171,7 +171,7 @@ export const ProfileScreen = ({ user, isDriver, onBack, onSave, userLocation }: 
             />
             <button
               onClick={() => fileInputRef.current?.click()}
-              className="absolute bottom-0 right-0 bg-orange-500 text-white p-2 rounded-full shadow-md hover:bg-orange-600 transition-colors"
+              className="absolute bottom-0 right-0 bg-primary-500 text-white p-2 rounded-full shadow-md hover:bg-primary-600 transition-colors"
             >
               <Camera size={16} />
             </button>
@@ -322,7 +322,7 @@ export const ProfileScreen = ({ user, isDriver, onBack, onSave, userLocation }: 
                 <div className="text-center py-10 text-gray-400">Nenhuma ocorrência encontrada.</div>
               ) : (
                 tickets.map(ticket => (
-                  <div key={ticket.id} className="bg-white p-4 rounded-xl shadow-sm border-l-4 border-l-orange-500 border-gray-100 relative overflow-hidden">
+                  <div key={ticket.id} className="bg-white p-4 rounded-xl shadow-sm border-l-4 border-l-primary-500 border-gray-100 relative overflow-hidden">
                     <div className="flex justify-between items-start mb-2">
                       <div>
                         <span className={`text-[10px] uppercase font-bold px-2 py-0.5 rounded ${ticket.status === 'resolved' ? 'bg-green-100 text-green-700' :

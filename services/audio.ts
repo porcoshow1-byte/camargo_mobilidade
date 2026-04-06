@@ -1,5 +1,5 @@
 /**
- * MotoJá Audio Service
+ * Mototaxi Millenio Audio Service
  * Sistema de efeitos sonoros profissionais para notificações
  * Utiliza Web Audio API para gerar tons suaves e modernos
  */

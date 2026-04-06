@@ -62,7 +62,7 @@ export const ChatModal = ({ rideId, currentUserId, otherUserName, onClose }: Cha
     <div className="fixed inset-0 z-[60] bg-black/50 backdrop-blur-sm flex items-end sm:items-center justify-center p-4 sm:p-6 animate-fade-in">
       <div className="bg-white w-full max-w-md h-[80vh] rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-slide-up">
         {/* Header */}
-        <div className="bg-orange-500 p-4 flex items-center justify-between text-white shadow-md z-10">
+        <div className="bg-primary-500 p-4 flex items-center justify-between text-white shadow-md z-10">
           <div className="flex items-center gap-3">
             <div className="bg-white/20 p-2 rounded-full">
               <User size={20} />
@@ -90,13 +90,13 @@ export const ChatModal = ({ rideId, currentUserId, otherUserName, onClose }: Cha
               <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
                 <div
                   className={`max-w-[80%] p-3 rounded-2xl text-sm shadow-sm ${isMe
-                    ? 'bg-orange-500 text-white rounded-tr-none'
+                    ? 'bg-primary-500 text-white rounded-tr-none'
                     : 'bg-white text-gray-800 border border-gray-100 rounded-tl-none'
                     }`}
                 >
                   <p>{msg.text}</p>
                   <div className={`flex items-center justify-end gap-1 mt-1 ${isMe ? 'opacity-80' : 'opacity-50'}`}>
-                    <span className={`text-[10px] ${isMe ? 'text-orange-100' : 'text-gray-400'}`}>
+                    <span className={`text-[10px] ${isMe ? 'text-primary-100' : 'text-gray-400'}`}>
                       {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                     {isMe && renderStatusIcon(msg.status)}
@@ -119,12 +119,12 @@ export const ChatModal = ({ rideId, currentUserId, otherUserName, onClose }: Cha
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               placeholder="Digite sua mensagem..."
-              className="flex-1 bg-gray-100 text-gray-800 rounded-full px-4 py-3 outline-none focus:ring-2 focus:ring-orange-500 transition"
+              className="flex-1 bg-gray-100 text-gray-800 rounded-full px-4 py-3 outline-none focus:ring-2 focus:ring-primary-500 transition"
             />
             <button
               type="submit"
               disabled={!newMessage.trim()}
-              className="p-3 bg-orange-500 text-white rounded-full hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-orange-500/30 transition-all active:scale-95"
+              className="p-3 bg-primary-500 text-white rounded-full hover:bg-primary-600 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-primary-500/30 transition-all active:scale-95"
             >
               <Send size={20} />
             </button>

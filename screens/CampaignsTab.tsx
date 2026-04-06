@@ -172,7 +172,7 @@ export const CampaignsTab: React.FC<CampaignsTabProps> = ({
             <div className="flex items-center justify-between">
                 <div>
                     <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-                        <Megaphone className="text-orange-500" size={28} />
+                        <Megaphone className="text-primary-500" size={28} />
                         Gestão de Campanhas
                     </h2>
                     <p className="text-gray-500 text-sm mt-1">
@@ -190,16 +190,16 @@ export const CampaignsTab: React.FC<CampaignsTabProps> = ({
             </div>
 
             {/* Add New Campaign */}
-            <Card className={`p-6 ${editingCampaignId ? 'border-2 border-orange-500 bg-orange-50/10' : ''}`}>
+            <Card className={`p-6 ${editingCampaignId ? 'border-2 border-primary-500 bg-primary-50/10' : ''}`}>
                 <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center gap-2">
                     {editingCampaignId ? (
                         <>
-                            <Pencil size={20} className="text-orange-500" />
+                            <Pencil size={20} className="text-primary-500" />
                             Editar Campanha
                         </>
                     ) : (
                         <>
-                            <Plus size={20} className="text-orange-500" />
+                            <Plus size={20} className="text-primary-500" />
                             Adicionar Nova Campanha
                         </>
                     )}
@@ -241,7 +241,7 @@ export const CampaignsTab: React.FC<CampaignsTabProps> = ({
                                     type="checkbox"
                                     checked={newCampaign.showCta}
                                     onChange={(e) => setNewCampaign(prev => ({ ...prev, showCta: e.target.checked }))}
-                                    className="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
+                                    className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
                                 />
                             </div>
                             <div className="flex-1">
@@ -262,7 +262,7 @@ export const CampaignsTab: React.FC<CampaignsTabProps> = ({
                                 <select
                                     value={newCampaign.ctaType}
                                     onChange={(e) => setNewCampaign(prev => ({ ...prev, ctaType: e.target.value as any }))}
-                                    className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                                    className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                                 >
                                     <option value="saiba_mais">Saiba mais</option>
                                     <option value="ligar">Ligar agora</option>
@@ -359,7 +359,7 @@ export const CampaignsTab: React.FC<CampaignsTabProps> = ({
                             {/* Preview CTA Button */}
                             {newCampaign.imageUrl && newCampaign.showCta && (
                                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                    <span className="bg-white text-orange-600 px-6 py-2 rounded-full text-sm font-bold shadow-lg uppercase tracking-wide transform hover:scale-105 transition-transform">
+                                    <span className="bg-white text-primary-600 px-6 py-2 rounded-full text-sm font-bold shadow-lg uppercase tracking-wide transform hover:scale-105 transition-transform">
                                         {newCampaign.ctaType === 'saiba_mais' && 'Saiba mais'}
                                         {newCampaign.ctaType === 'ligar' && 'Ligar'}
                                         {newCampaign.ctaType === 'whatsapp' && 'WhatsApp'}
@@ -395,7 +395,7 @@ export const CampaignsTab: React.FC<CampaignsTabProps> = ({
                             <div
                                 key={campaign.id}
                                 className={`relative rounded-xl overflow-hidden border-2 transition-all ${settings.activeCampaignBanner === campaign.imageUrl
-                                    ? 'border-orange-500 shadow-lg'
+                                    ? 'border-primary-500 shadow-lg'
                                     : campaign.active
                                         ? 'border-green-200'
                                         : 'border-gray-200 opacity-60'
@@ -410,7 +410,7 @@ export const CampaignsTab: React.FC<CampaignsTabProps> = ({
 
                                 {/* Active Indicator */}
                                 {settings.activeCampaignBanner === campaign.imageUrl && (
-                                    <div className="absolute top-2 left-2 bg-orange-500 text-white px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
+                                    <div className="absolute top-2 left-2 bg-primary-500 text-white px-2 py-0.5 rounded-full text-xs font-bold flex items-center gap-1">
                                         <CheckCircle size={12} />
                                         Principal
                                     </div>
@@ -437,8 +437,8 @@ export const CampaignsTab: React.FC<CampaignsTabProps> = ({
                                             <button
                                                 onClick={() => handleSetActiveMain(campaign.imageUrl)}
                                                 className={`px-2 py-1 text-xs rounded font-medium transition ${settings.activeCampaignBanner === campaign.imageUrl
-                                                    ? 'bg-orange-100 text-orange-600'
-                                                    : 'bg-gray-100 text-gray-600 hover:bg-orange-50 hover:text-orange-600'
+                                                    ? 'bg-primary-100 text-primary-600'
+                                                    : 'bg-gray-100 text-gray-600 hover:bg-primary-50 hover:text-primary-600'
                                                     }`}
                                                 title="Definir como principal"
                                             >

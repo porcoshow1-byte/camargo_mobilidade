@@ -30,7 +30,7 @@ export const SwipeableButton: React.FC<SwipeableButtonProps> = ({
         green: { bg: 'bg-green-500', text: 'text-green-500', container: 'bg-green-100 dark:bg-green-900/30 border-green-200 dark:border-green-800' },
         red: { bg: 'bg-red-500', text: 'text-red-500', container: 'bg-red-100 dark:bg-red-900/30 border-red-200 dark:border-red-800' },
         blue: { bg: 'bg-blue-500', text: 'text-blue-500', container: 'bg-blue-100 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800' },
-        orange: { bg: 'bg-orange-500', text: 'text-orange-500', container: 'bg-orange-100 dark:bg-orange-900/30 border-orange-200 dark:border-orange-800' }
+        orange: { bg: 'bg-primary-500', text: 'text-primary-500', container: 'bg-primary-100 dark:bg-primary-900/30 border-primary-200 dark:border-primary-800' }
     };
     const theme = colors[color];
 

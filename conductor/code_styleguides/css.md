@@ -1,4 +1,4 @@
-# CSS Style Guide - MotoJá
+# CSS Style Guide - Mototaxi Millenio
 
 ## Design Tokens
 
@@ -6,7 +6,7 @@
 
 ```css
 :root {
-  /* Primary - Orange (Marca MotoJá) */
+  /* Primary - Orange (Marca Mototaxi Millenio) */
   --color-primary: #f97316;
   --color-primary-light: #fb923c;
   --color-primary-dark: #ea580c;

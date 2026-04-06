@@ -1,5 +1,5 @@
 -- ============================================
--- MotoJá - Supabase Schema
+-- Mototaxi Millenio - Supabase Schema
 -- Migração Firebase → Supabase
 -- VERSÃO CORRIGIDA: Ordenação das Tabelas e FKs
 -- ============================================

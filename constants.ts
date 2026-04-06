@@ -34,7 +34,7 @@ if (!mapboxKey) {
 }
 
 export const APP_CONFIG = {
-  name: "MotoJá",
+  name: "Mototaxi Millenio",
   city: "Avaré - SP",
   currency: "R$",
   primaryColor: "orange",

@@ -1,4 +1,4 @@
-# Rule 01: Isolamento de Segurança (MotoJá)
+# Rule 01: Isolamento de Segurança (Mototaxi Millenio)
 
 ## MOTIVO
 Impedir o erro histórico de expor chaves sensíveis ou permitir que o frontend ignore a camada de lógica de segurança (RLS).

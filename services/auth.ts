@@ -40,7 +40,7 @@ export const observeAuthState = (callback: AuthCallback) => {
     console.warn("⚠️ Auth rodando em modo MOCK (Supabase).");
 
     // Verificação inicial via localStorage
-    const storedUser = localStorage.getItem('motoja_mock_user');
+    const storedUser = localStorage.getItem('mototaximillenio_mock_user');
     if (storedUser) {
       try {
         const parsed = JSON.parse(storedUser);
@@ -92,7 +92,7 @@ export const login = async (email: string, pass: string) => {
       created_at: new Date().toISOString()
     } as unknown as UserWithUID;
 
-    localStorage.setItem('motoja_mock_user', JSON.stringify(mockUser));
+    localStorage.setItem('mototaximillenio_mock_user', JSON.stringify(mockUser));
     notifyObservers(mockUser);
 
     return { user: mockUser, session: null };
@@ -129,7 +129,7 @@ export const register = async (email: string, pass: string) => {
       created_at: new Date().toISOString()
     } as unknown as UserWithUID;
 
-    localStorage.setItem('motoja_mock_user', JSON.stringify(mockUser));
+    localStorage.setItem('mototaximillenio_mock_user', JSON.stringify(mockUser));
     notifyObservers(mockUser);
 
     return { user: mockUser, session: null };
@@ -150,7 +150,7 @@ export const register = async (email: string, pass: string) => {
 
 export const logout = async () => {
   if (isMockMode || !supabase) {
-    localStorage.removeItem('motoja_mock_user');
+    localStorage.removeItem('mototaximillenio_mock_user');
     const { clearSession } = await import('./user');
     clearSession();
     notifyObservers(null);

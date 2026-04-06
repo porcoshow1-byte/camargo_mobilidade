@@ -366,8 +366,8 @@ export const AuthScreen = ({ role: rawRole, onLoginSuccess, onBack }: { role: st
             }
             if (compData.isTempPassword) {
               // Store flag for password reset modal
-              localStorage.setItem('motoja_needs_password_reset', 'true');
-              localStorage.setItem('motoja_company_id', compData.id);
+              localStorage.setItem('mototaximillenio_needs_password_reset', 'true');
+              localStorage.setItem('mototaximillenio_company_id', compData.id);
             }
           } catch (checkErr: any) {
             // Propagate our specific errors
@@ -553,9 +553,9 @@ export const AuthScreen = ({ role: rawRole, onLoginSuccess, onBack }: { role: st
   const getRoleInfo = () => {
     switch (role) {
       case 'admin': return { label: 'Administrador', color: 'text-gray-900', bg: 'bg-gray-900', gradient: 'from-gray-800 to-black' };
-      case 'driver': return { label: 'Motorista', color: 'text-orange-600', bg: 'bg-orange-600', gradient: 'from-orange-600 to-red-600' };
+      case 'driver': return { label: 'Motorista', color: 'text-primary-600', bg: 'bg-primary-600', gradient: 'from-primary-600 to-primary-900' };
       case 'company': return { label: 'Empresa', color: 'text-blue-600', bg: 'bg-blue-600', gradient: 'from-blue-600 to-blue-800' };
-      default: return { label: 'Passageiro', color: 'text-orange-600', bg: 'bg-orange-600', gradient: 'from-orange-500 to-red-500' };
+      default: return { label: 'Passageiro', color: 'text-primary-600', bg: 'bg-primary-600', gradient: 'from-primary-500 to-primary-800' };
     }
   };
   const roleInfo = getRoleInfo();
@@ -620,8 +620,8 @@ export const AuthScreen = ({ role: rawRole, onLoginSuccess, onBack }: { role: st
           {/* Header */}
           {registrationSuccess ? (
             <div className="text-center animate-fade-in py-8">
-              <div className="w-20 h-20 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Mail size={40} className="text-orange-600" />
+              <div className="w-20 h-20 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Mail size={40} className="text-primary-600" />
               </div>
 
               <h2 className="text-3xl font-bold text-gray-900 mb-4">Verifique seu E-mail!</h2>
@@ -745,12 +745,12 @@ export const AuthScreen = ({ role: rawRole, onLoginSuccess, onBack }: { role: st
                   <div className="space-y-4 animate-fade-in relative">
                     <button
                       onClick={() => setStep(1)}
-                      className="text-sm text-gray-500 hover:text-orange-600 flex items-center gap-1 mb-2 font-medium"
+                      className="text-sm text-gray-500 hover:text-primary-600 flex items-center gap-1 mb-2 font-medium"
                     >
                       &larr; Voltar para Dados Pessoais
                     </button>
 
-                    <div className="flex items-center gap-2 mb-2 text-orange-600 font-bold">
+                    <div className="flex items-center gap-2 mb-2 text-primary-600 font-bold">
                       <MapPin size={20} />
                       <h3>Endereço Completo</h3>
                     </div>
@@ -807,7 +807,7 @@ export const AuthScreen = ({ role: rawRole, onLoginSuccess, onBack }: { role: st
                     </div>
                     <div className="border-2 border-dashed border-gray-300 rounded-xl p-4 text-center hover:bg-gray-50 transition cursor-pointer relative group">
                       <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" onChange={(e) => setCnhFile(e.target.files?.[0] || null)} accept="application/pdf" />
-                      <div className="flex flex-col items-center gap-2 text-gray-500 group-hover:text-orange-600 transition-colors">
+                      <div className="flex flex-col items-center gap-2 text-gray-500 group-hover:text-primary-600 transition-colors">
                         {cnhFile ? <span className="text-green-600 font-bold flex items-center gap-2"><CheckCircle size={16} /> {cnhFile.name} (PDF)</span> : <><FileText size={24} /> <span>Anexar CNH Digital (Somente PDF)</span></>}
                       </div>
                     </div>
@@ -938,7 +938,7 @@ export const AuthScreen = ({ role: rawRole, onLoginSuccess, onBack }: { role: st
                       />
                       {isLogin && (
                         <div className="flex justify-end mt-1">
-                          <button onClick={() => setShowForgotPass(true)} className="text-xs font-medium text-gray-500 hover:text-orange-600 transition-colors">
+                          <button onClick={() => setShowForgotPass(true)} className="text-xs font-medium text-gray-500 hover:text-primary-600 transition-colors">
                             Esqueceu a senha?
                           </button>
                         </div>
@@ -960,7 +960,7 @@ export const AuthScreen = ({ role: rawRole, onLoginSuccess, onBack }: { role: st
                 <Button
                   onClick={(!isLogin && role === 'user' && step === 1) ? handleNextStep : handleAuth}
                   isLoading={loading}
-                  className={`w-full py-3 text-lg font-bold shadow-lg shadow-orange-500/20 ${role === 'admin' ? 'text-white' : ''}`}
+                  className={`w-full py-3 text-lg font-bold shadow-lg shadow-primary-500/20 ${role === 'admin' ? 'text-white' : ''}`}
                   style={role === 'admin' && settings.visual?.primaryColor ? { backgroundColor: settings.visual!.primaryColor, borderColor: settings.visual!.primaryColor } : {}}
                 >
                   {isLogin ? 'Entrar na Plataforma' : (role === 'user' && step === 1 ? 'Próximo' : 'Finalizar Cadastro')}
@@ -973,7 +973,7 @@ export const AuthScreen = ({ role: rawRole, onLoginSuccess, onBack }: { role: st
               <div className="text-center pt-4">
                 <p className="text-gray-500 text-sm">
                   {isLogin ? 'Ainda não tem conta?' : 'Já possui cadastro?'}
-                  <button onClick={() => { setIsLogin(!isLogin); setError(''); setStep(1); }} className="ml-2 font-bold text-orange-600 hover:text-orange-700 hover:underline">
+                  <button onClick={() => { setIsLogin(!isLogin); setError(''); setStep(1); }} className="ml-2 font-bold text-primary-600 hover:text-primary-700 hover:underline">
                     {isLogin ? 'Criar Nova Conta' : 'Fazer Login'}
                   </button>
                 </p>

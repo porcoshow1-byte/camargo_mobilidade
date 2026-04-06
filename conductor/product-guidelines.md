@@ -1,4 +1,4 @@
-# Product Guidelines - MotoJá
+# Product Guidelines - Mototaxi Millenio
 
 ## Voice and Tone
 

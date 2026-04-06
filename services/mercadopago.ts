@@ -63,9 +63,9 @@ const createRealPixPayment = async (rideId: string, price: number, email: string
       transaction_amount: Number(price.toFixed(2)),
       payment_method_id: 'pix',
       payer: {
-        email: email || 'passenger@motoja.com'
+        email: email || 'passenger@mototaximillenio.com'
       },
-      description: `Corrida MotoJá #${rideId.slice(0, 6)}`,
+      description: `Corrida Mototaxi Millenio #${rideId.slice(0, 6)}`,
       external_reference: rideId
     })
   });
@@ -122,7 +122,7 @@ export const createPixPayment = async (rideId: string, price: number, email: str
     return {
       id: "sim_" + rideId,
       status: "pending",
-      qr_code: "00020126580014BR.GOV.BCB.PIX0136123e4567-e89b-12d3-a456-426614174000520400005303986540510.005802BR5913MotoJa Teste6008Brasilia62070503***6304ABCD",
+      qr_code: "00020126580014BR.GOV.BCB.PIX0136123e4567-e89b-12d3-a456-426614174000520400005303986540510.005802BR5913Mototaxi Millenio Teste6008Brasilia62070503***6304ABCD",
       qr_code_base64: "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+P+/HgAFhAJ/wlseKgAAAABJRU5ErkJggg==", // Pixel transparente base64
       ticket_url: "https://mercadopago.com.br"
     };

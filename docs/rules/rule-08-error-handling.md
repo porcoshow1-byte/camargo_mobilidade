@@ -1,4 +1,4 @@
-# Rule 08: Tratamento de Erros com Contexto (MotoJá)
+# Rule 08: Tratamento de Erros com Contexto (Mototaxi Millenio)
 
 ## MOTIVO
 Evitar "telas brancas" (crashes), loadings infinitos e erros silenciosos que dificultam o suporte.

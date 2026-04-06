@@ -1,4 +1,4 @@
-# Rule 02: Performance e Concorrência Async (MotoJá)
+# Rule 02: Performance e Concorrência Async (Mototaxi Millenio)
 
 ## MOTIVO
 Garantir que a Interface do Usuário (UI) nunca trave por operações bloqueantes e que o App permaneça responsivo.

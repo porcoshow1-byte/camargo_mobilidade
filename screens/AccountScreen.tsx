@@ -77,7 +77,7 @@ export const AccountScreen: React.FC<AccountScreenProps> = ({ user, onBack, onNa
                     <div className="h-[1px] bg-gray-50 mx-4" />
                     <MenuItem icon={<UserCircle size={20} />} label="Meus dados" onClick={() => onNavigate('profile')} />
                     <div className="h-[1px] bg-gray-50 mx-4" />
-                    <MenuItem icon={<Gift size={20} />} label="Indique e ganhe R$ 1" onClick={() => onNavigate('referral')} iconColor="text-orange-600" />
+                    <MenuItem icon={<Gift size={20} />} label="Indique e ganhe R$ 1" onClick={() => onNavigate('referral')} iconColor="text-primary-600" />
                     <div className="h-[1px] bg-gray-50 mx-4" />
                     <MenuItem icon={<Heart size={20} />} label="Mototaxistas favoritos" onClick={() => onNavigate('driver_favorites')} />
                     <div className="h-[1px] bg-gray-50 mx-4" />

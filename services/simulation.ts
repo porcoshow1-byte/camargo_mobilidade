@@ -7,7 +7,7 @@ const MOCK_DRIVER: Driver = {
     id: 'mock_driver_001',
     name: 'Carlos Oliveira',
     phone: '11999887766',
-    email: 'motorista@motoja.com',
+    email: 'motorista@mototaximillenio.com',
     rating: 4.9,
     totalRides: 1240,
     vehicle: 'Honda CG 160',
@@ -36,7 +36,7 @@ export const initSimulation = () => {
 
 const checkAndSimulate = () => {
     try {
-        const ridesStr = localStorage.getItem('motoja_mock_rides');
+        const ridesStr = localStorage.getItem('mototaximillenio_mock_rides');
         if (!ridesStr) return;
 
         const rides: RideRequest[] = JSON.parse(ridesStr);

@@ -89,7 +89,7 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
     const handleManualWriteOff = async (ridesToPay: RideRequest[]) => {
         if (!confirm('Confirmar baixa manual desta fatura? Isso marcará todas as corridas como pagas.')) return;
 
-        const storedRides = JSON.parse(localStorage.getItem('motoja_mock_rides') || '[]');
+        const storedRides = JSON.parse(localStorage.getItem('mototaximillenio_mock_rides') || '[]');
         const updatedRides = storedRides.map((r: RideRequest) => {
             if (ridesToPay.some(pay => pay.id === r.id)) {
                 return { ...r, paymentStatus: 'completed' };
@@ -97,7 +97,7 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
             return r;
         });
 
-        localStorage.setItem('motoja_mock_rides', JSON.stringify(updatedRides));
+        localStorage.setItem('mototaximillenio_mock_rides', JSON.stringify(updatedRides));
 
         // Refresh local state logic implies re-fetch or manual update. For now, manual update:
         setRides(prev => prev.map(r => {
@@ -129,8 +129,8 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
         }
 
         // Only for non-admins (companies)
-        const needsReset = localStorage.getItem('motoja_needs_password_reset') === 'true';
-        const targetCompanyId = localStorage.getItem('motoja_company_id');
+        const needsReset = localStorage.getItem('mototaximillenio_needs_password_reset') === 'true';
+        const targetCompanyId = localStorage.getItem('mototaximillenio_company_id');
 
         // Ensure the prompt is for THIS company context (if ID stored) or generic
         if (needsReset && (!targetCompanyId || targetCompanyId === companyId)) {
@@ -176,8 +176,8 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
             setNewPassword('');
 
             // Clear flag
-            localStorage.removeItem('motoja_needs_password_reset');
-            localStorage.removeItem('motoja_company_id');
+            localStorage.removeItem('mototaximillenio_needs_password_reset');
+            localStorage.removeItem('mototaximillenio_company_id');
 
             alert('Senha atualizada com sucesso!');
         } catch (error: any) {
@@ -251,7 +251,7 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
                     }
 
                     // Load Mock Users
-                    const savedUsers = JSON.parse(localStorage.getItem('motoja_mock_users') || '[]');
+                    const savedUsers = JSON.parse(localStorage.getItem('mototaximillenio_mock_users') || '[]');
                     const employees = savedUsers.filter((u: User) => u.companyId === companyData!.id);
                     setCompanyUsers(employees);
                 }
@@ -264,11 +264,11 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
                 if (companyData && companyData.isTempPassword && role !== 'admin' && !isAdminView) {
                     setShowPasswordReset(true);
                     // Clear the localStorage flag
-                    localStorage.removeItem('motoja_needs_password_reset');
+                    localStorage.removeItem('mototaximillenio_needs_password_reset');
                 }
 
                 // Mock rides for demo purposes
-                const storedRides = JSON.parse(localStorage.getItem('motoja_mock_rides') || '[]');
+                const storedRides = JSON.parse(localStorage.getItem('mototaximillenio_mock_rides') || '[]');
                 const companyRides = storedRides.filter((r: RideRequest) => r.companyId === targetId).sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
                 setRides(companyRides);
@@ -307,14 +307,14 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
         };
 
         // Update local storage mock
-        const allUsers = JSON.parse(localStorage.getItem('motoja_mock_users') || '[]');
+        const allUsers = JSON.parse(localStorage.getItem('mototaximillenio_mock_users') || '[]');
         let updatedUsers;
         if (editingUser) {
             updatedUsers = allUsers.map((u: User) => u.id === editingUser.id ? newUser : u);
         } else {
             updatedUsers = [...allUsers, newUser];
         }
-        localStorage.setItem('motoja_mock_users', JSON.stringify(updatedUsers));
+        localStorage.setItem('mototaximillenio_mock_users', JSON.stringify(updatedUsers));
         setCompanyUsers(updatedUsers.filter((u: User) => u.companyId === company?.id));
 
         setUserModalOpen(false);
@@ -376,7 +376,7 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
             <div className="w-64 bg-white border-r border-gray-200 flex flex-col shrink-0 transition-all duration-300">
                 <div className="p-6">
                     <div className="flex items-center gap-3 mb-6">
-                        <div className="w-10 h-10 bg-orange-100 rounded-xl flex items-center justify-center text-orange-600 overflow-hidden shrink-0">
+                        <div className="w-10 h-10 bg-primary-100 rounded-xl flex items-center justify-center text-primary-600 overflow-hidden shrink-0">
                             {company.logoUrl ? <img src={company.logoUrl} className="w-full h-full object-contain" /> : <Building2 size={24} />}
                         </div>
                         <div className="min-w-0">
@@ -389,32 +389,32 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
                 <nav className="flex-1 px-4 space-y-1 overflow-y-auto">
                     <button
                         onClick={() => setSubTab('overview')}
-                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${subTab === 'overview' ? 'bg-orange-50 text-orange-700' : 'text-gray-600 hover:bg-gray-50'}`}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${subTab === 'overview' ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:bg-gray-50'}`}
                     >
                         <LayoutDashboard size={18} /> Visão Geral
                     </button>
                     <button
                         onClick={() => setSubTab('new_ride')}
-                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${subTab === 'new_ride' ? 'bg-orange-50 text-orange-700' : 'text-gray-600 hover:bg-gray-50'}`}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${subTab === 'new_ride' ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:bg-gray-50'}`}
                     >
                         <Plus size={18} /> Nova Corrida
                     </button>
                     <button
                         onClick={() => setSubTab('history')}
-                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${subTab === 'history' ? 'bg-orange-50 text-orange-700' : 'text-gray-600 hover:bg-gray-50'}`}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${subTab === 'history' ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:bg-gray-50'}`}
                     >
                         <History size={18} /> Histórico
                     </button>
                     <button
                         onClick={() => setSubTab('users')}
-                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${subTab === 'users' ? 'bg-orange-50 text-orange-700' : 'text-gray-600 hover:bg-gray-50'}`}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${subTab === 'users' ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:bg-gray-50'}`}
                     >
                         <Users size={18} /> Colaboradores
                     </button>
                     {(role === 'admin' || isAdminView) && (
                         <button
                             onClick={() => setSubTab('settings')}
-                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${subTab === 'settings' ? 'bg-orange-50 text-orange-700' : 'text-gray-600 hover:bg-gray-50'}`}
+                            className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${subTab === 'settings' ? 'bg-primary-50 text-primary-700' : 'text-gray-600 hover:bg-gray-50'}`}
                         >
                             <Settings size={18} /> Configurações
                         </button>
@@ -474,16 +474,16 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
                                     </div>
                                 </Card>
 
-                                <Card className="p-6 border-l-4 border-orange-500">
+                                <Card className="p-6 border-l-4 border-primary-500">
                                     <div className="flex justify-between items-start">
                                         <div>
                                             <p className="text-sm text-gray-500 mb-1">Faturas em Aberto</p>
                                             <h3 className="text-3xl font-bold text-gray-900">
                                                 R$ {rides.filter(r => r.paymentStatus === 'pending_invoice').reduce((acc, r) => acc + r.price, 0).toFixed(2)}
                                             </h3>
-                                            <p className="text-xs text-orange-600 mt-1">Vencimento: Dia {settings.billingDay}</p>
+                                            <p className="text-xs text-primary-600 mt-1">Vencimento: Dia {settings.billingDay}</p>
                                         </div>
-                                        <div className="p-3 bg-orange-50 rounded-lg text-orange-600"><CreditCard size={24} /></div>
+                                        <div className="p-3 bg-primary-50 rounded-lg text-primary-600"><CreditCard size={24} /></div>
                                     </div>
                                 </Card>
 
@@ -502,7 +502,7 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
                             <h3 className="text-lg font-bold text-gray-800 mt-4 mb-2">Faturas Recentes</h3>
                             <Card className="p-6 text-center text-gray-400 border-dashed border-2">
                                 <FileText size={48} className="mx-auto mb-4 opacity-20" />
-                                <p>Veja o detalhamento completo na aba <button onClick={() => setSubTab('history')} className="text-orange-600 font-bold hover:underline">Histórico</button></p>
+                                <p>Veja o detalhamento completo na aba <button onClick={() => setSubTab('history')} className="text-primary-600 font-bold hover:underline">Histórico</button></p>
                             </Card>
                         </div>
                     )}
@@ -512,7 +512,7 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
                             <div className="flex justify-between">
                                 <div className="relative w-64">
                                     <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
-                                    <input className="w-full pl-10 pr-4 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-orange-500 outline-none" placeholder="Buscar colaborador..." />
+                                    <input className="w-full pl-10 pr-4 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none" placeholder="Buscar colaborador..." />
                                 </div>
                                 <Button onClick={() => { setUserData({ name: '', email: '', phone: '', password: '' }); setEditingUser(null); setUserModalOpen(true); }}>
                                     <Plus size={18} className="mr-2" /> Novo Colaborador
@@ -554,8 +554,8 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
                                                                     // Mock remove
                                                                     const updated = companyUsers.filter(user => user.id !== u.id);
                                                                     setCompanyUsers(updated);
-                                                                    const all = JSON.parse(localStorage.getItem('motoja_mock_users') || '[]');
-                                                                    localStorage.setItem('motoja_mock_users', JSON.stringify(all.filter((user: User) => user.id !== u.id)));
+                                                                    const all = JSON.parse(localStorage.getItem('mototaximillenio_mock_users') || '[]');
+                                                                    localStorage.setItem('mototaximillenio_mock_users', JSON.stringify(all.filter((user: User) => user.id !== u.id)));
                                                                 }
                                                             }}
                                                             className="p-2 hover:bg-gray-100 rounded-full text-red-600 transition-colors" title="Remover"
@@ -594,7 +594,7 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
                                         <select
                                             value={(settings as any).billingPeriod || 'monthly'}
                                             onChange={(e) => setSettings({ ...settings, billingPeriod: e.target.value } as any)}
-                                            className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-orange-500 outline-none"
+                                            className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-primary-500 outline-none"
                                         >
                                             <option value="weekly">Semanal</option>
                                             <option value="biweekly">Quinzenal</option>
@@ -606,7 +606,7 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
                                         <select
                                             value={settings.billingDay}
                                             onChange={(e) => setSettings({ ...settings, billingDay: Number(e.target.value) })}
-                                            className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-orange-500 outline-none"
+                                            className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-primary-500 outline-none"
                                         >
                                             {[1, 5, 10, 15, 20, 25].map(d => <option key={d} value={d}>Dia {d}</option>)}
                                         </select>
@@ -626,8 +626,8 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
                                     </div>
                                 </div>
 
-                                <div className="bg-orange-50 p-4 rounded-xl flex items-start gap-3">
-                                    <AlertTriangle className="text-orange-600 shrink-0 mt-0.5" size={18} />
+                                <div className="bg-primary-50 p-4 rounded-xl flex items-start gap-3">
+                                    <AlertTriangle className="text-primary-600 shrink-0 mt-0.5" size={18} />
                                     <div>
                                         <div className="flex items-center gap-2 mb-1">
                                             <input
@@ -635,7 +635,7 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
                                                 id="autoBlock"
                                                 checked={settings.autoBlockOverdue}
                                                 onChange={(e) => setSettings({ ...settings, autoBlockOverdue: e.target.checked })}
-                                                className="w-4 h-4 text-orange-600 rounded cursor-pointer"
+                                                className="w-4 h-4 text-primary-600 rounded cursor-pointer"
                                             />
                                             <label htmlFor="autoBlock" className="font-bold text-gray-800 cursor-pointer text-sm">Bloqueio Automático</label>
                                         </div>
@@ -653,17 +653,17 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
                     {subTab === 'financial' && (
                         <div className="space-y-6 animate-fade-in">
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <Card className="p-6 border-l-4 border-orange-500">
+                                <Card className="p-6 border-l-4 border-primary-500">
                                     <h3 className="text-lg font-bold text-gray-800 mb-2">Faturas em Aberto</h3>
                                     {Object.entries(groupedRides)
                                         .filter(([_, rides]: [string, RideRequest[]]) => rides.some(r => r.paymentStatus === 'pending_invoice'))
                                         .map(([month, monthRides]: [string, RideRequest[]]) => {
                                             const total = monthRides.reduce((acc, r) => acc + r.price, 0);
                                             return (
-                                                <div key={month} className="flex justify-between items-center p-4 bg-orange-50 rounded-xl mb-3">
+                                                <div key={month} className="flex justify-between items-center p-4 bg-primary-50 rounded-xl mb-3">
                                                     <div>
                                                         <p className="font-bold text-gray-900 capitalize">{month}</p>
-                                                        <p className="text-xs text-orange-700">{monthRides.length} corridas</p>
+                                                        <p className="text-xs text-primary-700">{monthRides.length} corridas</p>
                                                     </div>
                                                     <div className="text-right">
                                                         <p className="font-bold text-gray-900">R$ {total.toFixed(2)}</p>
@@ -708,7 +708,7 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
                         <div className="max-w-2xl mx-auto animate-fade-in pb-10">
                             <Card className="p-8 shadow-sm">
                                 <div className="text-center mb-8">
-                                    <div className="w-12 h-12 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                                    <div className="w-12 h-12 bg-primary-100 text-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                                         <Map size={24} />
                                     </div>
                                     <h2 className="text-2xl font-bold text-gray-900">Solicitar Corrida Corporativa</h2>
@@ -719,7 +719,7 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
                                     {/* Passenger Selection */}
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700 mb-1">Passageiro</label>
-                                        <select className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none transition-all">
+                                        <select className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary-500 outline-none transition-all">
                                             <option value="">Selecione um colaborador...</option>
                                             {companyUsers.map(u => <option key={u.id} value={u.id}>{u.name} - {u.phone}</option>)}
                                         </select>
@@ -750,14 +750,14 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
 
                                     {/* Service Type Selection */}
                                     <div className="grid grid-cols-2 gap-4">
-                                        <button className="p-4 border-2 border-orange-500 bg-orange-50/50 rounded-xl flex flex-col items-center gap-2 transition-all">
-                                            <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-orange-600">
+                                        <button className="p-4 border-2 border-primary-500 bg-primary-50/50 rounded-xl flex flex-col items-center gap-2 transition-all">
+                                            <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm text-primary-600">
                                                 <img src="https://cdn-icons-png.flaticon.com/512/3082/3082383.png" className="w-6 h-6 object-contain" />
                                             </div>
                                             <span className="font-bold text-gray-800">MotoComum</span>
                                             <span className="text-xs font-bold text-green-600">R$ 12,50</span>
                                         </button>
-                                        <button className="p-4 border border-gray-200 hover:border-orange-200 hover:bg-orange-50 rounded-xl flex flex-col items-center gap-2 transition-all opacity-60">
+                                        <button className="p-4 border border-gray-200 hover:border-primary-200 hover:bg-primary-50 rounded-xl flex flex-col items-center gap-2 transition-all opacity-60">
                                             <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-gray-400">
                                                 <img src="https://cdn-icons-png.flaticon.com/512/2972/2972185.png" className="w-6 h-6 object-contain grayscale opacity-50" />
                                             </div>
@@ -766,7 +766,7 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
                                         </button>
                                     </div>
 
-                                    <Button fullWidth className="py-4 text-base shadow-lg shadow-orange-500/20" onClick={() => alert('Feature em desenvolvimento: Integração real com API de solicitação.')}>
+                                    <Button fullWidth className="py-4 text-base shadow-lg shadow-primary-500/20" onClick={() => alert('Feature em desenvolvimento: Integração real com API de solicitação.')}>
                                         <div className="flex items-center justify-center gap-2">
                                             <span>Confirmar Solicitação</span>
                                             <ArrowRight size={18} />
@@ -826,7 +826,7 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
                                             <div>
                                                 <p className="text-xs text-gray-500 uppercase font-bold tracking-wider mb-1">Passageiro</p>
                                                 <div className="flex items-center gap-2">
-                                                    <div className="w-8 h-8 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center text-xs font-bold">
+                                                    <div className="w-8 h-8 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center text-xs font-bold">
                                                         {selectedRide.passenger?.name?.[0] || 'U'}
                                                     </div>
                                                     <span className="text-sm text-gray-900 font-medium">{selectedRide.passenger?.name}</span>
@@ -875,7 +875,7 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
                                         <select
                                             value={historyFilter.user}
                                             onChange={(e) => setHistoryFilter({ ...historyFilter, user: e.target.value })}
-                                            className="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-orange-500 outline-none"
+                                            className="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-primary-500 outline-none"
                                         >
                                             <option value="">Todos</option>
                                             {companyUsers.map(u => <option key={u.id} value={u.name}>{u.name}</option>)}
@@ -948,7 +948,7 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
                                                         <td className="p-4 text-center">
                                                             <button
                                                                 onClick={() => setSelectedRide(r)}
-                                                                className="text-gray-400 hover:text-orange-600 transition-colors p-2 rounded-full hover:bg-orange-50"
+                                                                className="text-gray-400 hover:text-primary-600 transition-colors p-2 rounded-full hover:bg-primary-50"
                                                             >
                                                                 <ArrowRight size={18} />
                                                             </button>
@@ -1051,8 +1051,8 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
             {showPasswordReset && (
                 <div className="fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-fade-in">
                     <Card className="max-w-md w-full p-8 animate-slide-up relative overflow-hidden">
-                        <div className="absolute top-0 left-0 w-full h-2 bg-orange-500"></div>
-                        <div className="w-16 h-16 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                        <div className="absolute top-0 left-0 w-full h-2 bg-primary-500"></div>
+                        <div className="w-16 h-16 bg-primary-100 text-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
                             <Lock size={32} />
                         </div>
                         <h2 className="text-2xl font-bold text-center text-gray-800 mb-2">Redefinir Senha</h2>

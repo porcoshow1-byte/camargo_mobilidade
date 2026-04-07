@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contrato de Prestação de Serviço — Motojá → Mototaxi Millenio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a6b3c;
+            --primary-dark: #084d2b;
+            --primary-light: #e8f5ee;
+            --accent: #f59e0b;
+            --accent-dark: #d97706;
+            --text: #1a1a2e;
+            --text-secondary: #444;
+            --bg: #f0f2f5;
+            --card: #ffffff;
+            --border: #e2e8f0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.75;
+            font-size: 13.5px;
+        }
+
+        /* ==========================================
+           PRINT STYLES — A4 PROFISSIONAL
+           ========================================== */
+        @page {
+            size: A4;
+            margin: 20mm 18mm 20mm 18mm;
+        }
+
+        @media print {
+            *, *::before, *::after {
+                print-color-adjust: exact !important;
+                -webkit-print-color-adjust: exact !important;
+            }
+
+            html { background: white; }
+
+            body {
+                background: white !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                font-size: 10.5pt !important;
+                line-height: 1.55 !important;
+                color: #222 !important;
+            }
+
+            .no-print { display: none !important; }
+
+            .contract-page {
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                border: none !important;
+                overflow: visible !important;
+                animation: none !important;
+            }
+
+            /* Header prints with colors */
+            .header-bar {
+                padding: 24px 28px 20px !important;
+                border-radius: 0 !important;
+                background: #0a6b3c !important;
+                color: white !important;
+                margin: 0 !important;
+            }
+
+            .header-bar::before, .header-bar::after { display: none !important; }
+
+            .header-badge { display: none !important; }
+
+            .header-title { font-size: 20pt !important; margin-bottom: 4px !important; }
+            .header-subtitle { font-size: 10pt !important; }
+
+            .header-parties { margin-top: 14px !important; gap: 12px !important; }
+
+            .party-card {
+                padding: 8px 12px !important;
+                min-width: 0 !important;
+                background: rgba(255,255,255,0.12) !important;
+                border: 1px solid rgba(255,255,255,0.2) !important;
+                border-radius: 6px !important;
+            }
+            .party-name { font-size: 12pt !important; }
+            .party-role { font-size: 8.5pt !important; }
+            .party-label { font-size: 7pt !important; }
+
+            /* Body */
+            .contract-body {
+                padding: 16px 28px 0 !important;
+            }
+
+            /* Preamble */
+            .preamble {
+                padding: 12px 16px !important;
+                margin-bottom: 20px !important;
+                font-size: 10pt !important;
+                background: #eef6f1 !important;
+                border-left: 3px solid #0a6b3c !important;
+                border-radius: 0 6px 6px 0 !important;
+                page-break-inside: avoid;
+            }
+
+            /* Clauses */
+            .clause {
+                margin-bottom: 12px !important;
+                padding-bottom: 10px !important;
+                page-break-inside: avoid;
+            }
+
+            .clause-header { margin-bottom: 8px !important; }
+
+            .clause-number {
+                width: 24px !important;
+                height: 24px !important;
+                font-size: 9pt !important;
+                border-radius: 5px !important;
+                margin-right: 8px !important;
+                background: #0a6b3c !important;
+                color: white !important;
+            }
+
+            .clause-title { font-size: 12pt !important; }
+
+            .clause p, .clause li {
+                font-size: 10pt !important;
+                margin-bottom: 5px !important;
+                line-height: 1.5 !important;
+                color: #333 !important;
+            }
+
+            .clause ol, .clause ul { padding-left: 18px !important; }
+            .clause li { margin-bottom: 3px !important; }
+
+            /* Tables */
+            .service-table {
+                page-break-inside: avoid;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                margin: 8px 0 !important;
+                border: 1px solid #ccc !important;
+            }
+
+            .service-table thead th {
+                padding: 6px 8px !important;
+                font-size: 7.5pt !important;
+                background: #0a6b3c !important;
+                color: white !important;
+            }
+
+            .service-table tbody td {
+                padding: 5px 8px !important;
+                font-size: 9pt !important;
+                border-bottom: 1px solid #ddd !important;
+            }
+
+            .service-table tbody tr:nth-child(even) { background: #f7f7f7 !important; }
+            .service-table tbody tr:hover { background: inherit !important; }
+
+            /* Editable = clean */
+            .editable {
+                background: transparent !important;
+                border: none !important;
+                color: inherit !important;
+                padding: 0 !important;
+                font-weight: 600 !important;
+            }
+
+            /* Signatures section */
+            .signatures-section {
+                page-break-inside: avoid;
+                margin-top: 24px !important;
+                padding-top: 16px !important;
+                border-top: 1.5px solid #333 !important;
+            }
+
+            .signatures-grid { gap: 20px !important; margin-top: 12px !important; }
+            .sig-line { margin: 32px 8px 6px !important; border-top: 1.5px solid #333 !important; }
+            .sig-name { font-size: 10pt !important; }
+            .sig-role { font-size: 8.5pt !important; }
+            .sig-company { font-size: 7.5pt !important; }
+
+            .witnesses {
+                page-break-inside: avoid;
+                margin-top: 18px !important;
+                padding-top: 14px !important;
+            }
+            .witness-line { margin: 28px 8px 5px !important; }
+            .witnesses-title { font-size: 9pt !important; margin-bottom: 10px !important; }
+            .witness-label { font-size: 9pt !important; }
+            .witness-fields { font-size: 8pt !important; }
+
+            /* Footer */
+            .contract-footer {
+                padding: 10px 28px !important;
+                margin-top: 8px !important;
+                background: transparent !important;
+                border-top: 1px solid #ddd !important;
+                page-break-inside: avoid;
+            }
+
+            /* Local e Data */
+            .local-data {
+                margin-top: 20px !important;
+                font-size: 10pt !important;
+            }
+        }
+
+        /* ==========================================
+           SCREEN STYLES
+           ========================================== */
+
+        /* Top Action Bar */
+        .action-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: rgba(255,255,255,0.96);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 12px 24px;
+        }
+
+        .action-bar button {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-print { background: var(--primary); color: white; }
+        .btn-print:hover { background: var(--primary-dark); transform: translateY(-1px); }
+        .btn-pdf { background: var(--accent); color: white; }
+        .btn-pdf:hover { background: var(--accent-dark); transform: translateY(-1px); }
+        .btn-edit { background: #f1f5f9; color: var(--text); border: 1px solid var(--border) !important; }
+        .btn-edit:hover { background: #e2e8f0; }
+
+        /* Contract Page */
+        .contract-page {
+            max-width: 840px;
+            margin: 80px auto 40px;
+            background: var(--card);
+            border-radius: 12px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
+            animation: slideUp 0.4s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Header */
+        .header-bar {
+            background: linear-gradient(135deg, var(--primary) 0%, #0d8a4d 50%, var(--primary-dark) 100%);
+            padding: 44px 48px 36px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-bar::after {
+            content: '';
+            position: absolute;
+            top: -60%; right: -20%;
+            width: 400px; height: 400px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.04);
+        }
+
+        .header-bar::before {
+            content: '';
+            position: absolute;
+            bottom: -40%; left: -10%;
+            width: 300px; height: 300px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.03);
+        }
+
+        .header-content { position: relative; z-index: 2; }
+
+        .header-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 5px 14px;
+            border-radius: 100px;
+            font-size: 10px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            margin-bottom: 16px;
+        }
+
+        .header-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 30px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            line-height: 1.2;
+        }
+
+        .header-subtitle { font-size: 14px; opacity: 0.85; }
+
+        .header-parties { display: flex; gap: 24px; margin-top: 24px; flex-wrap: wrap; }
+
+        .party-card {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            padding: 14px 18px;
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .party-label {
+            font-size: 9px;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            opacity: 0.7;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .party-name { font-size: 16px; font-weight: 700; }
+        .party-role { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+
+        /* Content Body */
+        .contract-body { padding: 40px 48px; }
+
+        .preamble {
+            background: var(--primary-light);
+            border-left: 4px solid var(--primary);
+            border-radius: 0 10px 10px 0;
+            padding: 20px 24px;
+            margin-bottom: 32px;
+            font-size: 13.5px;
+            color: var(--primary-dark);
+            line-height: 1.75;
+        }
+
+        .preamble strong { color: var(--primary); }
+
+        /* Clauses */
+        .clause {
+            margin-bottom: 28px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .clause:last-of-type { border-bottom: none; }
+
+        .clause-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            color: white;
+            font-weight: 700;
+            font-size: 13px;
+            border-radius: 8px;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .clause-header { display: flex; align-items: center; margin-bottom: 14px; }
+        .clause-title { font-size: 17px; font-weight: 700; color: var(--text); }
+
+        .clause p, .clause li {
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            text-align: justify;
+        }
+
+        .clause ol, .clause ul { padding-left: 22px; }
+        .clause li { margin-bottom: 5px; }
+
+        .sub-clause-id { font-weight: 700; color: var(--primary-dark); }
+
+        /* Editable Fields */
+        .editable {
+            background: #fffde7;
+            border: 1px dashed #e0c000;
+            padding: 1px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+            color: #b58900;
+            cursor: text;
+            transition: all 0.2s;
+            display: inline;
+            outline: none;
+        }
+
+        .editable:focus {
+            background: #fff9c4;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15);
+        }
+
+        .editable:empty::before {
+            content: attr(data-placeholder);
+            color: #cca300;
+        }
+
+        .editing-off .editable {
+            background: transparent;
+            border-color: transparent;
+            color: var(--text);
+            cursor: default;
+        }
+
+        /* Tables */
+        .service-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+
+        .service-table thead th {
+            background: var(--primary);
+            color: white;
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .service-table tbody td {
+            padding: 9px 14px;
+            border-bottom: 1px solid var(--border);
+            font-size: 12.5px;
+            color: var(--text-secondary);
+        }
+
+        .service-table tbody tr:nth-child(even) { background: #f8fafb; }
+        .service-table tbody tr:hover { background: var(--primary-light); }
+
+        /* Signatures */
+        .signatures-section {
+            margin-top: 40px;
+            padding-top: 28px;
+            border-top: 2px solid var(--border);
+        }
+
+        .signatures-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 20px;
+        }
+
+        .sig-block { text-align: center; }
+        .sig-line { border-top: 2px solid var(--text); margin: 44px 16px 10px; }
+        .sig-name { font-weight: 700; font-size: 13px; color: var(--text); }
+        .sig-role { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+        .sig-company {
+            font-size: 10px;
+            color: #999;
+            margin-top: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Witnesses */
+        .witnesses {
+            margin-top: 36px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .witnesses-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .witnesses-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 36px;
+        }
+
+        .witness-block { text-align: center; }
+        .witness-line { border-top: 1px solid #aaa; margin: 36px 12px 6px; }
+        .witness-label { font-size: 11px; color: var(--text-secondary); }
+        .witness-fields { font-size: 10px; color: #999; margin-top: 3px; }
+
+        /* Footer */
+        .contract-footer {
+            background: #f7f8fa;
+            padding: 20px 48px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            font-size: 10px;
+            color: #999;
+        }
+
+        .contract-footer .doc-id {
+            font-family: monospace;
+            font-size: 9px;
+            color: #bbb;
+            margin-top: 3px;
+        }
+
+        /* Local e Data */
+        .local-data {
+            margin-top: 36px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 13.5px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .contract-page { margin: 70px 8px 24px; border-radius: 10px; }
+            .header-bar { padding: 28px 20px; }
+            .header-title { font-size: 22px; }
+            .header-parties { flex-direction: column; gap: 10px; }
+            .contract-body { padding: 24px 20px; }
+            .signatures-grid, .witnesses-grid { grid-template-columns: 1fr; gap: 20px; }
+            .action-bar { flex-wrap: wrap; padding: 8px 12px; }
+            .action-bar button { font-size: 12px; padding: 8px 14px; }
+            .contract-footer { padding: 16px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ACTION BAR (não imprime) -->
+<div class="action-bar no-print">
+    <button class="btn-print" onclick="window.print()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Imprimir
+    </button>
+    <button class="btn-pdf" onclick="window.print()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Salvar PDF
+    </button>
+    <button class="btn-edit" id="toggleEdit" onclick="toggleEditMode()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        <span id="editLabel">Editar Campos</span>
+    </button>
+</div>
+
+<!-- ==================== CONTRATO ==================== -->
+<div class="contract-page" id="contractPage">
+
+    <!-- HEADER -->
+    <div class="header-bar">
+        <div class="header-content">
+            <div class="header-badge">Documento Confidencial</div>
+            <h1 class="header-title">Contrato de Prestação de Serviço</h1>
+            <p class="header-subtitle">Desenvolvimento de Plataforma Digital de Mototáxi e Entregas</p>
+
+            <div class="header-parties">
+                <div class="party-card">
+                    <div class="party-label">Contratada</div>
+                    <div class="party-name">Motojá</div>
+                    <div class="party-role">Prestadora de Serviços de Tecnologia</div>
+                </div>
+                <div class="party-card">
+                    <div class="party-label">Contratante</div>
+                    <div class="party-name">Mototaxi Millenio</div>
+                    <div class="party-role">Empresa de Transporte por Mototáxi</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BODY -->
+    <div class="contract-body">
+
+        <!-- PREÂMBULO -->
+        <div class="preamble">
+            Pelo presente instrumento particular de <strong>Contrato de Prestação de Serviço</strong>, celebrado entre as partes abaixo qualificadas, que mutuamente se identificam e se reconhecem, têm entre si justo e contratado o seguinte:
+        </div>
+
+        <!-- CLÁUSULA 1 — PARTES -->
+        <div class="clause">
+            <div class="clause-header">
+                <span class="clause-number">1</span>
+                <h2 class="clause-title">Das Partes</h2>
+            </div>
+
+            <p><strong>CONTRATADA:</strong> <span class="editable" contenteditable="true">50.353.587 Jefferson Mendes de Souza</span>, pessoa jurídica de direito privado, inscrita no CNPJ sob nº <span class="editable" contenteditable="true">50.353.587/0001-90</span>, com sede na <span class="editable" contenteditable="true">Al. Scorpius, 169 – Costa Azul III – Avaré/SP – CEP 18.703-894</span>, neste ato representada por <span class="editable" contenteditable="true">Jefferson Mendes de Souza</span>, portador(a) do CPF nº <span class="editable" contenteditable="true" data-placeholder="000.000.000-00">___.___.___-__</span>, doravante denominada simplesmente <strong>"CONTRATADA"</strong>.</p>
+
+            <p><strong>CONTRATANTE:</strong> <span class="editable" contenteditable="true" data-placeholder="Razão Social">Mototaxi Millenio</span>, pessoa jurídica de direito privado, inscrita no CNPJ sob nº <span class="editable" contenteditable="true" data-placeholder="00.000.000/0001-00">___.___.___/____-__</span>, com sede em <span class="editable" contenteditable="true" data-placeholder="Endereço completo">__________________________________</span>, neste ato representada por <span class="editable" contenteditable="true" data-placeholder="Nome do representante">___________________________</span>, portador(a) do CPF nº <span class="editable" contenteditable="true" data-placeholder="000.000.000-00">___.___.___-__</span>, doravante denominada simplesmente <strong>"CONTRATANTE"</strong>.</p>
+        </div>
+
+        <!-- CLÁUSULA 2 — OBJETO -->
+        <div class="clause">
+            <div class="clause-header">
+                <span class="clause-number">2</span>
+                <h2 class="clause-title">Do Objeto</h2>
+            </div>
+
+            <p><span class="sub-clause-id">2.1.</span> O presente contrato tem por objeto a prestação de serviços de <strong>desenvolvimento, implantação e manutenção de plataforma digital</strong> para gerenciamento de operações de mototáxi e entregas, denominada <strong>"Mototaxi Millenio"</strong>, compreendendo os seguintes módulos e funcionalidades:</p>
+
+            <table class="service-table">
+                <thead>
+                    <tr>
+                        <th>Módulo</th>
+                        <th>Descrição</th>
+                        <th>Plataforma</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>App do Passageiro</strong></td>
+                        <td>Solicitação de mototáxi e entregas, acompanhamento em tempo real, histórico de corridas e pagamento integrado</td>
+                        <td>Web + Mobile (Android)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>App do Piloto</strong></td>
+                        <td>Recebimento de corridas, navegação GPS, gerenciamento de entregas, controle de ganhos e código de segurança</td>
+                        <td>Web + Mobile (Android)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Painel Administrativo</strong></td>
+                        <td>Gestão completa da plataforma: motoristas, corridas, financeiro, relatórios e métricas em tempo real</td>
+                        <td>Web (Desktop)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Painel de Empresas</strong></td>
+                        <td>Gestão de corridas corporativas, controle de gastos, relatórios e faturamento dedicado</td>
+                        <td>Web (Desktop)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Landing Page</strong></td>
+                        <td>Página institucional responsiva com informações do serviço, download do app e formulário de contato</td>
+                        <td>Web (Responsivo)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Backend &amp; Infraestrutura</strong></td>
+                        <td>Banco de dados em nuvem (Supabase), autenticação segura, APIs, gateway de pagamento (Mercado Pago)</td>
+                        <td>Cloud</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p><span class="sub-clause-id">2.2.</span> A plataforma será desenvolvida utilizando as seguintes tecnologias: <strong>React, TypeScript, Vite, Supabase, Capacitor (Android), Leaflet/Mapbox (mapas)</strong> e <strong>Mercado Pago (pagamentos)</strong>.</p>
+
+            <p><span class="sub-clause-id">2.3.</span> A CONTRATADA entregará, adicionalmente, o <strong>código-fonte completo</strong> e toda a documentação técnica necessária para operação e futuras manutenções da plataforma.</p>
+        </div>
+
+        <!-- CLÁUSULA 3 — PRAZO -->
+        <div class="clause">
+            <div class="clause-header">
+                <span class="clause-number">3</span>
+                <h2 class="clause-title">Do Prazo</h2>
+            </div>
+
+            <p><span class="sub-clause-id">3.1.</span> O prazo para execução dos serviços descritos na Cláusula 2 será de <span class="editable" contenteditable="true" data-placeholder="prazo">_____</span> (<span class="editable" contenteditable="true" data-placeholder="por extenso">_____________</span>) dias corridos, contados a partir da data de assinatura deste contrato e confirmação do primeiro pagamento.</p>
+
+            <p><span class="sub-clause-id">3.2.</span> O prazo poderá ser prorrogado mediante acordo escrito entre as partes, sem ônus adicional, nas seguintes hipóteses:</p>
+            <ol type="a">
+                <li>Alterações significativas de escopo solicitadas pela CONTRATANTE após aprovação do projeto;</li>
+                <li>Atraso no fornecimento de materiais, informações e/ou aprovações pela CONTRATANTE;</li>
+                <li>Casos fortuitos ou de força maior devidamente comprovados.</li>
+            </ol>
+
+            <p><span class="sub-clause-id">3.3.</span> Após a entrega final, a CONTRATADA oferecerá suporte técnico gratuito por <span class="editable" contenteditable="true">30 (trinta)</span> dias para correção de bugs e ajustes menores.</p>
+        </div>
+
+        <!-- CLÁUSULA 4 — VALOR E PAGAMENTO -->
+        <div class="clause">
+            <div class="clause-header">
+                <span class="clause-number">4</span>
+                <h2 class="clause-title">Do Valor e Forma de Pagamento</h2>
+            </div>
+
+            <p><span class="sub-clause-id">4.1.</span> Pela execução dos serviços descritos neste contrato, a CONTRATANTE pagará à CONTRATADA o valor total de <strong>R$ <span class="editable" contenteditable="true" data-placeholder="0.000,00">___________</span></strong> (<span class="editable" contenteditable="true" data-placeholder="valor por extenso">____________________________</span>).</p>
+
+            <p><span class="sub-clause-id">4.2.</span> O pagamento será realizado da seguinte forma:</p>
+            <table class="service-table">
+                <thead>
+                    <tr>
+                        <th>Parcela</th>
+                        <th>Percentual</th>
+                        <th>Valor (R$)</th>
+                        <th>Condição</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1ª Parcela (Entrada)</strong></td>
+                        <td><span class="editable" contenteditable="true">50%</span></td>
+                        <td><span class="editable" contenteditable="true" data-placeholder="0.000,00">_________</span></td>
+                        <td>Na assinatura do contrato</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2ª Parcela</strong></td>
+                        <td><span class="editable" contenteditable="true">25%</span></td>
+                        <td><span class="editable" contenteditable="true" data-placeholder="0.000,00">_________</span></td>
+                        <td>Na entrega da versão beta</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3ª Parcela (Final)</strong></td>
+                        <td><span class="editable" contenteditable="true">25%</span></td>
+                        <td><span class="editable" contenteditable="true" data-placeholder="0.000,00">_________</span></td>
+                        <td>Na entrega e aprovação final</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p><span class="sub-clause-id">4.3.</span> Os pagamentos poderão ser realizados via <strong>transferência bancária (PIX/TED)</strong> ou boleto bancário, conforme dados fornecidos pela CONTRATADA.</p>
+
+            <p><span class="sub-clause-id">4.4.</span> O atraso no pagamento implicará multa de <strong>2% (dois por cento)</strong> sobre o valor em atraso, acrescido de juros de mora de <strong>1% (um por cento)</strong> ao mês, calculados pro rata die.</p>
+
+            <p><span class="sub-clause-id">4.5.</span> Eventuais funcionalidades adicionais, não previstas na Cláusula 2, serão objeto de orçamento à parte, previamente aprovado pela CONTRATANTE.</p>
+        </div>
+
+        <!-- CLÁUSULA 5 — OBRIGAÇÕES DA CONTRATADA -->
+        <div class="clause">
+            <div class="clause-header">
+                <span class="clause-number">5</span>
+                <h2 class="clause-title">Das Obrigações da Contratada</h2>
+            </div>
+
+            <p>Constituem obrigações da CONTRATADA:</p>
+            <ol type="a">
+                <li>Desenvolver a plataforma conforme especificações técnicas acordadas e boas práticas de engenharia de software;</li>
+                <li>Manter a CONTRATANTE informada sobre o andamento do projeto, com relatórios de progresso semanais;</li>
+                <li>Entregar o código-fonte comentado e documentação técnica completa;</li>
+                <li>Realizar deploy (publicação) da plataforma nos servidores indicados;</li>
+                <li>Fornecer treinamento básico para operação do painel administrativo;</li>
+                <li>Corrigir bugs e falhas técnicas identificados durante o período de garantia (Cláusula 3.3);</li>
+                <li>Manter sigilo absoluto sobre informações confidenciais da CONTRATANTE;</li>
+                <li>Garantir a integridade e segurança dos dados durante todo o desenvolvimento.</li>
+            </ol>
+        </div>
+
+        <!-- CLÁUSULA 6 — OBRIGAÇÕES DA CONTRATANTE -->
+        <div class="clause">
+            <div class="clause-header">
+                <span class="clause-number">6</span>
+                <h2 class="clause-title">Das Obrigações da Contratante</h2>
+            </div>
+
+            <p>Constituem obrigações da CONTRATANTE:</p>
+            <ol type="a">
+                <li>Efetuar os pagamentos nos prazos e condições estipulados na Cláusula 4;</li>
+                <li>Fornecer à CONTRATADA todas as informações, conteúdos (textos, imagens, logotipos) e materiais necessários à execução dos serviços, em tempo hábil;</li>
+                <li>Designar um responsável para acompanhar e validar as entregas parciais do projeto;</li>
+                <li>Aprovar ou solicitar ajustes nas entregas parciais em até <span class="editable" contenteditable="true">5 (cinco)</span> dias úteis após recebimento;</li>
+                <li>Fornecer acesso às contas e credenciais necessárias (domínio, hospedagem, APIs de terceiros);</li>
+                <li>Não utilizar a plataforma para fins ilícitos ou em desacordo com a legislação vigente.</li>
+            </ol>
+        </div>
+
+        <!-- CLÁUSULA 7 — PROPRIEDADE INTELECTUAL -->
+        <div class="clause">
+            <div class="clause-header">
+                <span class="clause-number">7</span>
+                <h2 class="clause-title">Da Propriedade Intelectual</h2>
+            </div>
+
+            <p><span class="sub-clause-id">7.1.</span> Após a quitação integral dos valores previstos neste contrato, a <strong>CONTRATANTE</strong> será titular de todos os direitos de propriedade intelectual sobre a plataforma desenvolvida, incluindo código-fonte, design, documentação e materiais produzidos.</p>
+
+            <p><span class="sub-clause-id">7.2.</span> A CONTRATADA reserva-se o direito de utilizar a plataforma como referência em seu portfólio, salvo disposição em contrário acordada entre as partes.</p>
+
+            <p><span class="sub-clause-id">7.3.</span> Bibliotecas e frameworks de código aberto (open source) utilizadas no desenvolvimento permanecerão sob suas respectivas licenças originais.</p>
+        </div>
+
+        <!-- CLÁUSULA 8 — CONFIDENCIALIDADE -->
+        <div class="clause">
+            <div class="clause-header">
+                <span class="clause-number">8</span>
+                <h2 class="clause-title">Da Confidencialidade</h2>
+            </div>
+
+            <p><span class="sub-clause-id">8.1.</span> As partes comprometem-se a manter em sigilo todas as informações confidenciais trocadas em razão deste contrato, incluindo, mas não se limitando a: dados de clientes, estratégias comerciais, informações financeiras, dados técnicos e know-how.</p>
+
+            <p><span class="sub-clause-id">8.2.</span> A obrigação de confidencialidade permanecerá válida por <span class="editable" contenteditable="true">2 (dois)</span> anos após o término ou rescisão deste contrato.</p>
+
+            <p><span class="sub-clause-id">8.3.</span> A violação da obrigação de confidencialidade sujeitará a parte infratora ao pagamento de indenização por perdas e danos, sem prejuízo de outras medidas legais cabíveis.</p>
+        </div>
+
+        <!-- CLÁUSULA 9 — RESCISÃO -->
+        <div class="clause">
+            <div class="clause-header">
+                <span class="clause-number">9</span>
+                <h2 class="clause-title">Da Rescisão</h2>
+            </div>
+
+            <p><span class="sub-clause-id">9.1.</span> O presente contrato poderá ser rescindido nas seguintes hipóteses:</p>
+            <ol type="a">
+                <li><strong>Por mútuo acordo:</strong> mediante comunicação escrita com antecedência mínima de 15 (quinze) dias;</li>
+                <li><strong>Por inadimplemento:</strong> em caso de descumprimento de quaisquer cláusulas, após notificação escrita concedendo prazo de 10 (dez) dias para regularização;</li>
+                <li><strong>Por justa causa:</strong> em caso de conduta ilícita, fraude ou insolvência de qualquer das partes.</li>
+            </ol>
+
+            <p><span class="sub-clause-id">9.2.</span> Em caso de rescisão por iniciativa da CONTRATANTE, sem culpa da CONTRATADA:</p>
+            <ol type="a">
+                <li>Os valores pagos até a data não serão restituídos;</li>
+                <li>A CONTRATADA entregará todo o trabalho realizado até a data da rescisão;</li>
+                <li>Eventual saldo devedor referente a etapas já concluídas deverá ser quitado.</li>
+            </ol>
+
+            <p><span class="sub-clause-id">9.3.</span> Em caso de rescisão por culpa exclusiva da CONTRATADA:</p>
+            <ol type="a">
+                <li>A CONTRATADA restituirá proporcionalmente os valores referentes às etapas não concluídas;</li>
+                <li>Entregará todo o trabalho já realizado, incluindo código-fonte.</li>
+            </ol>
+        </div>
+
+        <!-- CLÁUSULA 10 — MANUTENÇÃO E SUPORTE -->
+        <div class="clause">
+            <div class="clause-header">
+                <span class="clause-number">10</span>
+                <h2 class="clause-title">Da Manutenção e Suporte Pós-Entrega</h2>
+            </div>
+
+            <p><span class="sub-clause-id">10.1.</span> Findo o período de garantia (Cláusula 3.3), a CONTRATANTE poderá contratar plano de manutenção e suporte continuado, cujos valores e condições serão definidos em aditivo contratual.</p>
+
+            <p><span class="sub-clause-id">10.2.</span> A manutenção contínua poderá incluir:</p>
+            <ol type="a">
+                <li>Correção de bugs e atualizações de segurança;</li>
+                <li>Atualizações de compatibilidade com novos dispositivos e versões de SO;</li>
+                <li>Novas funcionalidades e melhorias evolutivas (sob orçamento separado);</li>
+                <li>Monitoramento de infraestrutura e banco de dados;</li>
+                <li>Suporte técnico via chat/e-mail em horário comercial.</li>
+            </ol>
+        </div>
+
+        <!-- CLÁUSULA 11 — LGPD -->
+        <div class="clause">
+            <div class="clause-header">
+                <span class="clause-number">11</span>
+                <h2 class="clause-title">Da Proteção de Dados (LGPD)</h2>
+            </div>
+
+            <p><span class="sub-clause-id">11.1.</span> As partes declaram estar cientes e em conformidade com as disposições da <strong>Lei Geral de Proteção de Dados (Lei nº 13.709/2018 – LGPD)</strong> no que tange ao tratamento de dados pessoais coletados, armazenados e processados pela plataforma.</p>
+
+            <p><span class="sub-clause-id">11.2.</span> A CONTRATADA se compromete a implementar medidas técnicas e organizacionais adequadas para garantir a segurança dos dados pessoais, incluindo criptografia, controle de acesso e políticas de backup.</p>
+
+            <p><span class="sub-clause-id">11.3.</span> A CONTRATANTE será responsável exclusiva pelo uso e tratamento dos dados pessoais coletados por meio da plataforma, devendo adotar política de privacidade própria.</p>
+        </div>
+
+        <!-- CLÁUSULA 12 — DISPOSIÇÕES GERAIS -->
+        <div class="clause">
+            <div class="clause-header">
+                <span class="clause-number">12</span>
+                <h2 class="clause-title">Das Disposições Gerais</h2>
+            </div>
+
+            <p><span class="sub-clause-id">12.1.</span> O presente contrato <strong>não gera vínculo empregatício</strong> entre as partes, suas prepostas ou funcionários, sendo a CONTRATADA responsável exclusiva por suas obrigações trabalhistas, previdenciárias e fiscais.</p>
+
+            <p><span class="sub-clause-id">12.2.</span> Qualquer alteração deste contrato somente será válida se formalizada por escrito, mediante aditivo assinado por ambas as partes.</p>
+
+            <p><span class="sub-clause-id">12.3.</span> A tolerância de qualquer das partes quanto ao descumprimento de obrigações pela outra não implicará renúncia ao direito de exigi-lo, nem constituirá novação contratual.</p>
+
+            <p><span class="sub-clause-id">12.4.</span> Este contrato é irrevogável e irretratável, obrigando as partes, seus herdeiros e sucessores.</p>
+        </div>
+
+        <!-- CLÁUSULA 13 — FORO -->
+        <div class="clause">
+            <div class="clause-header">
+                <span class="clause-number">13</span>
+                <h2 class="clause-title">Do Foro</h2>
+            </div>
+
+            <p><span class="sub-clause-id">13.1.</span> As partes elegem o foro da Comarca de <span class="editable" contenteditable="true" data-placeholder="Cidade/UF">Avaré/SP</span>, com exclusão de qualquer outro, por mais privilegiado que seja, para dirimir quaisquer dúvidas ou litígios oriundos do presente contrato.</p>
+        </div>
+
+        <!-- LOCAL E DATA -->
+        <div class="local-data">
+            <p><span class="editable" contenteditable="true">Avaré/SP</span>, <span class="editable" contenteditable="true" data-placeholder="dia">____</span> de <span class="editable" contenteditable="true" data-placeholder="mês">______________</span> de <span class="editable" contenteditable="true">2026</span>.</p>
+        </div>
+
+        <!-- ASSINATURAS -->
+        <div class="signatures-section">
+            <div class="signatures-grid">
+                <div class="sig-block">
+                    <div class="sig-line"></div>
+                    <div class="sig-name">Jefferson Mendes de Souza</div>
+                    <div class="sig-role">Representante Legal</div>
+                    <div class="sig-company">Motojá — CONTRATADA</div>
+                </div>
+                <div class="sig-block">
+                    <div class="sig-line"></div>
+                    <div class="sig-name"><span class="editable" contenteditable="true" data-placeholder="Nome completo">________________________</span></div>
+                    <div class="sig-role">Representante Legal</div>
+                    <div class="sig-company">Mototaxi Millenio — CONTRATANTE</div>
+                </div>
+            </div>
+
+            <div class="witnesses">
+                <div class="witnesses-title">Testemunhas</div>
+                <div class="witnesses-grid">
+                    <div class="witness-block">
+                        <div class="witness-line"></div>
+                        <div class="witness-label">1ª Testemunha</div>
+                        <div class="witness-fields">Nome: _________________________ CPF: ___.___.___-__</div>
+                    </div>
+                    <div class="witness-block">
+                        <div class="witness-line"></div>
+                        <div class="witness-label">2ª Testemunha</div>
+                        <div class="witness-fields">Nome: _________________________ CPF: ___.___.___-__</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /contract-body -->
+
+    <!-- FOOTER -->
+    <div class="contract-footer">
+        <p>Este documento foi gerado eletronicamente e tem validade jurídica conforme legislação vigente.</p>
+        <div class="doc-id">REF: MOTOJA-MM-2026-001</div>
+    </div>
+
+</div><!-- /contract-page -->
+
+<script>
+    let isEditing = true;
+
+    function toggleEditMode() {
+        isEditing = !isEditing;
+        const page = document.getElementById('contractPage');
+        const label = document.getElementById('editLabel');
+        const editables = document.querySelectorAll('.editable');
+
+        if (isEditing) {
+            page.classList.remove('editing-off');
+            label.textContent = 'Editar Campos';
+            editables.forEach(function(el) { el.setAttribute('contenteditable', 'true'); });
+        } else {
+            page.classList.add('editing-off');
+            label.textContent = 'Modo Leitura';
+            editables.forEach(function(el) { el.setAttribute('contenteditable', 'false'); });
+        }
+    }
+</script>
+
+</body>
+</html>

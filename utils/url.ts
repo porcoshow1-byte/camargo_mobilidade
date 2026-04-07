@@ -2,41 +2,36 @@
  * Utility to generate "App URLs".
  * 
  * Logic:
- * - Localhost: uses "/app/${path}" to simulate a subdomain.
- * - Production: uses "https://app.mototaximillenio.top/${path}" (or configured domain).
+ * - Uses path-based routing for all environments.
+ * - Localhost: "/passageiro", "/piloto", etc.
+ * - Production (Vercel): "/passageiro", "/piloto", etc.
  */
 
 export const getAppUrl = (path: string = ''): string => {
     // Ensure path doesn't start with slash for cleaner concatenation
     const cleanPath = path.startsWith('/') ? path.slice(1) : path;
 
-    // Check if we are in development (localhost)
-    const isLocal = window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1');
-
-    if (isLocal) {
-        // Local: http://localhost:3000/app/passageiro
-        return `${window.location.origin}/app/${cleanPath}`;
-    } else {
-        // Production: https://app.mototaximillenio.top/passageiro
-        // You can also use an env var here: import.meta.env.VITE_APP_DOMAIN
-        const appDomain = 'app.mototaximillenio.top';
-        return `https://${appDomain}/${cleanPath}`;
-    }
+    // Same origin, path-based routing for all environments
+    return `${window.location.origin}/${cleanPath}`;
 };
 
 /**
  * Checks if the current window is running inside the "App Context".
  * 
  * Logic:
- * - Localhost: Checks if path starts with "/app".
- * - Production: Checks if hostname is "app.mototaximillenio.top".
+ * - Returns true if the path matches a known app route.
+ * - Works on both localhost and production (Vercel).
  */
 export const isAppContext = (): boolean => {
-    const isLocal = window.location.hostname.includes('localhost') || window.location.hostname.includes('127.0.0.1');
+    const path = window.location.pathname;
 
-    if (isLocal) {
-        return window.location.pathname.startsWith('/app');
-    } else {
-        return window.location.hostname.startsWith('app.');
-    }
+    // Check if any known app route is in the path
+    return (
+        path.startsWith('/passageiro') ||
+        path.startsWith('/piloto') ||
+        path.startsWith('/cadastro-motorista') ||
+        path.startsWith('/admin') ||
+        path.startsWith('/empresas') ||
+        path.startsWith('/app')  // Keep backward compat for localhost /app/* routes
+    );
 };

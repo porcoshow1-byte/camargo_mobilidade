@@ -13,7 +13,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import { isAppContext, getAppUrl } from './utils/url';
 
 // --- APP ROUTER (Functional Application) ---
-// This component runs ONLY when on 'app.mototaximillenio.top' or 'localhost/app/*'
+// This component runs when user navigates to /passageiro, /piloto, /admin, /empresas
 const AppRouter = () => {
   const { user } = useAuth();
 
@@ -29,11 +29,11 @@ const AppRouter = () => {
     });
   }, []);
 
-  // Parse role from URL (e.g. /app/passageiro -> 'user')
+  // Parse role from URL (e.g. /passageiro -> 'user')
   const getRoleFromUrl = (): Role | 'login' => {
     const path = window.location.pathname;
 
-    // Normalize path for local dev (remove /app prefix)
+    // Also support legacy /app/* paths for backward compat
     const effectivePath = path.replace('/app', '') || '/';
 
     if (effectivePath.includes('/passageiro')) return 'user';
@@ -100,14 +100,8 @@ const AppRouter = () => {
           // We might want to force a re-evaluation or just let React handle it.
         }}
         onBack={() => {
-          // Back from App Login -> Go to Site (Main Domain)
-          window.location.href = window.location.origin.replace('/app', ''); // Simple mock logic, for prod needs real domain
-          // Better:
-          if (window.location.hostname.includes('localhost')) {
-            window.location.href = '/';
-          } else {
-            window.location.href = 'https://mototaximillenio.top';
-          }
+          // Back from App Login -> Go to Landing Page (root)
+          window.location.href = '/';
         }}
       />
     );
@@ -163,7 +157,7 @@ const AppRouter = () => {
 }
 
 // --- SITE ROUTER (Marketing & Presentation) ---
-// This runs on 'mototaximillenio.top' or 'localhost:3000/' (root)
+// This runs on the root path '/' and '/apresentacao'
 const SiteRouter = () => {
   const [view, setView] = useState<'landing' | 'presentation'>('landing');
 

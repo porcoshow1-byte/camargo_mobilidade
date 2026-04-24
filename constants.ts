@@ -1,22 +1,27 @@
 import { Driver, User, ServiceType } from './types';
 
-// Helper function to safely access environment variables
-const getEnvVar = (key: string): string => {
+// Helper function to safely access environment variables in Vite (statically)
+const getGoogleMapsKey = (): string => {
   try {
     // @ts-ignore
-    if (typeof import.meta !== 'undefined' && import.meta.env) {
-      // @ts-ignore
-      return import.meta.env[key] || '';
-    }
+    return import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '';
   } catch (e) {
-    console.warn('Error reading env var:', e);
+    return '';
   }
-  return '';
+};
+
+const getMapboxToken = (): string => {
+  try {
+    // @ts-ignore
+    return import.meta.env.VITE_MAPBOX_TOKEN || '';
+  } catch (e) {
+    return '';
+  }
 };
 
 // Chave fornecida pelo usuário
 const USER_PROVIDED_KEY = "AIzaSyA-2urd4CmIJrOD-53lTCOGvykDwfGk07M";
-const envKey = getEnvVar('VITE_GOOGLE_MAPS_API_KEY');
+const envKey = getGoogleMapsKey();
 
 // Prioriza a variável de ambiente, mas usa a chave fornecida como fallback
 const googleKey = envKey || USER_PROVIDED_KEY;
@@ -26,8 +31,7 @@ if (!googleKey) {
 }
 
 // Mapbox Token
-const mapboxEnvKey = getEnvVar('VITE_MAPBOX_TOKEN');
-const mapboxKey = mapboxEnvKey || '';
+const mapboxKey = getMapboxToken();
 
 if (!mapboxKey) {
   console.warn("⚠️ Token do Mapbox (VITE_MAPBOX_TOKEN) não encontrado. O mapa precisará de configuração.");

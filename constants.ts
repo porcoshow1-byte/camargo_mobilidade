@@ -34,10 +34,10 @@ if (!mapboxKey) {
 }
 
 export const APP_CONFIG = {
-  name: "Mototaxi Millenio",
-  city: "Avaré - SP",
+  name: "Camargo Mobilidade",
+  city: "Ourinhos - SP",
   currency: "R$",
-  primaryColor: "orange",
+  primaryColor: "blue",
   googleMapsApiKey: googleKey,
   mapboxToken: mapboxKey,
   logoUrl: '/icon-192.png'
@@ -60,7 +60,7 @@ export const MOCK_DRIVER: Driver = {
   plate: 'ABC-1234',
   rating: 4.9,
   avatar: 'https://picsum.photos/100/100?random=2',
-  location: { lat: -23.1047, lng: -48.9213 }, // Approx Avaré coords
+  location: { lat: -22.9784, lng: -49.8715 }, // Approx Ourinhos coords
   status: 'online',
   earningsToday: 145.50,
   phone: '(14) 98888-7777'

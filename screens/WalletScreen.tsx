@@ -125,7 +125,7 @@ export const WalletScreen: React.FC<WalletScreenProps> = ({ balance, history, on
                         <p className="text-gray-500 text-center mb-6 text-sm">Escaneie o QR Code ou copie a chave Pix abaixo para pagar.</p>
 
                         <div className="flex items-center gap-2 bg-gray-100 p-3 rounded-xl w-full mb-8">
-                            <span className="flex-1 truncate text-xs text-gray-500 font-mono">00020126360014BR.GOV.BCB.PIX0114+551199999999520400005303986540510.005802BR5913Mototaxi Millenio Recarga6008SAO PAULO62070503***6304E2CA</span>
+                            <span className="flex-1 truncate text-xs text-gray-500 font-mono">00020126360014BR.GOV.BCB.PIX0114+551199999999520400005303986540510.005802BR5913Camargo Mobilidade Recarga6008SAO PAULO62070503***6304E2CA</span>
                             <button className="text-primary-600 font-bold text-sm flex items-center gap-1 hover:bg-primary-50 p-2 rounded-lg transition">
                                 <Copy size={16} /> Copiar
                             </button>

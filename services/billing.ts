@@ -22,7 +22,7 @@ export const generateInvoicePayment = async (
 ): Promise<InvoicePaymentResult> => {
     const settings = await getSettings();
     const provider = settings.paymentGateway.provider;
-    const description = `Fatura Mototaxi Millenio #${invoiceId} - Empresa ${companyId}`;
+    const description = `Fatura Camargo Mobilidade #${invoiceId} - Empresa ${companyId}`;
 
     try {
         if (provider === 'mercadopago') {
@@ -64,7 +64,7 @@ export const generateInvoicePayment = async (
             return {
                 success: true,
                 paymentId: `sim_inv_${invoiceId}`,
-                paymentLink: 'https://mototaximillenio.com/faturas/simulada',
+                paymentLink: 'https://camargomobilidade.com/faturas/simulada',
                 message: 'Fatura simulada gerada com sucesso'
             };
         }

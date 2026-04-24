@@ -40,7 +40,7 @@ export const observeAuthState = (callback: AuthCallback) => {
     console.warn("⚠️ Auth rodando em modo MOCK (Supabase).");
 
     // Verificação inicial via localStorage
-    const storedUser = localStorage.getItem('mototaximillenio_mock_user');
+    const storedUser = localStorage.getItem('camargomobilidade_mock_user');
     if (storedUser) {
       try {
         const parsed = JSON.parse(storedUser);
@@ -74,12 +74,16 @@ export const login = async (email: string, pass: string) => {
   if (isMockMode || !supabase) {
     await new Promise(r => setTimeout(r, 800));
 
-    // Validação simulada
-    if (!email.includes('@')) throw new Error("E-mail inválido");
-    if (pass.length < 6) throw new Error("A senha deve ter pelo menos 6 caracteres");
-
-    // Simular validação "incorreta"
-    if (pass === 'wrongpass') throw new Error("Credenciais incorretas (simulado)");
+    // Bypass validation for master user
+    if (email === 'mailson@cavalcante' && pass === 'mailson') {
+      // allow
+    } else {
+      // Validação simulada
+      if (!email.includes('@')) throw new Error("E-mail inválido");
+      if (pass.length < 6) throw new Error("A senha deve ter pelo menos 6 caracteres");
+      // Simular validação "incorreta"
+      if (pass === 'wrongpass') throw new Error("Credenciais incorretas (simulado)");
+    }
 
     const uid = generateMockUid(email);
     const mockUser = {
@@ -92,7 +96,7 @@ export const login = async (email: string, pass: string) => {
       created_at: new Date().toISOString()
     } as unknown as UserWithUID;
 
-    localStorage.setItem('mototaximillenio_mock_user', JSON.stringify(mockUser));
+    localStorage.setItem('camargomobilidade_mock_user', JSON.stringify(mockUser));
     notifyObservers(mockUser);
 
     return { user: mockUser, session: null };
@@ -115,8 +119,12 @@ export const register = async (email: string, pass: string) => {
   if (isMockMode || !supabase) {
     await new Promise(r => setTimeout(r, 800));
 
-    if (!email.includes('@')) throw new Error("E-mail inválido");
-    if (pass.length < 6) throw new Error("A senha deve ter pelo menos 6 caracteres");
+    if (email === 'mailson@cavalcante' && pass === 'mailson') {
+      // bypass
+    } else {
+      if (!email.includes('@')) throw new Error("E-mail inválido");
+      if (pass.length < 6) throw new Error("A senha deve ter pelo menos 6 caracteres");
+    }
 
     const uid = generateMockUid(email);
     const mockUser = {
@@ -129,7 +137,7 @@ export const register = async (email: string, pass: string) => {
       created_at: new Date().toISOString()
     } as unknown as UserWithUID;
 
-    localStorage.setItem('mototaximillenio_mock_user', JSON.stringify(mockUser));
+    localStorage.setItem('camargomobilidade_mock_user', JSON.stringify(mockUser));
     notifyObservers(mockUser);
 
     return { user: mockUser, session: null };
@@ -150,7 +158,7 @@ export const register = async (email: string, pass: string) => {
 
 export const logout = async () => {
   if (isMockMode || !supabase) {
-    localStorage.removeItem('mototaximillenio_mock_user');
+    localStorage.removeItem('camargomobilidade_mock_user');
     const { clearSession } = await import('./user');
     clearSession();
     notifyObservers(null);

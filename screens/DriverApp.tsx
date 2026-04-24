@@ -1042,7 +1042,7 @@ export const DriverApp = () => {
                     <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-1">Como deseja navegar?</h3>
                     <p className="text-sm text-gray-500 mb-5 truncate">Destino: {targetAddr}</p>
                     <div className="space-y-3">
-                      {/* Option 1: Mototaxi Millenio Internal */}
+                      {/* Option 1: Camargo Mobilidade Internal */}
                       <button
                         onClick={() => {
                           setShowNavOptions(false);
@@ -1054,7 +1054,7 @@ export const DriverApp = () => {
                           <MapPin size={24} className="text-white" />
                         </div>
                         <div className="text-left">
-                          <p className="font-bold text-gray-900 dark:text-white">Mototaxi Millenio</p>
+                          <p className="font-bold text-gray-900 dark:text-white">Camargo Mobilidade</p>
                           <p className="text-xs text-gray-500">Navegar pelo app</p>
                         </div>
                         <ChevronRight size={16} className="text-gray-300 ml-auto" />

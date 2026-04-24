@@ -7,14 +7,14 @@ const MOCK_DRIVER: Driver = {
     id: 'mock_driver_001',
     name: 'Carlos Oliveira',
     phone: '11999887766',
-    email: 'motorista@mototaximillenio.com',
+    email: 'motorista@camargomobilidade.com',
     rating: 4.9,
     totalRides: 1240,
     vehicle: 'Honda CG 160',
     plate: 'ABC-1234',
     avatar: 'https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=400&h=400&fit=crop',
     status: 'online',
-    location: { lat: -23.1047, lng: -48.9213 },
+    location: { lat: -22.9784, lng: -49.8715 },
     verificationStatus: 'verified',
     earningsToday: 150.50,
     createdAt: Date.now()
@@ -36,7 +36,7 @@ export const initSimulation = () => {
 
 const checkAndSimulate = () => {
     try {
-        const ridesStr = localStorage.getItem('mototaximillenio_mock_rides');
+        const ridesStr = localStorage.getItem('camargomobilidade_mock_rides');
         if (!ridesStr) return;
 
         const rides: RideRequest[] = JSON.parse(ridesStr);

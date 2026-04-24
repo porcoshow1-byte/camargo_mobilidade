@@ -629,9 +629,9 @@ export const UserApp = () => {
 
   useEffect(() => {
     // Restore state from localStorage on mount
-    const savedRideId = localStorage.getItem('mototaximillenio_current_ride_id');
-    const savedStep = localStorage.getItem('mototaximillenio_step');
-    const savedBookingMode = localStorage.getItem('mototaximillenio_booking_mode');
+    const savedRideId = localStorage.getItem('camargomobilidade_current_ride_id');
+    const savedStep = localStorage.getItem('camargomobilidade_step');
+    const savedBookingMode = localStorage.getItem('camargomobilidade_booking_mode');
 
     if (savedRideId) {
       setCurrentRideId(savedRideId);
@@ -644,7 +644,7 @@ export const UserApp = () => {
     } else if (savedStep === 'searching') {
       // Edge case: searching but no ID yet (maybe just clicked button before ID returned)
       // For now, if no ID, clearer to reset to home to avoid stuck state
-      localStorage.removeItem('mototaximillenio_step');
+      localStorage.removeItem('camargomobilidade_step');
       setStep('home');
     }
 
@@ -656,14 +656,14 @@ export const UserApp = () => {
   // Sync state to localStorage
   useEffect(() => {
     if (currentRideId) {
-      localStorage.setItem('mototaximillenio_current_ride_id', currentRideId);
+      localStorage.setItem('camargomobilidade_current_ride_id', currentRideId);
     } else {
-      localStorage.removeItem('mototaximillenio_current_ride_id');
+      localStorage.removeItem('camargomobilidade_current_ride_id');
     }
   }, [currentRideId]);
 
   useEffect(() => {
-    localStorage.setItem('mototaximillenio_step', step);
+    localStorage.setItem('camargomobilidade_step', step);
   }, [step]);
 
   // Reset service selection whenever route is recalculated
@@ -674,7 +674,7 @@ export const UserApp = () => {
   }, [routeInfo]);
 
   useEffect(() => {
-    localStorage.setItem('mototaximillenio_booking_mode', bookingMode);
+    localStorage.setItem('camargomobilidade_booking_mode', bookingMode);
   }, [bookingMode]);
 
   // Force reset service when entering confirmation screen
@@ -746,7 +746,7 @@ export const UserApp = () => {
   const [favorites, setFavorites] = useState<SavedAddress[]>(() => {
     try {
       if (typeof window !== 'undefined') {
-        const saved = localStorage.getItem('mototaximillenio_favorites');
+        const saved = localStorage.getItem('camargomobilidade_favorites');
         if (saved) return JSON.parse(saved);
       }
     } catch (e) { console.error('Failed to load favorites', e); }
@@ -757,7 +757,7 @@ export const UserApp = () => {
   });
 
   useEffect(() => {
-    localStorage.setItem('mototaximillenio_favorites', JSON.stringify(favorites));
+    localStorage.setItem('camargomobilidade_favorites', JSON.stringify(favorites));
 
     // Sync to Firestore if user is logged in (Debounced)
     if (currentUser?.id) {
@@ -871,7 +871,7 @@ export const UserApp = () => {
       // Sync Favorites from Cloud
       if ((profile as User).savedAddresses && (profile as User).savedAddresses!.length > 0) {
         setFavorites((profile as User).savedAddresses!);
-        localStorage.setItem('mototaximillenio_favorites', JSON.stringify((profile as User).savedAddresses));
+        localStorage.setItem('camargomobilidade_favorites', JSON.stringify((profile as User).savedAddresses));
       }
     } catch (err: any) {
       console.error("Erro crítico ao carregar perfil:", err);
@@ -1084,9 +1084,9 @@ export const UserApp = () => {
 
     updatedPoints.forEach((point) => {
       if (point.address && point.address.length > 3 && !point.coords) {
-        // Gera coordenada simulada perto da origem (ou Avaré)
-        const baseLat = originCoords?.lat || -23.1047;
-        const baseLng = originCoords?.lng || -48.9213;
+        // Gera coordenada simulada perto da origem (ou Ourinhos)
+        const baseLat = originCoords?.lat || -22.9784;
+        const baseLng = originCoords?.lng || -49.8715;
         point.coords = {
           lat: baseLat + (Math.random() - 0.5) * 0.05,
           lng: baseLng + (Math.random() - 0.5) * 0.05
@@ -1112,7 +1112,7 @@ export const UserApp = () => {
     const origin = updatedPoints[0];
     const destination = updatedPoints[updatedPoints.length - 1];
 
-    const safeOriginCoords = origin.coords || { lat: -23.1047, lng: -48.9213 };
+    const safeOriginCoords = origin.coords || { lat: -22.9784, lng: -49.8715 };
     const safeDestCoords = destination.coords || { lat: -23.1100, lng: -48.9300 };
 
     const waypoints = updatedPoints.slice(1, updatedPoints.length - 1).map(p => p.coords!).filter(Boolean);
@@ -1250,7 +1250,7 @@ export const UserApp = () => {
           setCurrentUser(updatedUser);
 
           // Persist
-          localStorage.setItem(`mototaximillenio_user_${currentUser.id}`, JSON.stringify(updatedUser));
+          localStorage.setItem(`camargomobilidade_user_${currentUser.id}`, JSON.stringify(updatedUser));
           const { updateUserProfile } = await import('../services/user');
           updateUserProfile(currentUser.id, { walletBalance: newBalance });
         }
@@ -1311,7 +1311,7 @@ export const UserApp = () => {
       const payment = await createPixPayment(
         currentRide.id,
         currentRide.price || 0,
-        currentUser?.email || 'user@mototaximillenio.com'
+        currentUser?.email || 'user@camargomobilidade.com'
       );
 
       setPixData(payment);
@@ -1378,7 +1378,7 @@ export const UserApp = () => {
           favoriteDrivers: [...currentFavorites, driverId]
         };
         setCurrentUser(updatedUser);
-        localStorage.setItem(`mototaximillenio_user_${currentUser.id}`, JSON.stringify(updatedUser));
+        localStorage.setItem(`camargomobilidade_user_${currentUser.id}`, JSON.stringify(updatedUser));
         setToast({ message: 'Motorista adicionado aos favoritos!', type: 'success', visible: true });
         setTimeout(() => setToast(null), 3000);
       }
@@ -1463,7 +1463,7 @@ export const UserApp = () => {
               <Ticket size={20} />
             </div>
             <div>
-              <h3 className="font-bold text-gray-800 text-sm">Bem-vindo ao Mototaxi Millenio!</h3>
+              <h3 className="font-bold text-gray-800 text-sm">Bem-vindo ao Camargo Mobilidade!</h3>
               <p className="text-xs text-gray-500 mt-1">Ganhe 10% OFF na sua primeira corrida com o cupom MOTOJA10.</p>
               <p className="text-[10px] text-gray-400 mt-2 font-medium">Há 2 horas</p>
             </div>
@@ -1491,7 +1491,7 @@ export const UserApp = () => {
           {/* Top Left: Brand Pill */}
           <div className="absolute left-6 z-20 animate-fade-in-down" style={{ top: 'calc(1.5rem + env(safe-area-inset-top))' }}>
             <div className="bg-primary-500 text-white px-6 py-2 rounded-full shadow-lg shadow-primary-500/30 flex items-center gap-2">
-              <span className="font-bold text-lg">Mototaxi Millenio</span>
+              <span className="font-bold text-lg">Camargo Mobilidade</span>
             </div>
           </div>
 
@@ -2535,7 +2535,7 @@ export const UserApp = () => {
       }
 
       // PERSIST TO STORAGE
-      localStorage.setItem('mototaximillenio_favorites', JSON.stringify(newFavs));
+      localStorage.setItem('camargomobilidade_favorites', JSON.stringify(newFavs));
       return newFavs;
     });
 
@@ -3133,7 +3133,7 @@ export const UserApp = () => {
             setCurrentUser(updatedUser);
 
             // Persist to localStorage (backup)
-            localStorage.setItem(`mototaximillenio_user_${currentUser.id}`, JSON.stringify(updatedUser));
+            localStorage.setItem(`camargomobilidade_user_${currentUser.id}`, JSON.stringify(updatedUser));
 
             // SYNC TO FIRESTORE SERVER
             import('../services/user').then(({ updateUserProfile }) => {
@@ -3179,7 +3179,7 @@ export const UserApp = () => {
               };
 
               setCurrentUser(updatedUser);
-              localStorage.setItem(`mototaximillenio_user_${currentUser!.id}`, JSON.stringify(updatedUser));
+              localStorage.setItem(`camargomobilidade_user_${currentUser!.id}`, JSON.stringify(updatedUser));
 
               setToast({ message: 'Cupom resgatado com sucesso!', type: 'success', visible: true });
               setTimeout(() => setToast(null), 3000);
@@ -3209,7 +3209,7 @@ export const UserApp = () => {
                 favoriteDrivers: (currentUser.favoriteDrivers || []).filter(id => id !== driverId)
               };
               setCurrentUser(updatedUser);
-              localStorage.setItem(`mototaximillenio_user_${currentUser.id}`, JSON.stringify(updatedUser));
+              localStorage.setItem(`camargomobilidade_user_${currentUser.id}`, JSON.stringify(updatedUser));
               // Optional: Toast message
             }
           }}
@@ -3254,7 +3254,7 @@ export const UserApp = () => {
 
           // FORCE localStorage persistence (backup)
           if (updated && updated.id) {
-            localStorage.setItem(`mototaximillenio_user_${updated.id}`, JSON.stringify(updated));
+            localStorage.setItem(`camargomobilidade_user_${updated.id}`, JSON.stringify(updated));
             console.log("Profile saved to localStorage:", updated);
           }
 
@@ -3269,7 +3269,7 @@ export const UserApp = () => {
                 newFavs = [...prev, { id: 'fav_home', label: 'Casa', address: updated.address, coords: null, type: 'home' }];
               }
               // Persist Update Immediately
-              localStorage.setItem('mototaximillenio_favorites', JSON.stringify(newFavs));
+              localStorage.setItem('camargomobilidade_favorites', JSON.stringify(newFavs));
               return newFavs;
             });
           }

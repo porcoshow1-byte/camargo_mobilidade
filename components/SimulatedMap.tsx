@@ -52,10 +52,10 @@ const mapContainerStyle = {
   height: '100%',
 };
 
-// Ponto central padrão (Avaré - SP)
+// Ponto central padrão (Ourinhos - SP)
 // Ponto central padrão (Fallback se GPS falhar totalmente)
 const defaultCenter = {
-  lat: -23.5505, // SP Capital (better default than Avaré if needed)
+  lat: -23.5505, // SP Capital (better default than Ourinhos if needed)
   lng: -46.6333,
 };
 
@@ -427,7 +427,7 @@ const MapboxMapInner: React.FC<MapProps> = (props) => {
               }}
             >
               <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                <circle cx="24" cy="24" r="22" fill="#4A764E" stroke="white" strokeWidth="3" />
+                <circle cx="24" cy="24" r="22" fill="#1B4DBA" stroke="white" strokeWidth="3" />
                 <path d="M24 10 L34 32 L24 26 L14 32 Z" fill="white" />
               </svg>
             </div>
@@ -487,7 +487,7 @@ const MapboxMapInner: React.FC<MapProps> = (props) => {
             id="route-line"
             type="line"
             layout={{ "line-join": "round", "line-cap": "round" }}
-            paint={{ "line-color": "#4A764E", "line-width": 5, "line-opacity": 0.8 }}
+            paint={{ "line-color": "#1B4DBA", "line-width": 5, "line-opacity": 0.8 }}
           />
         </Source>
       )}
@@ -822,7 +822,7 @@ const GoogleMapInner: React.FC<MapProps> = ({ showDriver, showRoute, status, ori
         <GoogleMarker position={origin} icon={{
           path: window.google.maps.SymbolPath.CIRCLE,
           scale: 8,
-          fillColor: "#4A764E",
+          fillColor: "#1B4DBA",
           fillOpacity: 1,
           strokeWeight: 2,
           strokeColor: "#ffffff",
@@ -878,7 +878,7 @@ const GoogleMapInner: React.FC<MapProps> = ({ showDriver, showRoute, status, ori
             suppressMarkers: true,
             preserveViewport: true,
             polylineOptions: {
-              strokeColor: "#4A764E",
+              strokeColor: "#1B4DBA",
               strokeWeight: 5
             }
           }}
@@ -915,7 +915,7 @@ export const SimulatedMap: React.FC<MapProps> = (props) => {
     }
   }, [isLoaded, mapboxToken, props.onMapReady]);
 
-  // 0. Loading State (Prevents Avaré Jump)
+  // 0. Loading State (Prevents Ourinhos Jump)
   if (props.isLoading) {
     return (
       <div className="w-full h-full bg-gray-100 flex flex-col items-center justify-center animate-pulse z-50">

@@ -89,7 +89,7 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
     const handleManualWriteOff = async (ridesToPay: RideRequest[]) => {
         if (!confirm('Confirmar baixa manual desta fatura? Isso marcará todas as corridas como pagas.')) return;
 
-        const storedRides = JSON.parse(localStorage.getItem('mototaximillenio_mock_rides') || '[]');
+        const storedRides = JSON.parse(localStorage.getItem('camargomobilidade_mock_rides') || '[]');
         const updatedRides = storedRides.map((r: RideRequest) => {
             if (ridesToPay.some(pay => pay.id === r.id)) {
                 return { ...r, paymentStatus: 'completed' };
@@ -97,7 +97,7 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
             return r;
         });
 
-        localStorage.setItem('mototaximillenio_mock_rides', JSON.stringify(updatedRides));
+        localStorage.setItem('camargomobilidade_mock_rides', JSON.stringify(updatedRides));
 
         // Refresh local state logic implies re-fetch or manual update. For now, manual update:
         setRides(prev => prev.map(r => {
@@ -129,8 +129,8 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
         }
 
         // Only for non-admins (companies)
-        const needsReset = localStorage.getItem('mototaximillenio_needs_password_reset') === 'true';
-        const targetCompanyId = localStorage.getItem('mototaximillenio_company_id');
+        const needsReset = localStorage.getItem('camargomobilidade_needs_password_reset') === 'true';
+        const targetCompanyId = localStorage.getItem('camargomobilidade_company_id');
 
         // Ensure the prompt is for THIS company context (if ID stored) or generic
         if (needsReset && (!targetCompanyId || targetCompanyId === companyId)) {
@@ -176,8 +176,8 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
             setNewPassword('');
 
             // Clear flag
-            localStorage.removeItem('mototaximillenio_needs_password_reset');
-            localStorage.removeItem('mototaximillenio_company_id');
+            localStorage.removeItem('camargomobilidade_needs_password_reset');
+            localStorage.removeItem('camargomobilidade_company_id');
 
             alert('Senha atualizada com sucesso!');
         } catch (error: any) {
@@ -251,7 +251,7 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
                     }
 
                     // Load Mock Users
-                    const savedUsers = JSON.parse(localStorage.getItem('mototaximillenio_mock_users') || '[]');
+                    const savedUsers = JSON.parse(localStorage.getItem('camargomobilidade_mock_users') || '[]');
                     const employees = savedUsers.filter((u: User) => u.companyId === companyData!.id);
                     setCompanyUsers(employees);
                 }
@@ -264,11 +264,11 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
                 if (companyData && companyData.isTempPassword && role !== 'admin' && !isAdminView) {
                     setShowPasswordReset(true);
                     // Clear the localStorage flag
-                    localStorage.removeItem('mototaximillenio_needs_password_reset');
+                    localStorage.removeItem('camargomobilidade_needs_password_reset');
                 }
 
                 // Mock rides for demo purposes
-                const storedRides = JSON.parse(localStorage.getItem('mototaximillenio_mock_rides') || '[]');
+                const storedRides = JSON.parse(localStorage.getItem('camargomobilidade_mock_rides') || '[]');
                 const companyRides = storedRides.filter((r: RideRequest) => r.companyId === targetId).sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
 
                 setRides(companyRides);
@@ -307,14 +307,14 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
         };
 
         // Update local storage mock
-        const allUsers = JSON.parse(localStorage.getItem('mototaximillenio_mock_users') || '[]');
+        const allUsers = JSON.parse(localStorage.getItem('camargomobilidade_mock_users') || '[]');
         let updatedUsers;
         if (editingUser) {
             updatedUsers = allUsers.map((u: User) => u.id === editingUser.id ? newUser : u);
         } else {
             updatedUsers = [...allUsers, newUser];
         }
-        localStorage.setItem('mototaximillenio_mock_users', JSON.stringify(updatedUsers));
+        localStorage.setItem('camargomobilidade_mock_users', JSON.stringify(updatedUsers));
         setCompanyUsers(updatedUsers.filter((u: User) => u.companyId === company?.id));
 
         setUserModalOpen(false);
@@ -554,8 +554,8 @@ export const CompanyDashboard = ({ onBack, companyId, isAdminView }: { onBack: (
                                                                     // Mock remove
                                                                     const updated = companyUsers.filter(user => user.id !== u.id);
                                                                     setCompanyUsers(updated);
-                                                                    const all = JSON.parse(localStorage.getItem('mototaximillenio_mock_users') || '[]');
-                                                                    localStorage.setItem('mototaximillenio_mock_users', JSON.stringify(all.filter((user: User) => user.id !== u.id)));
+                                                                    const all = JSON.parse(localStorage.getItem('camargomobilidade_mock_users') || '[]');
+                                                                    localStorage.setItem('camargomobilidade_mock_users', JSON.stringify(all.filter((user: User) => user.id !== u.id)));
                                                                 }
                                                             }}
                                                             className="p-2 hover:bg-gray-100 rounded-full text-red-600 transition-colors" title="Remover"

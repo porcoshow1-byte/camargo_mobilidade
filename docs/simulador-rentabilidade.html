@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Ganhos e Corridas — Mototáxi Millenio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a6b3c;
+            --primary-dark: #084d2b;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --accent: #f59e0b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); padding: 20px; line-height: 1.6; }
+
+        .container { max-width: 1000px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 40px; padding: 30px; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; border-radius: 16px; box-shadow: 0 10px 25px -5px rgba(10, 107, 60, 0.4); }
+        .header h1 { font-size: 32px; font-weight: 700; margin-bottom: 10px; }
+        .header p { opacity: 0.9; font-size: 16px; }
+
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+
+        .card { background: var(--card); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        .card-header { padding: 20px; border-bottom: 1px solid var(--border); background: #fdfdfd; font-weight: 600; font-size: 18px; display: flex; align-items: center; gap: 10px; }
+        .card-body { padding: 24px; }
+
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 6px; color: var(--text-muted); }
+        .form-group input { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 8px; font-size: 16px; outline: none; transition: border-color 0.2s; }
+        .form-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(10, 107, 60, 0.1); }
+        
+        .input-with-symbol { position: relative; }
+        .input-with-symbol span { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-weight: 500; }
+        .input-with-symbol input { padding-left: 35px; }
+        .input-with-suffix input { padding-left: 14px; padding-right: 35px; }
+        .input-with-suffix span { left: auto; right: 14px; }
+
+        .result-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 20px; margin-top: 24px; }
+        .result-item { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .result-item:last-child { margin-bottom: 0; padding-top: 12px; border-top: 1px solid #bbf7d0; font-weight: 700; font-size: 18px; color: var(--primary-dark); }
+        .result-label { font-size: 14px; color: #166534; }
+        .result-value { font-size: 16px; font-weight: 600; color: #15803d; }
+
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 24px; }
+        .stat-card { background: #f8fafc; border: 1px solid var(--border); padding: 16px; border-radius: 8px; text-align: center; }
+        .stat-value { font-size: 24px; font-weight: 700; color: var(--primary); margin-top: 5px; }
+        .stat-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); font-weight: 600; }
+
+        .badge { display: inline-block; padding: 4px 8px; background: rgba(245, 158, 11, 0.1); color: var(--accent); border-radius: 4px; font-size: 12px; font-weight: 600; margin-bottom: 16px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>📊 Simulador de Operação e Lucros</h1>
+        <p>Projete os custos das corridas para o cliente e a receita mensal da sua plataforma.</p>
+    </div>
+
+    <div class="grid">
+        <!-- SIMULADOR DE CORRIDA INDIVIDUAL -->
+        <div class="card">
+            <div class="card-header">
+                🛵 Simulação de Corrida (Ticket)
+            </div>
+            <div class="card-body">
+                <div class="badge">Quanto custa para o passageiro e quanto ganha o piloto</div>
+
+                <div class="form-group">
+                    <label>Taxa de Embarque (Base)</label>
+                    <div class="input-with-symbol">
+                        <span>R$</span>
+                        <input type="number" id="baseFare" value="3.00" step="0.5" oninput="calculateRide()">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Preço por KM rodado</label>
+                    <div class="input-with-symbol">
+                        <span>R$</span>
+                        <input type="number" id="kmPrice" value="1.50" step="0.1" oninput="calculateRide()">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Distância da Corrida Exemplo (KM)</label>
+                    <div class="input-with-symbol input-with-suffix">
+                        <input type="number" id="distance" value="6" step="1" oninput="calculateRide()">
+                        <span>km</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Taxa da Plataforma (Sua comissão)</label>
+                    <div class="input-with-symbol input-with-suffix">
+                        <input type="number" id="appFee" value="10" step="1" oninput="calculateRide()">
+                        <span>%</span>
+                    </div>
+                </div>
+
+                <div class="result-box">
+                    <div class="result-item">
+                        <span class="result-label">Cálculo de KM (Distância x Preço):</span>
+                        <span class="result-value" id="calcKm">R$ 9,00</span>
+                    </div>
+                    <div class="result-item" style="border-bottom: 1px dashed #bbf7d0; padding-bottom: 12px;">
+                        <span class="result-label">Valor cobrado do Passageiro:</span>
+                        <span class="result-value" style="font-size: 20px; color: #166534;" id="totalFare">R$ 12,00</span>
+                    </div>
+                    <div class="result-item" style="margin-top: 12px;">
+                        <span class="result-label">Ganhos do Piloto (Líquido):</span>
+                        <span class="result-value" id="driverNet">R$ 10,80</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label">Faturamento da Plataforma:</span>
+                        <span class="result-value" id="platformCut">R$ 1,20</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SIMULADOR MENSAL DA PLATAFORMA -->
+        <div class="card">
+            <div class="card-header">
+                🚀 Projeção de Faturamento Mensal
+            </div>
+            <div class="card-body">
+                <div class="badge">Quanto o aplicativo fatura no fim do mês</div>
+
+                <div class="form-group">
+                    <label>Quantidade de Pilotos Ativos</label>
+                    <input type="number" id="activeDrivers" value="15" step="1" oninput="calculateMonthly()">
+                </div>
+
+                <div class="form-group">
+                    <label>Média de Corridas por Piloto (por dia)</label>
+                    <input type="number" id="ridesPerDay" value="12" step="1" oninput="calculateMonthly()">
+                </div>
+
+                <div class="form-group">
+                    <label>Dias trabalhados por mês</label>
+                    <input type="number" id="workDays" value="26" step="1" oninput="calculateMonthly()">
+                </div>
+
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Corridas/Mês</div>
+                        <div class="stat-value" id="monthlyRides">4.680</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Movimentação Bruta</div>
+                        <div class="stat-value" id="grossVolume">R$ 56.160</div>
+                    </div>
+                </div>
+
+                <div class="result-box" style="background: #1e293b; border-color: #334155; margin-top: 24px;">
+                    <div class="result-item">
+                        <span class="result-label" style="color: #cbd5e1;">Taxa da plataforma (<span id="feeDisplay">10</span>%):</span>
+                        <span class="result-value" style="color: #f8fafc;" id="monthlyFee">...</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="result-label" style="color: #94a3b8; font-size: 13px;">(-) Custo estimado mensal Servidor/APIs:</span>
+                        <span class="result-value" style="color: #ef4444; font-size: 14px;">- R$ 150,00</span>
+                    </div>
+                    <div class="result-item" style="border-top-color: #475569;">
+                        <span class="result-label" style="color: #fff;">Lucro Líquido Estimado:</span>
+                        <span class="result-value" style="color: #10b981; font-size: 24px;" id="monthlyNet">R$ 0,00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentTicket = 12.00; // Valor que vai para a projeção mensal
+
+    function formatCurrency(val) {
+        return val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    }
+
+    function calculateRide() {
+        const base = parseFloat(document.getElementById('baseFare').value) || 0;
+        const kmPrice = parseFloat(document.getElementById('kmPrice').value) || 0;
+        const distance = parseFloat(document.getElementById('distance').value) || 0;
+        const fee = parseFloat(document.getElementById('appFee').value) || 0;
+
+        const calcKm = distance * kmPrice;
+        const total = base + calcKm;
+        
+        const platformCut = total * (fee / 100);
+        const driverNet = total - platformCut;
+
+        currentTicket = total; // Salva para o cálculo mensal
+
+        document.getElementById('calcKm').textContent = formatCurrency(calcKm);
+        document.getElementById('totalFare').textContent = formatCurrency(total);
+        document.getElementById('driverNet').textContent = formatCurrency(driverNet);
+        document.getElementById('platformCut').textContent = formatCurrency(platformCut);
+        
+        document.getElementById('feeDisplay').textContent = fee;
+        calculateMonthly();
+    }
+
+    function calculateMonthly() {
+        const drivers = parseFloat(document.getElementById('activeDrivers').value) || 0;
+        const ridesPerDay = parseFloat(document.getElementById('ridesPerDay').value) || 0;
+        const workDays = parseFloat(document.getElementById('workDays').value) || 0;
+        const fee = parseFloat(document.getElementById('appFee').value) || 0;
+
+        const monthlyRides = drivers * ridesPerDay * workDays;
+        const grossVolume = monthlyRides * currentTicket;
+        const platformGross = grossVolume * (fee / 100);
+        
+        const serverCosts = 150; // Custo fixo estimado
+        const platformNet = platformGross - serverCosts;
+
+        document.getElementById('monthlyRides').textContent = monthlyRides.toLocaleString('pt-BR');
+        document.getElementById('grossVolume').textContent = formatCurrency(grossVolume);
+        document.getElementById('monthlyFee').textContent = formatCurrency(platformGross);
+        
+        document.getElementById('monthlyNet').textContent = platformNet > 0 ? formatCurrency(platformNet) : formatCurrency(0);
+    }
+
+    // Inicializa os cálculos
+    calculateRide();
+</script>
+
+</body>
+</html>

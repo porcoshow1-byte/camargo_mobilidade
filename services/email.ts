@@ -68,8 +68,8 @@ export const sendEmail = async (
 export const testSMTPConnection = async (): Promise<EmailResult> => {
     const settings = await getSettings();
     return sendEmail(
-        settings.companyEmail || 'admin@mototaximillenio.com',
-        'Teste de Conexão SMTP - Mototaxi Millenio',
+        settings.companyEmail || 'admin@camargomobilidade.com',
+        'Teste de Conexão SMTP - Camargo Mobilidade',
         '<h1>Conexão SMTP Bem Sucedida!</h1><p>Se você está lendo isso, suas configurações de SMTP estão tecnicamente corretas (simuladas).</p>'
     );
 };

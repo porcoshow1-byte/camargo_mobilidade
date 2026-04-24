@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.mototaximillenio.app',
-  appName: 'Mototaxi Millenio',
+  appId: 'com.camargomobilidade.app',
+  appName: 'Camargo Mobilidade',
   webDir: 'dist'
 };
 

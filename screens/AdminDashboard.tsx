@@ -1056,7 +1056,7 @@ const SearchingOverlay = ({ show }: { show: boolean }) => {
           <Search size={40} className="text-white animate-bounce-slight" />
         </div>
       </div>
-      <h2 className="text-2xl font-bold mb-2">Procurando Mototaxi Millenio...</h2>
+      <h2 className="text-2xl font-bold mb-2">Procurando Camargo Mobilidade...</h2>
       <p className="text-gray-400 text-sm animate-pulse">Contatando motoristas próximos</p>
     </div>
   );
@@ -2041,7 +2041,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
 
   // Load occurrence timeline from localStorage
   useEffect(() => {
-    const saved = localStorage.getItem('mototaximillenio_occurrence_timeline');
+    const saved = localStorage.getItem('camargomobilidade_occurrence_timeline');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
@@ -2060,7 +2060,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
   // Save occurrence timeline to localStorage when it changes
   useEffect(() => {
     if (Object.keys(occurrenceTimeline).length > 0) {
-      localStorage.setItem('mototaximillenio_occurrence_timeline', JSON.stringify(occurrenceTimeline));
+      localStorage.setItem('camargomobilidade_occurrence_timeline', JSON.stringify(occurrenceTimeline));
     }
   }, [occurrenceTimeline]);
 
@@ -3070,9 +3070,15 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
               className="h-12 object-contain w-auto mb-2 -ml-1"
             />
           ) : (
-            <h1 className="text-2xl font-bold flex items-center gap-2">
-              <span className="text-primary-500">Millênio</span>
-            </h1>
+            <div className="flex items-center gap-3 mb-1">
+              <img src="/icon.png" alt="Camargo" className="h-10 w-10 rounded-lg object-cover shadow-lg" />
+              <div>
+                <h1 className="text-xl font-bold leading-tight">
+                  <span className="text-[#F5B731]">Camargo</span>{' '}
+                  <span className="text-white">Mobilidade</span>
+                </h1>
+              </div>
+            </div>
           )}
           <p className="text-gray-500 text-xs mt-1">Painel Administrativo v1.0</p>
         </div>
@@ -3471,7 +3477,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                       <XAxis dataKey="name" axisLine={false} tickLine={false} />
                       <YAxis axisLine={false} tickLine={false} allowDecimals={false} />
                       <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)' }} />
-                      <Bar dataKey="rides" fill="#4A764E" radius={[4, 4, 0, 0]} barSize={30} />
+                      <Bar dataKey="rides" fill="#1B4DBA" radius={[4, 4, 0, 0]} barSize={30} />
                     </BarChart>
                   </RechartsWrapper>
                 </Card>
@@ -3748,7 +3754,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                               const formattedHistory = history
                                 .sort((a: any, b: any) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
                                 .map(n => ({
-                                  from: n.title === 'Suporte Mototaxi Millenio' ? 'admin' : 'driver', // Simple heuristic
+                                  from: n.title === 'Suporte Camargo Mobilidade' ? 'admin' : 'driver', // Simple heuristic
                                   text: n.body,
                                   time: new Date(n.created_at)
                                 }));
@@ -3823,7 +3829,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
 
                           // 2. Send Real Notification
                           await sendNotification(chatDriver.id, 'newMessage', {
-                            title: 'Suporte Mototaxi Millenio',
+                            title: 'Suporte Camargo Mobilidade',
                             body: msgText,
                             data: { sender: 'admin' }
                           });
@@ -3842,7 +3848,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
 
                           // 2. Send Real Notification
                           await sendNotification(chatDriver.id, 'newMessage', {
-                            title: 'Suporte Mototaxi Millenio',
+                            title: 'Suporte Camargo Mobilidade',
                             body: msgText,
                             data: { sender: 'admin' }
                           });
@@ -3932,7 +3938,7 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                           const formattedHistory = history
                             .sort((a: any, b: any) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
                             .map(n => ({
-                              from: n.title === 'Suporte Mototaxi Millenio' ? 'admin' : 'driver', // Simple heuristic
+                              from: n.title === 'Suporte Camargo Mobilidade' ? 'admin' : 'driver', // Simple heuristic
                               text: n.body,
                               time: new Date(n.created_at)
                             }));
@@ -4448,13 +4454,13 @@ const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
                         <div>
                           <label className="block text-sm font-semibold text-gray-700 mb-1.5">Cor Principal</label>
                           <div className="flex gap-2 items-center">
-                            <input type="color" value={settings.visual?.primaryColor || '#4A764E'} onChange={(e) => setSettings({ ...settings, visual: { ...settings.visual, primaryColor: e.target.value } })} className="w-10 h-10 rounded-lg cursor-pointer border-0 p-0 shadow-sm" />
-                            <Input value={settings.visual?.primaryColor || '#4A764E'} onChange={(e: any) => setSettings({ ...settings, visual: { ...settings.visual, primaryColor: e.target.value } })} className="flex-1" />
+                            <input type="color" value={settings.visual?.primaryColor || '#1B4DBA'} onChange={(e) => setSettings({ ...settings, visual: { ...settings.visual, primaryColor: e.target.value } })} className="w-10 h-10 rounded-lg cursor-pointer border-0 p-0 shadow-sm" />
+                            <Input value={settings.visual?.primaryColor || '#1B4DBA'} onChange={(e: any) => setSettings({ ...settings, visual: { ...settings.visual, primaryColor: e.target.value } })} className="flex-1" />
                           </div>
                         </div>
                         <div>
                           <label className="block text-sm font-semibold text-gray-700 mb-1.5">Nome do App</label>
-                          <Input value={settings.appName} onChange={(e: any) => setSettings({ ...settings, appName: e.target.value })} placeholder="Mototaxi Millenio" />
+                          <Input value={settings.appName} onChange={(e: any) => setSettings({ ...settings, appName: e.target.value })} placeholder="Camargo Mobilidade" />
                         </div>
                       </div>
 

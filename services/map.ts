@@ -26,9 +26,9 @@ let geocoderService: any = null;
 
 // Lista de locais simulados (Fallback se a API falhar ou não estiver carregada)
 const MOCK_LOCATIONS: AddressResult[] = [
-  { description: 'Terminal Rodoviário de Avaré', mainText: 'Rodoviária', placeId: 'loc1', coords: { lat: -23.104, lng: -48.925 } },
-  { description: 'Santa Casa de Misericórdia', mainText: 'Santa Casa', placeId: 'loc2', coords: { lat: -23.102, lng: -48.921 } },
-  { description: 'Largo São João (Centro)', mainText: 'Praça São João', placeId: 'loc3', coords: { lat: -23.106, lng: -48.926 } },
+  { description: 'Terminal Rodoviário de Ourinhos', mainText: 'Rodoviária', placeId: 'loc1', coords: { lat: -22.978, lng: -49.872 } },
+  { description: 'Santa Casa de Ourinhos', mainText: 'Santa Casa', placeId: 'loc2', coords: { lat: -22.976, lng: -49.868 } },
+  { description: 'Praça Mello Peixoto (Centro)', mainText: 'Praça Mello Peixoto', placeId: 'loc3', coords: { lat: -22.980, lng: -49.870 } },
 ];
 
 // Helper para verificar se temos uma chave válida configurada
@@ -86,7 +86,7 @@ export const reverseGeocode = async (lat: number, lng: number): Promise<string> 
 
         let clean = response.split(', Brasil')[0]; // Remove ", Brasil"
 
-        // Remove CEP e Estado do final (ex: " - SP, 18700-000" ou ", Avaré - SP, ...")
+        // Remove CEP e Estado do final (ex: " - SP, 19900-000" ou ", Ourinhos - SP, ...")
         // Tenta remover o padrão de CEP primeiro
         clean = clean.replace(/, \d{5}-?\d{3}$/, '');
         // Tenta remover " - UF" do final se sobrar
@@ -217,7 +217,7 @@ export const searchAddress = async (query: string, biasCoords?: { lat: number; l
   // Fallback Final (Mock Aleatório apenas se OSM falhar)
   const lowerQuery = query.toLowerCase();
 
-  // Locais Hardcoded de Avaré para demo bonita
+  // Locais Hardcoded de Ourinhos para demo bonita
   const hardcodedMatches = MOCK_LOCATIONS.filter(loc =>
     loc.description.toLowerCase().includes(lowerQuery) || (loc.mainText && loc.mainText.toLowerCase().includes(lowerQuery))
   );
@@ -229,7 +229,7 @@ export const searchAddress = async (query: string, biasCoords?: { lat: number; l
     return [{
       description: query,
       placeId: `mock_${Date.now()}`,
-      coords: { lat: -23.1047 + (Math.random() * 0.01), lng: -48.9213 + (Math.random() * 0.01) }
+      coords: { lat: -22.9784 + (Math.random() * 0.01), lng: -49.8715 + (Math.random() * 0.01) }
     }];
   }
 
@@ -261,7 +261,7 @@ export const getPlaceDetails = async (placeId: string): Promise<{ lat: number, l
   if (mock && mock.coords) return mock.coords;
 
   if (placeId.startsWith('mock_')) {
-    return { lat: -23.1047 + (Math.random() * 0.01), lng: -48.9213 + (Math.random() * 0.01) };
+    return { lat: -22.9784 + (Math.random() * 0.01), lng: -49.8715 + (Math.random() * 0.01) };
   }
 
   // Se for OSM, teoricamente o `AddressAutocomplete` já extraiu as coords do item selecionado?

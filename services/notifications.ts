@@ -1,5 +1,5 @@
 /**
- * Mototaxi Millenio Notifications Service
+ * Camargo Mobilidade Notifications Service
  * Sistema de notificações push para motoristas e passageiros
  * Usa a Notification API do browser para enviar notificações locais
  */
@@ -111,7 +111,7 @@ const notificationConfigs: Record<NotificationType, (data?: any) => Notification
 
     rideCompleted: () => ({
         title: '🎉 Corrida concluída!',
-        body: 'Obrigado por usar o Mototaxi Millenio. Avalie sua experiência!',
+        body: 'Obrigado por usar o Camargo Mobilidade. Avalie sua experiência!',
         tag: 'ride-status',
     }),
 

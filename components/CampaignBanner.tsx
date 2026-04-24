@@ -63,7 +63,7 @@ export const CampaignBanner: React.FC<CampaignBannerProps> = ({ campaigns, activ
                         ) : (
                             // Default Gradient Fallback
                             <div className="w-full h-full bg-gradient-to-r from-primary-500 to-primary-600 flex flex-col items-center justify-center text-white p-4">
-                                <span className="text-xs font-bold opacity-80 uppercase tracking-widest">Mototaxi Millenio</span>
+                                <span className="text-xs font-bold opacity-80 uppercase tracking-widest">Camargo Mobilidade</span>
                                 <h4 className="text-lg font-bold text-center mt-1">{banner.title}</h4>
                                 {banner.showCta !== false && (
                                     <button className="mt-2 px-4 py-1.5 bg-white text-primary-600 rounded-full text-xs font-bold shadow-sm pointer-events-auto hover:bg-primary-50 transition-colors">

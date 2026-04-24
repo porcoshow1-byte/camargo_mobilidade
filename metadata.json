@@ -1,6 +1,6 @@
 {
-  "name": "Mototaxi Millenio",
-  "description": "A comprehensive white-label platform for mototaxi and small package deliveries, featuring passenger, driver, and admin interfaces.",
+  "name": "Camargo Mobilidade",
+  "description": "Plataforma completa de mototáxi e entregas 24h em Ourinhos-SP, com interfaces para passageiro, motorista e administrador.",
   "requestFramePermissions": [
     "camera",
     "microphone",

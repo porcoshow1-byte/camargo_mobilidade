@@ -1,10 +1,10 @@
 {
-    "name": "Mototaxi Millenio - Mototáxi e Entregas",
-    "short_name": "Mototaxi Millenio",
+    "name": "Camargo Mobilidade - Mototáxi e Entregas",
+    "short_name": "Camargo Mobilidade",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#ffffff",
-    "theme_color": "#4A764E",
+    "theme_color": "#1B4DBA",
     "icons": [
         {
             "src": "icon-192.png",

@@ -26,9 +26,9 @@ export const ReferralScreen: React.FC<ReferralScreenProps> = ({ referralCode, on
         if (navigator.share) {
             try {
                 await navigator.share({
-                    title: 'Ganhe R$ 1 no Mototaxi Millenio!',
-                    text: `Use meu código ${referralCode} e ganhe descontos no Mototaxi Millenio!`,
-                    url: 'https://mototaximillenio.app.br'
+                    title: 'Ganhe R$ 1 no Camargo Mobilidade!',
+                    text: `Use meu código ${referralCode} e ganhe descontos no Camargo Mobilidade!`,
+                    url: 'https://camargomobilidade.app.br'
                 });
             } catch (err) {
                 console.log('Error sharing:', err);

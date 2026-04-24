@@ -366,8 +366,8 @@ export const AuthScreen = ({ role: rawRole, onLoginSuccess, onBack }: { role: st
             }
             if (compData.isTempPassword) {
               // Store flag for password reset modal
-              localStorage.setItem('mototaximillenio_needs_password_reset', 'true');
-              localStorage.setItem('mototaximillenio_company_id', compData.id);
+              localStorage.setItem('camargomobilidade_needs_password_reset', 'true');
+              localStorage.setItem('camargomobilidade_company_id', compData.id);
             }
           } catch (checkErr: any) {
             // Propagate our specific errors

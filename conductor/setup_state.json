@@ -11,7 +11,7 @@
         "styleguides"
     ],
     "answers": {
-        "project_name": "Mototaxi Millenio",
+        "project_name": "Camargo Mobilidade",
         "project_description": "Uma plataforma white-label completa para mototáxi, entregas rápidas e pequenas encomendas, com apps para passageiro, piloto e painel administrativo.",
         "problem_statement": "Conecta passageiros e empresas a mototaxistas locais, modernizando o serviço com segurança, rastreamento e facilidade de pagamento.",
         "target_users": "Passageiros, Empresas, Mototaxistas e Administradores",

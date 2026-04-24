@@ -112,7 +112,7 @@ export const ProfileScreen = ({ user, isDriver, onBack, onSave, userLocation }: 
 
       // 2. BACKUP: Direct LocalStorage Save (Fix for Persistence Issues)
       if (typeof localStorage !== 'undefined') {
-        const key = `mototaximillenio_user_${user.id}`;
+        const key = `camargomobilidade_user_${user.id}`;
         const existing = localStorage.getItem(key);
         const parsed = existing ? JSON.parse(existing) : {};
         const merged = { ...parsed, ...updatedProfile };

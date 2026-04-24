@@ -112,29 +112,29 @@ export const DEFAULT_SETTINGS: SystemSettings = {
     deliveryMotoBasePrice: 6.00,
     deliveryMotoPricePerKm: 2.20,
 
-    appName: 'Mototaxi Millenio',
-    supportPhone: '(11) 99999-9999',
-    supportEmail: 'suporte@mototaximillenio.com.br',
+    appName: 'Camargo Mobilidade',
+    supportPhone: '(14) 99755-7224',
+    supportEmail: 'suporte@camargomobilidade.com.br',
 
     // Default Wait Settings
     waitTimeLimit: 5,   // 5 minutes tolerance
     waitTimeFee: 0.50,  // R$ 0.50 per excess minute
 
-    companyName: 'Mototaxi Millenio Transportes LTDA',
+    companyName: 'Camargo Mobilidade Transportes',
     companyCnpj: '00.000.000/0001-00',
-    companyAddress: 'Rua das Motos, 123 - Centro',
-    companyCity: 'Avaré',
+    companyAddress: 'R. dos Expedicionários, 255 - Centro',
+    companyCity: 'Ourinhos',
     companyState: 'SP',
-    companyCep: '18700-000',
-    companyEmail: 'contato@mototaximillenio.com.br',
-    companyPhone: '(14) 3732-0000',
+    companyCep: '19900-041',
+    companyEmail: 'contato@camargomobilidade.com.br',
+    companyPhone: '(14) 99755-7224',
 
     visual: {
         loginBackgroundImage: '/assets/admin_login.png',
         mobileBackgroundImage: '',
         appLogoUrl: '',
-        primaryColor: '#4A764E', // Green-500
-        loginTitle: 'Mototaxi Millenio',
+        primaryColor: '#1B4DBA', // Blue-500
+        loginTitle: 'Camargo Mobilidade',
         loginSubtitle: 'Gestão completa da plataforma de mobilidade em um único lugar.',
     },
 
@@ -158,14 +158,14 @@ export const DEFAULT_SETTINGS: SystemSettings = {
         user: 'user@example.com',
         pass: '',
         secure: true,
-        fromName: 'Mototaxi Millenio Notificações',
-        fromEmail: 'noreply@mototaximillenio.com.br'
+        fromName: 'Camargo Mobilidade Notificações',
+        fromEmail: 'noreply@camargomobilidade.com.br'
     },
     campaigns: [],
     activeCampaignBanner: null
 };
 
-const STORAGE_KEY = 'mototaximillenio_system_settings';
+const STORAGE_KEY = 'camargomobilidade_system_settings';
 export const SETTINGS_TABLE = 'settings';
 
 /**

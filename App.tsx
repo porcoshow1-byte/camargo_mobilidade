@@ -124,7 +124,7 @@ const AppRouter = () => {
 
   // App Wrapper to simulate mobile view on Desktop gracefully
   const AppWrapper = ({ children }: { children: React.ReactNode }) => (
-    <div className="min-h-[100dvh] w-full bg-gray-100 md:bg-gray-200 lg:bg-[#0c1510] flex items-center justify-center font-sans overflow-hidden">
+    <div className="min-h-[100dvh] w-full bg-gray-100 md:bg-gray-200 lg:bg-[#0F1D32] flex items-center justify-center font-sans overflow-hidden">
       {/* 
         This transform trick creates a new containing block for 'fixed' elements,
         so full-screen modals inside UserApp/DriverApp won't break out of the phone frame! 

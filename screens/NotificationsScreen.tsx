@@ -106,7 +106,7 @@ export const NotificationsScreen = ({ onBack }: NotificationsScreenProps) => {
                     <img src={APP_CONFIG.logoUrl} alt="Logo" className="w-8 h-8 object-contain" />
                 </div>
                 <div className="flex-1">
-                    <h2 className="text-lg font-bold leading-tight">Central Mototaxi Millenio</h2>
+                    <h2 className="text-lg font-bold leading-tight">Central Camargo Mobilidade</h2>
                     <p className="text-xs text-white/80">suporte oficial</p>
                 </div>
             </div>

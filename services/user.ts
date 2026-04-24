@@ -136,7 +136,7 @@ export const getOrCreateUserProfile = async (
 
   // MOCK MODE
   if (isMockMode || !supabase) {
-    const storageKey = `mototaximillenio_user_${uid}`;
+    const storageKey = `camargomobilidade_user_${uid}`;
     const stored = localStorage.getItem(storageKey);
 
     if (stored) {
@@ -149,7 +149,11 @@ export const getOrCreateUserProfile = async (
       return parsed;
     }
 
-    const displayName = initialData?.name || email.split('@')[0];
+    let displayName = initialData?.name || email.split('@')[0];
+    if (email === 'mailson@cavalcante') {
+      displayName = 'Mailson Cavalcante';
+    }
+
     const baseData = {
       id: uid,
       name: displayName,
@@ -159,7 +163,7 @@ export const getOrCreateUserProfile = async (
       address: initialData?.address || '',
       addressComponents: initialData?.addressComponents,
       rating: 5.0,
-      avatar: `https://ui-avatars.com/api/?background=${role === 'user' ? 'orange' : '000'}&color=fff&name=${displayName}`,
+      avatar: `https://ui-avatars.com/api/?background=${role === 'user' ? 'orange' : '000'}&color=fff&name=${encodeURIComponent(displayName)}`,
       createdAt: Date.now(),
       type: role === 'user' ? 'passenger' : role // Map role to schema type
     };
@@ -286,7 +290,7 @@ export const getOrCreateUserProfile = async (
 
 export const updateUserProfile = async (uid: string, data: Partial<User | Driver>) => {
   if (isMockMode || !supabase) {
-    const storageKey = `mototaximillenio_user_${uid}`;
+    const storageKey = `camargomobilidade_user_${uid}`;
     const stored = localStorage.getItem(storageKey);
     let updated;
     if (stored) {
@@ -310,7 +314,7 @@ export const updateUserProfile = async (uid: string, data: Partial<User | Driver
 
 export const deleteUser = async (uid: string) => {
   if (isMockMode || !supabase) {
-    localStorage.removeItem(`mototaximillenio_user_${uid}`);
+    localStorage.removeItem(`camargomobilidade_user_${uid}`);
     return;
   }
 
@@ -326,11 +330,11 @@ const generateSessionId = () => {
 };
 
 export const getLocalSessionId = () => {
-  return localStorage.getItem('mototaximillenio_session_id');
+  return localStorage.getItem('camargomobilidade_session_id');
 };
 
 const setLocalSessionId = (sessionId: string) => {
-  localStorage.setItem('mototaximillenio_session_id', sessionId);
+  localStorage.setItem('camargomobilidade_session_id', sessionId);
 };
 
 export const registerSession = async (uid: string): Promise<string> => {
@@ -363,5 +367,5 @@ export const validateSession = async (uid: string): Promise<boolean> => {
 };
 
 export const clearSession = () => {
-  localStorage.removeItem('mototaximillenio_session_id');
+  localStorage.removeItem('camargomobilidade_session_id');
 };

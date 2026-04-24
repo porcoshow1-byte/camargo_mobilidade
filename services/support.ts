@@ -89,12 +89,12 @@ const mapToDbTicket = (data: Partial<SupportTicket>): any => {
 
 // MOCK DATA STORAGE
 const getMockTickets = (): SupportTicket[] => {
-    const stored = localStorage.getItem('mototaximillenio_support_tickets');
+    const stored = localStorage.getItem('camargomobilidade_support_tickets');
     return stored ? JSON.parse(stored) : [];
 };
 
 const saveMockTickets = (tickets: SupportTicket[]) => {
-    localStorage.setItem('mototaximillenio_support_tickets', JSON.stringify(tickets));
+    localStorage.setItem('camargomobilidade_support_tickets', JSON.stringify(tickets));
 };
 
 export const createSupportTicket = async (ticketData: Omit<SupportTicket, 'id' | 'createdAt' | 'updatedAt' | 'read' | 'status'>) => {

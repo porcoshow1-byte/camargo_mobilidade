@@ -1400,12 +1400,6 @@ const CompanyFormModal = ({ company, onClose, onSave, onDelete, onNotify }: {
 };
 
 const AdminDashboardContent = ({ onLogout }: { onLogout?: () => void }) => {
-  const { isLoaded, loadError } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: APP_CONFIG.googleMapsApiKey,
-    libraries
-  });
-
   const [activeTab, setActiveTab] = useState('dashboard');
   const { location: adminLocation, loading: loadingLocation } = useGeoLocation();
   const [loading, setLoading] = useState(true);

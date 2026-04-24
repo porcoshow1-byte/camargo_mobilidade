@@ -19,15 +19,14 @@ const getMapboxToken = (): string => {
   }
 };
 
-// Chave fornecida pelo usuário
-const USER_PROVIDED_KEY = "AIzaSyA-2urd4CmIJrOD-53lTCOGvykDwfGk07M";
 const envKey = getGoogleMapsKey();
 
-// Prioriza a variável de ambiente, mas usa a chave fornecida como fallback
-const googleKey = envKey || USER_PROVIDED_KEY;
+// Remove a chave de fallback fixa do Google Maps, pois ela está com restrição de domínio
+// e força o mapa a mostrar um erro ("Oops! Something went wrong.")
+const googleKey = envKey || '';
 
 if (!googleKey) {
-  console.warn("⚠️ Chave do Google Maps (VITE_GOOGLE_MAPS_API_KEY) não encontrada. O mapa pode não carregar corretamente.");
+  console.warn("⚠️ Chave do Google Maps (VITE_GOOGLE_MAPS_API_KEY) não encontrada.");
 }
 
 // Mapbox Token

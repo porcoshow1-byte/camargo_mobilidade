@@ -891,29 +891,54 @@ const GoogleMapInner: React.FC<MapProps> = ({ showDriver, showRoute, status, ori
 
 // Componente Principal que gerencia o carregamento da API
 // Componente Principal que gerencia o carregamento da API e Escolha Visual
-export const SimulatedMap: React.FC<MapProps> = (props) => {
-  const apiKey = APP_CONFIG.googleMapsApiKey;
-  const mapboxToken = APP_CONFIG.mapboxToken;
-
-  // Use Leaflet by default is FALSE now. We prioritize Mapbox.
-
-  // Load Google API for Services support (Hybrid Plan: usage for Price/Distance/Places)
-  // Even if we don't render <GoogleMap>, we might need the script loaded for 'window.google.maps' 
-  // usage in services/map.ts if that service checks 'window.google'.
+const GoogleMapWrapper: React.FC<MapProps & { apiKey: string }> = (props) => {
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: apiKey || '',
+    googleMapsApiKey: props.apiKey,
     preventGoogleFontsLoading: true,
     libraries: libraries
   });
 
-  // Notify parent when API is loaded (or if using Mapbox, we are ready immediately)
   useEffect(() => {
-    const isReady = mapboxToken ? true : isLoaded;
-    if (isReady && props.onMapReady) {
+    if (isLoaded && props.onMapReady) {
       props.onMapReady();
     }
-  }, [isLoaded, mapboxToken, props.onMapReady]);
+  }, [isLoaded, props.onMapReady]);
+
+  if (props.isLoading) {
+    return (
+      <div className="w-full h-full bg-gray-100 flex flex-col items-center justify-center animate-pulse z-50">
+        <Loader2 className="w-10 h-10 text-primary-500 animate-spin mb-4" />
+        <p className="text-gray-500 font-medium text-sm">Localizando GPS...</p>
+      </div>
+    );
+  }
+
+  if (isLoaded && !loadError) {
+    return (
+      <div className="relative w-full h-full animate-fade-in bg-gray-100 z-0">
+        <GoogleMapInner {...props} />
+      </div>
+    );
+  }
+
+  return (
+    <div className="w-full h-full bg-gray-100 flex flex-col items-center justify-center text-gray-500 p-4 text-center">
+      <p className="font-bold text-gray-800">Falha ao carregar Google Maps</p>
+    </div>
+  );
+};
+
+// Componente Principal que gerencia o carregamento da API e Escolha Visual
+export const SimulatedMap: React.FC<MapProps> = (props) => {
+  const apiKey = APP_CONFIG.googleMapsApiKey;
+  const mapboxToken = APP_CONFIG.mapboxToken;
+
+  useEffect(() => {
+    if (mapboxToken && props.onMapReady) {
+      props.onMapReady();
+    }
+  }, [mapboxToken, props.onMapReady]);
 
   // 0. Loading State (Prevents Ourinhos Jump)
   if (props.isLoading) {
@@ -930,8 +955,6 @@ export const SimulatedMap: React.FC<MapProps> = (props) => {
     return (
       <div className="relative w-full h-full animate-fade-in bg-gray-100 z-0">
         <MapboxMapInner {...props} />
-
-
         <div className="absolute bottom-1 right-1 z-[400] bg-white/80 px-1 rounded text-[10px] text-gray-500">
           Mapbox GL JS
         </div>
@@ -940,15 +963,8 @@ export const SimulatedMap: React.FC<MapProps> = (props) => {
   }
 
   // 2. Google Maps Fallback (if no Mapbox Token)
-  // Only shows if API Key is valid and loaded.
-  if (apiKey && isLoaded && !loadError) {
-    return (
-      <div className="relative w-full h-full animate-fade-in bg-gray-100 z-0">
-        <GoogleMapInner {...props} />
-
-
-      </div>
-    );
+  if (apiKey) {
+    return <GoogleMapWrapper {...props} apiKey={apiKey} />;
   }
 
   // 3. Error State (No Mapbox, No Google)
